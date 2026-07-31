@@ -409,7 +409,7 @@ const ProjectDetail = () => {
                   <div className="pt-3 border-t border-border/30 space-y-2.5">
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-mono text-muted-foreground/60">Category</span>
-                      <div className={`px-2 py-0.5 rounded-full text-[9px] font-mono bg-cyan-500/10 border border-cyan-500/20 text-cyan-400`}>
+                      <div className={`px-2 py-0.5 rounded-full text-[9px] font-mono bg-primary/[0.07] border border-cyan-500/20 text-primary`}>
                         {project.category}
                       </div>
                     </div>

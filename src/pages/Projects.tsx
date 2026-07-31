@@ -359,7 +359,7 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
 
           {project.interest_count >= 5 && (
             <div className="absolute top-3 right-12">
-              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[8px] font-mono text-amber-400">
+              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[8px] font-mono text-accent">
                 <Flame className="w-2.5 h-2.5" /> Popular
               </div>
             </div>

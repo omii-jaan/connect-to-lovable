@@ -81,7 +81,7 @@ const BuilderProfile = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-6 h-6 text-cyan-400 animate-spin" />
+          <Loader2 className="w-6 h-6 text-primary animate-spin" />
           <p className="text-sm font-mono text-muted-foreground">{`> loading ${username}...`}</p>
         </div>
       </div>
@@ -94,7 +94,7 @@ const BuilderProfile = () => {
         <div className="flex flex-col items-center gap-4">
           <User className="w-12 h-12 text-muted-foreground/40" />
           <p className="text-sm font-mono text-muted-foreground">{`> builder "${username}" not found`}</p>
-          <Link to="/" className="text-xs font-mono text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1">
+          <Link to="/" className="text-xs font-mono text-primary hover:text-primary transition-colors flex items-center gap-1">
             <ArrowLeft className="w-3 h-3" />
             Back to Shipyard
           </Link>
