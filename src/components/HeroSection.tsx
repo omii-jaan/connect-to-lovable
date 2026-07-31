@@ -4,7 +4,10 @@ import heroBg from "@/assets/hero-bg.jpg";
 import { ArrowRight, Sparkles, Users, Rocket, Terminal, RefreshCw, Send } from "lucide-react";
 import { NumberTicker } from "@/components/magicui/number-ticker";
 import { WordRotate } from "@/components/magicui/word-rotate";
+import HeroOrb from "@/components/HeroOrb";
+import { useTilt } from "@/hooks/useTilt";
 import { toast } from "@/hooks/use-toast";
+
 
 const LOG_REPLIES: Record<string, string[]> = {
   default: [
@@ -70,6 +73,9 @@ const HeroSection = () => {
   const logEndRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { ref: tiltRef, style: tiltStyle, handlers: tiltHandlers } = useTilt<HTMLDivElement>({ max: 5 });
+
+
 
   useEffect(() => {
     if (logContainerRef.current) {
