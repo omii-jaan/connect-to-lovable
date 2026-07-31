@@ -129,11 +129,11 @@ const HeroSection = () => {
         className="absolute inset-0 bg-cover bg-center opacity-[0.03]"
         style={{ backgroundImage: `url(${heroBg})` }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/20 to-background pointer-events-none" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full bg-[radial-gradient(circle_80%_60%_at_50%_-10%,hsl(183_100%_50%_/_0.08),transparent_50%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/30 to-background pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full bg-[radial-gradient(circle_70%_50%_at_50%_-10%,hsl(var(--brand-400)/0.05),transparent_60%)] pointer-events-none" />
 
-      <div className="absolute top-1/4 left-5 w-40 h-40 bg-primary/5 rounded-full blur-[80px]" />
-      <div className="absolute bottom-1/4 right-5 w-60 h-60 bg-secondary/5 rounded-full blur-[100px]" />
+      <div className="absolute top-1/4 left-5 w-40 h-40 bg-primary/[0.03] rounded-full blur-[90px]" />
+      <div className="absolute bottom-1/4 right-5 w-60 h-60 bg-secondary/[0.03] rounded-full blur-[110px]" />
 
       <div className="relative z-10 container max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">

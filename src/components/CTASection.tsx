@@ -13,9 +13,10 @@ const CTASection = () => {
         {/* Core Header */}
         <BlurFade delay={0.1} direction="up">
           <div className="text-center mb-16 max-w-2xl mx-auto">
-            <h2 className="font-display font-black text-3xl md:text-5xl text-foreground mb-4 leading-tight">
+            <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground mb-4">Get started</p>
+            <h2 className="font-display font-bold text-3xl md:text-5xl text-foreground mb-4 leading-[1.05] tracking-[-0.03em]">
               Ready to change how <br />
-              <span className="gradient-text-cyan text-glow-cyan">software is built & hired?</span>
+              <span className="gradient-text-cyan">software is built &amp; hired?</span>
             </h2>
             <p className="text-muted-foreground text-sm">
               Whether you are a developer shipping agentic architectures or a founder building the future, we have a port docked for you.
