@@ -216,7 +216,7 @@ const Dashboard = () => {
           <div className="w-7 h-7 rounded-full bg-gradient-primary flex items-center justify-center">
             <Zap className="w-3.5 h-3.5 text-primary-foreground" />
           </div>
-          <span className="font-display font-black text-base tracking-wider gradient-text-cyan">SHIPYARD</span>
+          <span className="font-display font-bold text-base tracking-wider gradient-text-cyan">SHIPYARD</span>
         </div>
 
         {/* User card */}
@@ -316,7 +316,7 @@ const Dashboard = () => {
               {/* Header */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                  <h1 className="font-display font-black text-2xl md:text-3xl text-foreground">
+                  <h1 className="font-display font-bold text-2xl md:text-3xl text-foreground">
                     Welcome back,{" "}
                     <span className="gradient-text-cyan">{userName}</span>
                   </h1>
@@ -354,7 +354,7 @@ const Dashboard = () => {
                       </div>
                       <span className="text-[9px] font-mono uppercase text-muted-foreground/50">Live</span>
                     </div>
-                    <p className="font-display font-black text-2xl text-foreground">{stat.value}</p>
+                    <p className="font-display font-bold text-2xl text-foreground">{stat.value}</p>
                     <p className="text-[10px] font-mono text-muted-foreground mt-0.5">{stat.label}</p>
                     {/* Simple sparkline */}
                     <div className="flex items-end gap-[2px] mt-2 h-6">
@@ -994,7 +994,7 @@ const Dashboard = () => {
                           value={editForm.full_name}
                           onChange={(e) => updateFormField("full_name", e.target.value)}
                           placeholder="Display name"
-                          className="w-full bg-transparent border-b border-border focus:border-primary outline-none font-display font-black text-2xl md:text-3xl text-foreground pb-1 mb-2"
+                          className="w-full bg-transparent border-b border-border focus:border-primary outline-none font-display font-bold text-2xl md:text-3xl text-foreground pb-1 mb-2"
                         />
                         <input
                           type="text"
@@ -1019,7 +1019,7 @@ const Dashboard = () => {
                     ) : (
                       <>
                         <div className="flex flex-wrap items-center gap-3 mb-2">
-                          <h1 className="font-display font-black text-2xl md:text-3xl text-foreground">
+                          <h1 className="font-display font-bold text-2xl md:text-3xl text-foreground">
                             {profile?.full_name || userName}
                           </h1>
                           {profile?.is_verified && (
@@ -1081,7 +1081,7 @@ const Dashboard = () => {
                         "text-secondary"
                       }`} />
                     </div>
-                    <p className="font-display font-black text-2xl text-foreground">{stat.value}</p>
+                    <p className="font-display font-bold text-2xl text-foreground">{stat.value}</p>
                     <p className="text-[10px] font-mono text-muted-foreground mt-0.5">{stat.label}</p>
                   </div>
                 ))}
@@ -1293,7 +1293,7 @@ const Dashboard = () => {
                     <span className="text-[10px] font-mono text-primary/60">/marketplace</span>
                     <span className="w-1 h-1 rounded-full bg-primary/60 animate-pulse" />
                   </div>
-                  <h2 className="font-display font-black text-xl text-foreground">Marketplace Projects</h2>
+                  <h2 className="font-display font-bold text-xl text-foreground">Marketplace Projects</h2>
                   <p className="text-xs font-mono text-muted-foreground mt-0.5">Browse, post, and manage hiring projects</p>
                 </div>
                 <Link to="/post-project">

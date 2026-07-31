@@ -112,9 +112,10 @@
     --shadow-md: 0 4px 12px -2px hsl(224 40% 3% / 0.5);
     --shadow-lg: 0 16px 40px -12px hsl(224 40% 3% / 0.6);
 
-    --glow-cyan: 0 0 30px hsl(var(--brand-400) / 0.28);
-    --glow-purple: 0 0 30px hsl(var(--violet-400) / 0.24);
-    --glow-green: 0 0 30px hsl(var(--teal-400) / 0.24);
+    /* Glows are accents, not the point — kept intentionally faint */
+    --glow-cyan: 0 0 24px hsl(var(--brand-400) / 0.10);
+    --glow-purple: 0 0 24px hsl(var(--violet-400) / 0.08);
+    --glow-green: 0 0 24px hsl(var(--teal-400) / 0.08);
 
     --gradient-hero: linear-gradient(135deg, hsl(var(--neutral-950)) 0%, hsl(226 30% 8%) 50%, hsl(var(--neutral-950)) 100%);
     --gradient-card: linear-gradient(145deg, hsl(var(--surface-elevated)), hsl(var(--surface)));
@@ -175,9 +176,9 @@
     --shadow-md: 0 4px 12px -2px hsl(220 30% 30% / 0.08);
     --shadow-lg: 0 16px 40px -12px hsl(220 30% 30% / 0.14);
 
-    --glow-cyan: 0 0 30px hsl(var(--brand-600) / 0.18);
-    --glow-purple: 0 0 30px hsl(var(--violet-600) / 0.16);
-    --glow-green: 0 0 30px hsl(var(--teal-500) / 0.16);
+    --glow-cyan: 0 0 24px hsl(var(--brand-600) / 0.08);
+    --glow-purple: 0 0 24px hsl(var(--violet-600) / 0.07);
+    --glow-green: 0 0 24px hsl(var(--teal-500) / 0.07);
 
     --gradient-hero: linear-gradient(135deg, hsl(var(--neutral-50)) 0%, hsl(0 0% 100%) 50%, hsl(var(--neutral-50)) 100%);
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(210 30% 98%));
@@ -245,23 +246,25 @@
     box-shadow: var(--glow-green);
   }
 
+  /* Text glow retained as a whisper so headlines stay crisp, not neon */
   .text-glow-cyan {
-    text-shadow: 0 0 20px hsl(var(--brand-400) / 0.6);
+    text-shadow: 0 0 24px hsl(var(--brand-400) / 0.14);
   }
 
   .text-glow-purple {
-    text-shadow: 0 0 20px hsl(var(--violet-400) / 0.6);
+    text-shadow: 0 0 24px hsl(var(--violet-400) / 0.12);
   }
 
+  /* Accent type is a single restrained hue, not a rainbow sweep */
   .gradient-text-cyan {
-    background: var(--gradient-primary);
+    background: linear-gradient(180deg, hsl(var(--brand-300)), hsl(var(--brand-500)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .gradient-text-purple {
-    background: var(--gradient-secondary);
+    background: linear-gradient(180deg, hsl(var(--foreground)), hsl(215 16% 58%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -269,12 +272,15 @@
 
   .card-shine {
     background: var(--gradient-card);
-    border: 1px solid hsl(var(--brand-400) / 0.1);
+    border: 1px solid hsl(var(--border-subtle));
+    transition: border-color var(--duration-micro) var(--ease-standard),
+                box-shadow var(--duration-enter) var(--ease-standard),
+                transform var(--duration-micro) var(--ease-standard);
   }
 
   .card-shine:hover {
-    border-color: hsl(var(--brand-400) / 0.3);
-    box-shadow: var(--glow-cyan);
+    border-color: hsl(var(--border-strong));
+    box-shadow: var(--shadow-md);
   }
 
   .noise-overlay::before {
@@ -292,22 +298,22 @@
   }
 
   .animate-pulse-glow {
-    animation: pulse-glow 2s ease-in-out infinite;
+    animation: pulse-glow 4s var(--ease-standard) infinite;
   }
 
   @keyframes float {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
+    50% { transform: translateY(-6px); }
   }
 
   @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 15px hsl(var(--brand-400) / 0.3); }
-    50% { box-shadow: 0 0 40px hsl(var(--brand-400) / 0.55); }
+    0%, 100% { box-shadow: 0 0 0 hsl(var(--brand-400) / 0); }
+    50% { box-shadow: 0 0 18px hsl(var(--brand-400) / 0.12); }
   }
 
   .bg-canvas-dots {
-    background-image: radial-gradient(circle, hsl(var(--brand-400) / 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
+    background-image: radial-gradient(circle, hsl(var(--foreground) / 0.045) 1px, transparent 1px);
+    background-size: 28px 28px;
   }
 
   .wire-pulse {

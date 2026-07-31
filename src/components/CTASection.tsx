@@ -13,9 +13,10 @@ const CTASection = () => {
         {/* Core Header */}
         <BlurFade delay={0.1} direction="up">
           <div className="text-center mb-16 max-w-2xl mx-auto">
-            <h2 className="font-display font-black text-3xl md:text-5xl text-foreground mb-4 leading-tight">
+            <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground mb-4">Get started</p>
+            <h2 className="font-display font-bold text-3xl md:text-5xl text-foreground mb-4 leading-[1.05] tracking-[-0.03em]">
               Ready to change how <br />
-              <span className="gradient-text-cyan text-glow-cyan">software is built & hired?</span>
+              <span className="gradient-text-cyan">software is built &amp; hired?</span>
             </h2>
             <p className="text-muted-foreground text-sm">
               Whether you are a developer shipping agentic architectures or a founder building the future, we have a port docked for you.
@@ -28,19 +29,19 @@ const CTASection = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           
           {/* Card 1: For Builders */}
-          <div className="relative rounded-3xl p-8 md:p-10 border border-primary/20 bg-gradient-to-br from-primary/5 via-card/80 to-card/40 group hover:shadow-[0_0_30px_rgba(183,100,50,0.1)] hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+          <div className="relative rounded-2xl p-8 md:p-10 border border-border-subtle bg-surface group hover:border-border-strong hover:shadow-[var(--shadow-lg)] hover:-translate-y-0.5 transition-all duration-300 ease-standard overflow-hidden">
             {/* Visual background icon decoration */}
-            <Terminal className="absolute -right-8 -bottom-8 w-44 h-44 text-primary/5 pointer-events-none group-hover:scale-110 transition-transform duration-500" />
+            <Terminal className="absolute -right-8 -bottom-8 w-44 h-44 text-foreground/[0.03] pointer-events-none group-hover:scale-105 transition-transform duration-500" />
             
             <div className="relative z-10 flex flex-col justify-between h-full">
               <div>
-                <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary uppercase tracking-wider mb-6 inline-block">
+                <span className="px-2.5 py-1 rounded-full border border-border-subtle bg-surface-elevated text-[10px] font-medium text-muted-foreground uppercase tracking-[0.18em] mb-6 inline-block">
                   For AI Builders
                 </span>
                 
-                <h3 className="font-display font-black text-2xl md:text-3xl text-foreground mb-4">
+                <h3 className="font-display font-bold text-2xl md:text-3xl text-foreground mb-4 tracking-[-0.02em]">
                   Dock your builds. <br />
-                  <span className="gradient-text-cyan text-glow-cyan">Earn 100% of your vibe.</span>
+                  <span className="gradient-text-cyan">Earn 100% of your vibe.</span>
                 </h3>
                 
                 <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
@@ -71,19 +72,19 @@ const CTASection = () => {
           </div>
 
           {/* Card 2: For Founders */}
-          <div className="relative rounded-3xl p-8 md:p-10 border border-secondary/20 bg-gradient-to-br from-secondary/5 via-card/80 to-card/40 group hover:shadow-[0_0_30px_rgba(168,85,247,0.1)] hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+          <div className="relative rounded-2xl p-8 md:p-10 border border-border-subtle bg-surface group hover:border-border-strong hover:shadow-[var(--shadow-lg)] hover:-translate-y-0.5 transition-all duration-300 ease-standard overflow-hidden">
             {/* Visual background icon decoration */}
-            <Compass className="absolute -right-8 -bottom-8 w-44 h-44 text-secondary/5 pointer-events-none group-hover:scale-110 transition-transform duration-500" />
+            <Compass className="absolute -right-8 -bottom-8 w-44 h-44 text-foreground/[0.03] pointer-events-none group-hover:scale-105 transition-transform duration-500" />
             
             <div className="relative z-10 flex flex-col justify-between h-full">
               <div>
-                <span className="px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-[10px] font-bold text-secondary uppercase tracking-wider mb-6 inline-block">
+                <span className="px-2.5 py-1 rounded-full border border-border-subtle bg-surface-elevated text-[10px] font-medium text-muted-foreground uppercase tracking-[0.18em] mb-6 inline-block">
                   For Founders
                 </span>
                 
-                <h3 className="font-display font-black text-2xl md:text-3xl text-foreground mb-4">
+                <h3 className="font-display font-bold text-2xl md:text-3xl text-foreground mb-4 tracking-[-0.02em]">
                   Match instantly. <br />
-                  <span className="gradient-text-purple text-glow-purple">Hire based on code proof.</span>
+                  <span className="text-muted-foreground">Hire based on code proof.</span>
                 </h3>
                 
                 <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
@@ -106,7 +107,7 @@ const CTASection = () => {
                 </ul>
               </div>
 
-              <a href="/#discover" className="group w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-secondary text-secondary-foreground font-bold text-xs glow-purple transition-all hover:brightness-110">
+              <a href="/#discover" className="group w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border border-border-strong bg-surface-elevated text-foreground font-semibold text-xs transition-all duration-micro ease-standard hover:bg-muted">
                 Search Shipped Projects
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </a>

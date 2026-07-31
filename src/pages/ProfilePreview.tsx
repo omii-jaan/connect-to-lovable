@@ -42,7 +42,7 @@ const ProfilePreview = () => {
           <div className="w-7 h-7 rounded-full bg-gradient-primary flex items-center justify-center">
             <Zap className="w-3.5 h-3.5 text-primary-foreground" />
           </div>
-          <span className="font-display font-black text-sm tracking-wider gradient-text-cyan">SHIPYARD</span>
+          <span className="font-display font-bold text-sm tracking-wider gradient-text-cyan">SHIPYARD</span>
         </div>
       </div>
 
@@ -67,7 +67,7 @@ const ProfilePreview = () => {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-3 mb-2">
-                <h1 className="font-display font-black text-2xl md:text-3xl text-foreground">
+                <h1 className="font-display font-bold text-2xl md:text-3xl text-foreground">
                   {MOCK_PROFILE.full_name}
                 </h1>
                 {MOCK_PROFILE.is_verified && (
@@ -125,7 +125,7 @@ const ProfilePreview = () => {
                   "text-secondary"
                 }`} />
               </div>
-              <p className="font-display font-black text-2xl text-foreground">{stat.value}</p>
+              <p className="font-display font-bold text-2xl text-foreground">{stat.value}</p>
               <p className="text-[10px] font-mono text-muted-foreground mt-0.5">{stat.label}</p>
             </div>
           ))}

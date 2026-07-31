@@ -121,7 +121,7 @@ const Login = () => {
             <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center glow-cyan group-hover:scale-105 transition-transform">
               <Zap className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="font-display font-black text-2xl tracking-wider gradient-text-cyan">
+            <span className="font-display font-bold text-2xl tracking-wider gradient-text-cyan">
               SHIPYARD
             </span>
           </Link>
@@ -131,9 +131,9 @@ const Login = () => {
             Auth Terminal · Secure Dock
           </div>
 
-          <h1 className="font-display font-black text-3xl md:text-4xl text-foreground text-center leading-tight">
+          <h1 className="font-display font-bold text-3xl md:text-4xl text-foreground text-center leading-tight">
             Dock back into{" "}
-            <span className="gradient-text-cyan text-glow-cyan">the yard</span>
+            <span className="gradient-text-cyan">the yard</span>
           </h1>
         </div>
 

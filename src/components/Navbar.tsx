@@ -72,7 +72,7 @@ const Navbar = () => {
             <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center glow-cyan">
               <Zap className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="font-display font-black text-xl tracking-wider gradient-text-cyan">SHIPYARD</span>
+            <span className="font-display font-bold text-xl tracking-wider gradient-text-cyan">SHIPYARD</span>
           </Link>
           
           {/* Live Online Badge */}
@@ -98,8 +98,8 @@ const Navbar = () => {
               href={`#${link.id}`}
               className={`relative px-3 py-2 transition-colors duration-200 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:h-[2px] after:bg-primary after:rounded-full after:transition-all after:duration-300 ${
                 link.id && activeSection === link.id
-                  ? "text-primary text-glow-cyan after:w-4/5"
-                  : "text-muted-foreground hover:text-primary hover:text-glow-cyan after:w-0 hover:after:w-4/5"
+                  ? "text-primary after:w-4/5"
+                  : "text-muted-foreground hover:text-primary after:w-0 hover:after:w-4/5"
               }`}
             >
               {link.label}
