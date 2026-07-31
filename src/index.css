@@ -301,6 +301,26 @@
     animation: pulse-glow 4s var(--ease-standard) infinite;
   }
 
+  /* 3D wireframe orb — real transform depth, deliberately faint */
+  .animate-orb-spin {
+    animation: orb-spin 30s linear infinite;
+  }
+
+  .animate-orb-drift {
+    animation: orb-drift 18s var(--ease-standard) infinite alternate;
+  }
+
+  @keyframes orb-spin {
+    from { transform: rotateX(var(--orb-tilt, 0deg)) rotateY(0deg); }
+    to { transform: rotateX(var(--orb-tilt, 0deg)) rotateY(360deg); }
+  }
+
+  @keyframes orb-drift {
+    from { transform: rotateZ(-6deg) translateY(-8px); }
+    to { transform: rotateZ(6deg) translateY(8px); }
+  }
+
+
   @keyframes float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-6px); }
