@@ -140,26 +140,26 @@ const HeroSection = () => {
           
           {/* Left Column */}
           <div className="lg:col-span-6 flex flex-col items-start text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-bold uppercase tracking-wider mb-6 animate-pulse-glow">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border-subtle bg-surface-elevated/60 text-muted-foreground text-[10px] font-semibold uppercase tracking-[0.18em] mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
               The Next Gen Port for Vibe Coding
             </div>
 
-            <h1 className="font-display font-black text-5xl sm:text-6xl lg:text-7xl leading-[1.05] tracking-tight text-foreground mb-6 flex flex-wrap items-baseline gap-x-3">
+            <h1 className="font-display font-bold text-5xl sm:text-6xl lg:text-7xl leading-[1.02] tracking-[-0.035em] text-foreground mb-6 flex flex-wrap items-baseline gap-x-3">
               Build.
               <WordRotate
                 words={["Dock.", "Deploy.", "Launch.", "Ship."]}
                 duration={3000}
-                className="gradient-text-cyan text-glow-cyan font-black"
+                className="gradient-text-cyan font-bold"
                 motionProps={{
-                  initial: { opacity: 0, y: -50 },
+                  initial: { opacity: 0, y: -24 },
                   animate: { opacity: 1, y: 0 },
-                  exit: { opacity: 0, y: 50 },
-                  transition: { duration: 0.25, ease: "easeOut" },
+                  exit: { opacity: 0, y: 24 },
+                  transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
                 }}
               />
               Ship.
-              <span className="gradient-text-purple text-glow-purple">Get Paid.</span>
+              <span className="text-muted-foreground">Get Paid.</span>
             </h1>
 
             <p className="text-muted-foreground text-base md:text-lg max-w-xl mb-8 leading-relaxed">
@@ -178,14 +178,14 @@ const HeroSection = () => {
 
             </div>
 
-            <div className="grid grid-cols-3 gap-6 pt-6 border-t border-foreground/5 w-full">
-              {stats.map(({ label, value, suffix, icon: Icon }) => (
+            <div className="grid grid-cols-3 gap-6 pt-6 border-t border-border-subtle w-full">
+              {stats.map(({ label, value, suffix }) => (
                 <div key={label} className="flex flex-col">
-                  <span className="font-display font-black text-xl md:text-2xl gradient-text-cyan flex items-center gap-1.5">
+                  <span className="font-display font-bold text-xl md:text-2xl text-foreground flex items-baseline gap-1">
                     <NumberTicker value={value} className="text-xl md:text-2xl" />
-                    <span className="text-xl md:text-2xl">{suffix}</span>
+                    <span className="text-xl md:text-2xl text-primary">{suffix}</span>
                   </span>
-                  <span className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wider mt-1">{label}</span>
+                  <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-[0.16em] mt-1.5">{label}</span>
                 </div>
               ))}
             </div>
@@ -196,15 +196,15 @@ const HeroSection = () => {
             <div className="relative w-full rounded-2xl border border-foreground/15 bg-card/40 backdrop-blur-2xl shadow-2xl overflow-hidden">
               
               {/* Terminal Header */}
-              <div className="flex items-center justify-between px-4 py-3 bg-card/[0.02] border-b border-foreground/10">
+              <div className="flex items-center justify-between px-4 py-3 bg-surface-elevated/40 border-b border-border-subtle">
                 <div className="flex items-center gap-1.5">
-                  <span className="w-3 h-3 rounded-full bg-[#ff5f56]" />
-                  <span className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
-                  <span className="w-3 h-3 rounded-full bg-[#27c93f]" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-foreground/15" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-foreground/15" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-foreground/15" />
                 </div>
                 <span className="text-[10px] font-mono text-muted-foreground">~/sandbox — bash</span>
-                <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-semibold uppercase tracking-widest">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground font-medium uppercase tracking-[0.16em]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent" />
                   Live
                 </div>
               </div>
