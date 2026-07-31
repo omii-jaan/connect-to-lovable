@@ -1,0 +1,201 @@
+---
+
+## PART 1 — THE MINDSET SHIFT
+
+Most builders think "good UI" means pretty colors and nice fonts. That's maybe 15% of what makes something feel premium. The other 85% is invisible until it's missing.
+
+**Top-tier products feel "expensive" because of three things:**
+
+1. **Restraint** — they do less, but everything they do is perfect. Linear doesn't have 40 features on the dashboard. It has 6, and each one is flawless.
+2. **Consistency at the microscopic level** — every button, every spacing, every transition follows the same rules. Nothing is "close enough."
+3. **Anticipation of the user** — the product reacts before you realize you needed it to. Loading states, hover hints, smart defaults, empty states that teach you what to do next.
+
+The goal isn't "more features." The goal is "every interaction feels considered."
+
+---
+
+## PART 2 — THE DESIGN SYSTEM (build this FIRST, before any feature)
+
+This is non-negotiable. Top teams spend the first 1-2 weeks building nothing visible — just the system. Then every feature after is fast *and* consistent.
+
+### A. Typography
+
+- **Two typefaces max.** Usually: one display/heading face, one body face. Sometimes one face with multiple weights.
+- Pick faces with *character* but not novelty. Good choices: Inter, Geist, Söhne, Neue Haas Grotesk, Suisse Int'l, Editorial New, Migra, Tiempos. Bad choices: anything default, anything overly decorative.
+- **Define a type scale with ratio.** Use a modular scale (1.2 or 1.25 ratio). Example:
+  - xs: 0.75rem (12px) — labels, captions
+  - sm: 0.875rem (14px) — secondary text, inputs
+  - base: 1rem (16px) — body
+  - lg: 1.125rem (18px) — lead text
+  - xl: 1.25rem — section subtitles
+  - 2xl: 1.5rem — card titles
+  - 3xl: 1.875rem — page titles
+  - 4xl: 2.25rem — hero subtitles
+  - 5xl: 3rem — hero titles
+  - 6xl: 3.75rem — display
+- **Line heights:** 1.5 for body, 1.2 for headings, 1.4 for UI text.
+- **Font weights:** 3 max. Regular (400), Medium (500), Semibold (600). Bold (700) only for emphasis in body.
+- **Letter spacing:** tight on large headings (-0.02em to -0.04em), normal on body, wide on small caps labels (+0.05em).
+
+### B. Color
+
+- **6+ ramps, each with 9-10 shades (50-950).** Primary, secondary, accent, success, warning, error, plus neutrals.
+- Neutrals are the most important and most abused. Top products use *warm* or *cool* grays, never pure `#888`. Linear uses cool blue-tinted grays. Vercel uses near-pure neutral. Pick a tint and commit.
+- **Semantic naming, not hex.** `text-primary`, `text-secondary`, `bg-elevated`, `border-subtle`, `border-default`. Never `text-gray-400` in components.
+- **Dark mode is not "invert the colors."** Dark mode needs its own carefully tuned palette — backgrounds shift cooler, borders get lighter, text uses different contrast levels.
+- **Contrast:** WCAG AA minimum everywhere (4.5:1 body, 3:1 large text). Top teams aim for AAA on body text (7:1).
+
+### C. Spacing
+
+- **8px base system.** Everything is a multiple of 4 or 8. No `13px` margins. No `22px` padding.
+- Define spacing tokens: `xs (4)`, `sm (8)`, `md (16)`, `lg (24)`, `xl (32)`, `2xl (48)`, `3xl (64)`, `4xl (96)`.
+- **Vertical rhythm matters more than people think.** Sections breathe with consistent vertical spacing. Cards inside sections use smaller spacing. It creates visual hierarchy without you noticing.
+
+### D. Layout & Grid
+
+- 12-column grid on desktop, with defined breakpoints (sm 640, md 768, lg 1024, xl 1280, 2xl 1536).
+- Max content width: 1280-1440px for dashboards, 680-768px for reading/article content.
+- **Side padding scale with viewport.** 16px on mobile, 24 on tablet, 32 on desktop, 48 on wide.
+
+### E. Components — the library
+
+Build these as a real library, documented, with variants:
+- Buttons (primary, secondary, ghost, destructive) × (sizes sm/md/lg) × states (default/hover/active/focus/disabled/loading)
+- Inputs (text, textarea, select, checkbox, radio, switch) with label, hint, error states
+- Cards (default, elevated, outlined, interactive)
+- Modals / drawers / popovers
+- Toasts / alerts / banners
+- Tables (with sorting, empty, loading, error states)
+- Tabs, accordions, breadcrumbs, pagination
+- Avatars, badges, chips, tags
+- Skeleton loaders for every async component
+
+Each component: hover, focus, active, disabled, loading, error, empty. If you haven't designed those states, the component isn't done.
+
+### F. Motion language
+
+- **Easing:** use custom curves, never `linear`. Standard: `cubic-bezier(0.16, 1, 0.3, 1)` for entrances (smooth decel), `cubic-bezier(0.4, 0, 0.2, 1)` for standard, `cubic-bezier(0.32, 0.72, 0, 1)` for snappy.
+- **Duration:** 150-200ms for micro (hover, tap), 250-350ms for entrances/exits, 400-600ms for page transitions, 600ms+ only for hero moments.
+- **Stagger:** when lists animate in, stagger children 40-80ms apart.
+- **Respect `prefers-reduced-motion`.** Disable non-essential motion for those users. This is a top-team tell.
+- Motion should *explain* hierarchy and causality — not decorate. A dropdown expanding teaches you where it came from. A card lifting on hover tells you it's clickable.
+
+### G. Iconography
+
+- One icon set, one weight, one optical size. Lucide is a great default. Phosphor if you want more weights. Don't mix sets.
+- Icons sized to type — 16px icons next to 14px text, 20px next to 18px text.
+
+---
+
+## PART 3 — THE PROCESS (how we actually build it)
+
+### Phase 0 — Foundation (before features)
+
+1. Define the product in one sentence: who, what, why.
+2. List the 3-5 core user jobs (not features — jobs the user needs done).
+3. Sketch the 5-10 screens that cover those jobs. Paper or Figma, doesn't matter.
+4. Build the design system (above) as code: `tokens.ts`, base components, theme provider.
+
+### Phase 1 — Skeleton flows
+
+Build the *happy path* of each core job end-to-end. A user can complete the job, even if the UI is plain. No dead ends, no "coming soon" buttons. If a feature isn't done, the button doesn't exist.
+
+### Phase 2 — Real data layer
+
+Wire everything to Supabase. Real auth, real CRUD, real RLS policies. No mock data left in. This is where most AI-built apps fake it — we won't.
+
+### Phase 3 — First polish pass (visual)
+
+Apply the design system everywhere. Replace placeholder text with real micro-copy. Tighten spacing. Add the motion language. This is where it starts looking like a real product.
+
+### Phase 4 — Edge case pass
+
+For every screen, ask:
+- What if there's no data? (empty state with a clear next action)
+- What if it's loading? (skeleton matching the layout, not a spinner)
+- What if it errors? (helpful message, retry button, no crash)
+- What if there's a lot of data? (pagination/virtualization, not a 5000-item DOM)
+- What if the user is on mobile? (real responsive, not just "it fits")
+- What if the user is offline / slow? (optimistic UI, retry queues)
+
+### Phase 5 — Interaction polish pass
+
+- Every clickable thing has hover, active, focus states
+- Every form validates on blur, shows errors clearly, disables submit until valid
+- Transitions between states are animated
+- Keyboard navigation works everywhere (Tab order, Escape closes modals, Enter submits)
+- Focus rings are visible and consistent
+
+### Phase 6 — Accessibility pass
+
+- Run axe/Lighthouse. Fix everything.
+- Screen-reader test the core flows.
+- Color contrast audit on every text/bg combination.
+- All images have alt text. All buttons have accessible names.
+- `prefers-reduced-motion` and `prefers-color-scheme` respected.
+
+### Phase 7 — Performance pass
+
+- Lighthouse score 90+ on all four metrics.
+- Code-split routes. Lazy-load heavy components.
+- Images: WebP/AVIF, proper sizing, lazy-load below the fold.
+- Bundle size budget (e.g. < 200KB JS initial).
+- LCP < 2.5s on a cold load.
+
+### Phase 8 — Micro-copy pass
+
+This is huge and underrated. Top products have *writing* that's:
+- Specific, not generic ("Your password must be 8+ characters" not "Invalid input")
+- Reassuring in errors ("Couldn't load your projects. Try again?" not "Error 500")
+- Active voice, present tense, second person
+- No exclamation marks. No "please." No jargon.
+
+### Phase 9 — Final detail pass
+
+- Pixel-check alignment on every screen
+- Verify hover states don't cause layout shift
+- Check that long text doesn't break layouts
+- Test with real-looking data, not "test test test"
+- Proofread every string
+
+---
+
+## PART 4 — THE STANDARDS WE HOLD OURSELVES TO
+
+These are the rules. If something violates them, it's not done.
+
+1. **No placeholder text ships.** No "Lorem ipsum," no "TODO," no "Coming soon."
+2. **No broken flows.** Every button does something. Every link goes somewhere.
+3. **No unstyled states.** Loading, empty, error — all designed.
+4. **No layout shift.** Hover, load, content change — nothing jumps.
+5. **No contrast violations.** Every text is readable on its background.
+6. **No inaccessible interactions.** Keyboard works on everything.
+7. **No mock data in production paths.** Real backend or nothing.
+8. **No inconsistent spacing.** Everything on the 8px grid.
+9. **No default browser styling.** Every form control is custom-styled.
+10. **No motion that decorates without explaining.** Every animation has a purpose.
+
+---
+
+## PART 5 — HOW WE WORK TOGETHER
+
+To actually execute this, here's how we'll run it:
+
+1. **You give me the product brief** — what it is, who it's for, what the core jobs are.
+2. **I build the design system first** and show you the tokens and base components.
+3. **I build one core flow end-to-end** — fully working, real backend, polished. You review it.
+4. **We iterate on that flow** until it meets the standards above.
+5. **Then I build the next flow**, reusing the system, applying the same polish.
+6. **After all flows work, we do the polish passes** — edge cases, accessibility, performance, micro-copy.
+
+Each phase, I tell you what I'm doing and you can redirect. You're the product owner; I'm the builder + the designer following these standards.
+
+---
+
+## What I need from you to start
+
+1. **What's the app?** One sentence: who uses it, what they do with it, why it's better than what exists.
+2. **Brand direction** — any names, colors, reference products (Linear? Notion? Vercel? Stripe? Arc? pick 1-3 whose feel you want).
+3. **The 3-5 core jobs** the user needs to do.
+
+Give me those three and I'll start building — design system first, then the first flow, properly.
