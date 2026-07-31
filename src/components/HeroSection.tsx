@@ -202,8 +202,9 @@ const HeroSection = () => {
           </div>
 
           {/* Right Column: Interactive Terminal */}
-          <div className="lg:col-span-6 w-full flex flex-col">
-            <div className="relative w-full rounded-2xl border border-foreground/15 bg-card/40 backdrop-blur-2xl shadow-2xl overflow-hidden">
+          <div className="lg:col-span-6 w-full flex flex-col" ref={tiltRef} {...tiltHandlers}>
+            <div style={tiltStyle} className="relative w-full rounded-2xl border border-foreground/15 bg-card/40 backdrop-blur-2xl shadow-2xl overflow-hidden">
+
               
               {/* Terminal Header */}
               <div className="flex items-center justify-between px-4 py-3 bg-surface-elevated/40 border-b border-border-subtle">
