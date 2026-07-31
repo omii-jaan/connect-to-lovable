@@ -247,7 +247,7 @@ const Dashboard = () => {
                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                   isActive
                     ? "bg-primary/10 text-primary border border-primary/20"
-                    : "text-muted-foreground hover:text-foreground hover:bg-white/[0.04] border border-transparent"
+                    : "text-muted-foreground hover:text-foreground hover:bg-card/[0.04] border border-transparent"
                 }`}
               >
                 <item.icon className={`w-4 h-4 ${isActive ? `text-primary` : "text-muted-foreground/60"}`} />
@@ -294,7 +294,7 @@ const Dashboard = () => {
               <Bell className="w-3.5 h-3.5" />
               <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-primary text-[6px] font-bold text-primary-foreground flex items-center justify-center">3</span>
             </button>
-            <div className="w-px h-5 bg-white/10 mx-1" />
+            <div className="w-px h-5 bg-foreground/10 mx-1" />
             <div className="flex items-center gap-2 pl-1">
               <div className="w-7 h-7 rounded-full bg-gradient-primary flex items-center justify-center">
                 {user.user_metadata?.avatar_url ? (
@@ -384,7 +384,7 @@ const Dashboard = () => {
                   </div>
                   <div className="divide-y divide-white/5">
                     {activityFeed.map((item, i) => (
-                      <div key={i} className="px-4 py-2.5 hover:bg-white/[0.02] transition-colors">
+                      <div key={i} className="px-4 py-2.5 hover:bg-card/[0.02] transition-colors">
                         <div className="flex items-start gap-2">
                           <div className="flex flex-col items-center gap-0.5 mt-0.5">
                             <span className={`w-1.5 h-1.5 rounded-full ${
@@ -689,7 +689,7 @@ const Dashboard = () => {
                         .filter((p) => shipStatus === "all" || p.status === shipStatus)
                         .filter((p) => !shipSearch || p.title.toLowerCase().includes(shipSearch.toLowerCase()))
                         .map((project) => (
-                          <tr key={project.id} className="border-b border-border/50 last:border-b-0 hover:bg-white/[0.02] transition-colors">
+                          <tr key={project.id} className="border-b border-border/50 last:border-b-0 hover:bg-card/[0.02] transition-colors">
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-2">
                                 <FolderGit2 className="w-3.5 h-3.5 text-primary shrink-0" />
@@ -974,7 +974,7 @@ const Dashboard = () => {
                       {profile?.avatar_url || user?.user_metadata?.avatar_url ? (
                         <label className="w-full h-full cursor-pointer">
                           <img src={profile?.avatar_url || user?.user_metadata?.avatar_url} alt={profile?.full_name || userName} className="w-full h-full object-cover" />
-                          {isEditing && <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-full opacity-0 hover:opacity-100 transition-opacity"><Image className="w-6 h-6 text-white" /></div>}
+                          {isEditing && <div className="absolute inset-0 bg-background/50 flex items-center justify-center rounded-full opacity-0 hover:opacity-100 transition-opacity"><Image className="w-6 h-6 text-foreground" /></div>}
                         </label>
                       ) : (
                         <User className="w-8 h-8 text-primary-foreground" />
@@ -1053,7 +1053,7 @@ const Dashboard = () => {
                     )}
                   </div>
                   {!isEditing && (
-                    <button onClick={startEditing} className="self-start px-4 py-2 rounded-lg border border-border bg-muted/50 text-xs font-bold text-foreground hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-2 shrink-0">
+                    <button onClick={startEditing} className="self-start px-4 py-2 rounded-lg border border-border bg-muted/50 text-xs font-bold text-foreground hover:bg-foreground/10 hover:border-foreground/20 transition-all flex items-center gap-2 shrink-0">
                       <Pencil className="w-3 h-3" />
                       Edit Profile
                     </button>
@@ -1156,7 +1156,7 @@ const Dashboard = () => {
                       <>
                         <div className="space-y-2 mb-3">
                           {Object.entries(editForm.social_links).map(([platform, url]) => (
-                            <div key={platform} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.02] border border-border/50">
+                            <div key={platform} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-card/[0.02] border border-border/50">
                               <div className="w-7 h-7 rounded-lg bg-muted/50 border border-border flex items-center justify-center shrink-0">
                                 {platform.toLowerCase() === "github" ? <Github className="w-3.5 h-3.5 text-muted-foreground" /> : <Globe className="w-3.5 h-3.5 text-muted-foreground" />}
                               </div>
@@ -1274,7 +1274,7 @@ const Dashboard = () => {
               {/* Save/Cancel bar */}
               {isEditing && (
                 <div className="sticky bottom-0 flex items-center justify-end gap-3 p-4 bg-background/80 backdrop-blur-xl border-t border-border/50 rounded-b-2xl">
-                  <button onClick={cancelEditing} disabled={saving} className="px-4 py-2 rounded-lg border border-border bg-muted/50 text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-white/10 transition-all disabled:opacity-50">
+                  <button onClick={cancelEditing} disabled={saving} className="px-4 py-2 rounded-lg border border-border bg-muted/50 text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-foreground/10 transition-all disabled:opacity-50">
                     Cancel
                   </button>
                   <button onClick={handleSave} disabled={saving} className="px-5 py-2 rounded-lg bg-gradient-primary text-primary-foreground font-bold text-xs glow-cyan hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-2">
@@ -1315,7 +1315,7 @@ const Dashboard = () => {
                   <div className="space-y-1.5">
                     {MOCK_HIRE_PROJECTS.filter(p => p.status === "open").slice(0, 5).map((project, i) => (
                       <motion.div key={project.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}>
-                        <Link to={`/projects/${project.id}`} className="group flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/[0.04] hover:border hover:border-border/50 transition-all border border-transparent">
+                        <Link to={`/projects/${project.id}`} className="group flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-card/[0.04] hover:border hover:border-border/50 transition-all border border-transparent">
                           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20 flex items-center justify-center shrink-0">
                             <Briefcase className="w-4 h-4 text-primary" />
                           </div>
@@ -1335,7 +1335,7 @@ const Dashboard = () => {
                       </motion.div>
                     ))}
                   </div>
-                  <Link to="/projects" className="block mt-3 text-center text-[10px] font-mono text-primary/80 hover:text-primary transition-colors py-1.5 rounded-lg hover:bg-white/[0.02]">
+                  <Link to="/projects" className="block mt-3 text-center text-[10px] font-mono text-primary/80 hover:text-primary transition-colors py-1.5 rounded-lg hover:bg-card/[0.02]">
                     Browse all projects →
                   </Link>
                 </div>
@@ -1429,7 +1429,7 @@ const Dashboard = () => {
                           (notifPrefs as Record<string, boolean>)[n.key] ? "bg-cyan-500" : "bg-muted"
                         }`}
                       >
-                        <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${
+                        <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-card transition-transform ${
                           (notifPrefs as Record<string, boolean>)[n.key] ? "translate-x-5" : "translate-x-0.5"
                         }`} />
                       </button>
@@ -1603,7 +1603,7 @@ const InvitationCard = ({ inv, index }: { inv: Invitation; index: number }) => {
                 <button
                   onClick={() => handleRespond("declined")}
                   disabled={responding}
-                  className="px-3 py-1 rounded-lg bg-muted border border-border/50 text-[9px] font-mono text-muted-foreground hover:text-foreground hover:bg-white/[0.04] transition-all flex items-center gap-1 disabled:opacity-50"
+                  className="px-3 py-1 rounded-lg bg-muted border border-border/50 text-[9px] font-mono text-muted-foreground hover:text-foreground hover:bg-card/[0.04] transition-all flex items-center gap-1 disabled:opacity-50"
                 >
                   <XIcon className="w-3 h-3" /> Decline
                 </button>

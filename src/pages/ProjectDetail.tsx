@@ -125,7 +125,7 @@ const ProjectDetail = () => {
                     <div className="flex items-center gap-1.5 shrink-0">
                       <button
                         onClick={handleShare}
-                        className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground/40 hover:text-foreground hover:bg-white/[0.04] bg-muted border border-border/50 transition-all"
+                        className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground/40 hover:text-foreground hover:bg-card/[0.04] bg-muted border border-border/50 transition-all"
                       >
                         {copied ? <CheckCheck className="w-4 h-4 text-accent" /> : <Share2 className="w-4 h-4" />}
                       </button>
@@ -134,7 +134,7 @@ const ProjectDetail = () => {
                         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
                           saved
                             ? "text-primary bg-primary/10 border border-primary/20"
-                            : "text-muted-foreground/40 hover:text-foreground hover:bg-white/[0.04] bg-muted border border-border/50"
+                            : "text-muted-foreground/40 hover:text-foreground hover:bg-card/[0.04] bg-muted border border-border/50"
                         }`}
                       >
                         {saved ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
@@ -354,7 +354,7 @@ const ProjectDetail = () => {
                       {matches.length > 3 && (
                         <button
                           onClick={() => setShowAllMatches(!showAllMatches)}
-                          className="w-full mt-3 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-[10px] font-mono text-muted-foreground/60 hover:text-foreground hover:bg-white/[0.02] transition-all border border-transparent hover:border-border/30"
+                          className="w-full mt-3 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-[10px] font-mono text-muted-foreground/60 hover:text-foreground hover:bg-card/[0.02] transition-all border border-transparent hover:border-border/30"
                         >
                           {showAllMatches ? (
                             <><ChevronUp className="w-3 h-3" /> Show Less</>

@@ -30,7 +30,7 @@ const MarqueeSection = () => {
           {tools.map((tool) => (
             <div
               key={tool.name}
-              className="mx-4 px-5 py-2.5 rounded-full border border-white/10 bg-white/[0.02] backdrop-blur-sm text-sm font-bold"
+              className="mx-4 px-5 py-2.5 rounded-full border border-foreground/10 bg-card/[0.02] backdrop-blur-sm text-sm font-bold"
             >
               <span className={`bg-gradient-to-r ${tool.gradient} bg-clip-text text-transparent`}>
                 {tool.name}

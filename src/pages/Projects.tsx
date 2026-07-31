@@ -305,7 +305,7 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
               className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 ${
                 saved
                   ? "text-primary bg-primary/10 border border-primary/20"
-                  : "text-muted-foreground/30 hover:text-muted-foreground hover:bg-white/[0.04] border border-transparent"
+                  : "text-muted-foreground/30 hover:text-muted-foreground hover:bg-card/[0.04] border border-transparent"
               }`}
             >
               {saved ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}

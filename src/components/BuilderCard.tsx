@@ -48,7 +48,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
       ref={ref}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`relative rounded-3xl p-6 bg-gradient-to-br from-card/80 to-card/40 border border-white/5 group cursor-pointer transition-all duration-300 hover:-translate-y-1.5 overflow-hidden backdrop-blur-md ${styles.glow}`}
+      className={`relative rounded-3xl p-6 bg-gradient-to-br from-card/80 to-card/40 border border-foreground/5 group cursor-pointer transition-all duration-300 hover:-translate-y-1.5 overflow-hidden backdrop-blur-md ${styles.glow}`}
       style={{ "--glow-x": "-9999px", "--glow-y": "-9999px" } as React.CSSProperties}
     >
       {/* Mouse-following glow overlay */}
@@ -78,7 +78,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
             <img
               src={builder.avatar}
               alt={builder.name}
-              className="w-12 h-12 rounded-full border border-white/20 object-cover relative z-10 bg-muted"
+              className="w-12 h-12 rounded-full border border-foreground/20 object-cover relative z-10 bg-muted"
             />
             {/* Status dot */}
             <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-accent border-2 border-background z-20 animate-pulse" />
@@ -111,7 +111,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
         {builder.stack.map((tech) => (
           <span 
             key={tech} 
-            className="px-2.5 py-0.5 text-[10px] rounded-md bg-white/5 border border-white/5 text-white/80 font-mono transition-colors group-hover:bg-white/10 group-hover:border-white/10"
+            className="px-2.5 py-0.5 text-[10px] rounded-md bg-foreground/5 border border-foreground/5 text-foreground/80 font-mono transition-colors group-hover:bg-foreground/10 group-hover:border-foreground/10"
           >
             {tech}
           </span>
@@ -119,7 +119,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
       </div>
 
       {/* Telemetry */}
-      <div className="mb-5 p-2.5 rounded-xl bg-black/20 border border-white/5">
+      <div className="mb-5 p-2.5 rounded-xl bg-background/20 border border-foreground/5">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <span className="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider">Telemetry</span>
@@ -129,7 +129,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
         </div>
         <div className="flex gap-1 items-end h-6">
           {commitActivity.map((count, i) => {
-            const colors = ["bg-white/10", "bg-primary/20", "bg-primary/55", "bg-primary/80", "bg-primary"];
+            const colors = ["bg-foreground/10", "bg-primary/20", "bg-primary/55", "bg-primary/80", "bg-primary"];
             const bgClass = colors[Math.min(count, colors.length - 1)];
             return (
               <div 
@@ -148,7 +148,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
       </div>
 
       {/* Metrics & Bottom Profile Link */}
-      <div className="flex items-center justify-between pt-4 border-t border-white/5 relative z-10">
+      <div className="flex items-center justify-between pt-4 border-t border-foreground/5 relative z-10">
         <div className="flex items-center gap-4 text-xs text-muted-foreground font-mono">
           <span className="flex items-center gap-1.5">
             <Star className="w-3.5 h-3.5 text-primary" />
@@ -159,7 +159,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
             {builder.projects} shipped
           </span>
         </div>
-        <button className="flex items-center gap-1 text-xs text-primary hover:text-white font-bold tracking-wide transition-all group-hover:translate-x-0.5">
+        <button className="flex items-center gap-1 text-xs text-primary hover:text-foreground font-bold tracking-wide transition-all group-hover:translate-x-0.5">
           Verify Proof <ExternalLink className="w-3 h-3 ml-0.5" />
         </button>
       </div>
