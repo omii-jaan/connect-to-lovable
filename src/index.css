@@ -4,113 +4,195 @@
 @tailwind components;
 @tailwind utilities;
 
-/* VibeForge Design System — All colors MUST be HSL */
+/* ============================================================
+   Design system — cool (slate-tinted) temperature.
+   No pure colors, no pure black/white. All colors in HSL.
+   ============================================================ */
 
 @layer base {
   :root {
-    /* Core surfaces */
-    --background: 222 25% 5%;
-    --foreground: 210 20% 94%;
+    /* ---- Neutral ramp (slate, cool-tinted) ---- */
+    --neutral-50: 210 40% 98%;
+    --neutral-100: 210 33% 95%;
+    --neutral-200: 214 27% 89%;
+    --neutral-300: 213 20% 79%;
+    --neutral-400: 215 16% 63%;
+    --neutral-500: 215 14% 50%;
+    --neutral-600: 215 17% 38%;
+    --neutral-700: 216 22% 27%;
+    --neutral-800: 218 27% 17%;
+    --neutral-900: 222 30% 11%;
+    --neutral-950: 224 34% 6%;
 
-    --card: 222 22% 8%;
-    --card-foreground: 210 20% 94%;
+    /* ---- Brand ramp (cyan, slightly desaturated off-pure) ---- */
+    --brand-50: 185 60% 96%;
+    --brand-100: 185 62% 90%;
+    --brand-200: 185 65% 80%;
+    --brand-300: 185 68% 67%;
+    --brand-400: 185 74% 55%;
+    --brand-500: 186 80% 46%;
+    --brand-600: 187 78% 38%;
+    --brand-700: 188 72% 30%;
+    --brand-800: 189 62% 24%;
+    --brand-900: 190 52% 19%;
+    --brand-950: 192 46% 12%;
 
-    --popover: 222 22% 8%;
-    --popover-foreground: 210 20% 94%;
+    /* ---- Support accents (muted, cool-leaning) ---- */
+    --violet-400: 268 62% 70%;
+    --violet-500: 268 54% 58%;
+    --violet-600: 269 50% 48%;
+    --teal-400: 162 58% 55%;
+    --teal-500: 163 62% 42%;
+    --amber-400: 38 82% 62%;
+    --rose-500: 358 62% 52%;
 
-    /* Brand — Electric Cyan */
-    --primary: 183 100% 50%;
-    --primary-foreground: 222 25% 5%;
+    /* ---- Dark theme (default) — its own palette, not an inversion ---- */
+    --background: var(--neutral-950);
+    --foreground: 213 25% 92%;
 
-    /* Secondary — Neon Purple */
-    --secondary: 270 60% 62%;
-    --secondary-foreground: 210 20% 94%;
+    /* Elevation: page < surface < elevated */
+    --surface: 222 26% 9%;
+    --surface-elevated: 220 24% 12%;
+    --surface-inset: 226 34% 5%;
 
-    /* Muted */
-    --muted: 222 18% 13%;
-    --muted-foreground: 215 15% 55%;
+    --card: var(--surface);
+    --card-foreground: var(--foreground);
+    --popover: var(--surface-elevated);
+    --popover-foreground: var(--foreground);
 
-    /* Accent — Neon Green */
-    --accent: 142 76% 55%;
-    --accent-foreground: 222 25% 5%;
+    /* Text hierarchy */
+    --text-secondary: 215 16% 66%;
+    --text-tertiary: 215 15% 52%;
+    --text-disabled: 216 16% 38%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 20% 94%;
+    --primary: var(--brand-400);
+    --primary-foreground: 224 34% 6%;
 
-    --border: 222 18% 15%;
-    --input: 222 18% 13%;
-    --ring: 183 100% 50%;
+    --secondary: var(--violet-400);
+    --secondary-foreground: 213 25% 92%;
+
+    --muted: 220 22% 13%;
+    --muted-foreground: var(--text-secondary);
+
+    --accent: var(--teal-400);
+    --accent-foreground: 224 34% 6%;
+
+    --destructive: 358 66% 56%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* Borders get lighter in dark mode, never darker */
+    --border: 220 18% 18%;
+    --border-subtle: 220 18% 14%;
+    --border-strong: 218 16% 26%;
+    --input: 220 20% 15%;
+    --ring: var(--brand-400);
 
     --radius: 0.75rem;
 
-    /* Custom tokens */
-    --glow-cyan: 0 0 30px hsl(183 100% 50% / 0.4);
-    --glow-purple: 0 0 30px hsl(270 60% 62% / 0.4);
-    --glow-green: 0 0 30px hsl(142 76% 55% / 0.4);
+    /* ---- Spacing scale (8px base) ---- */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    --space-3xl: 4rem;
+    --space-4xl: 6rem;
 
-    --gradient-hero: linear-gradient(135deg, hsl(222 25% 5%) 0%, hsl(240 20% 7%) 50%, hsl(222 25% 5%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(222 22% 9%), hsl(222 22% 7%));
-    --gradient-primary: linear-gradient(135deg, hsl(183 100% 50%), hsl(200 100% 60%));
-    --gradient-secondary: linear-gradient(135deg, hsl(270 60% 62%), hsl(290 70% 55%));
-    --gradient-shine: linear-gradient(135deg, hsl(183 100% 50% / 0.1), hsl(270 60% 62% / 0.1));
+    /* ---- Motion language ---- */
+    --ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-snappy: cubic-bezier(0.32, 0.72, 0, 1);
+    --duration-micro: 150ms;
+    --duration-enter: 300ms;
+    --duration-page: 500ms;
 
-    --sidebar-background: 222 22% 7%;
-    --sidebar-foreground: 210 20% 80%;
-    --sidebar-primary: 183 100% 50%;
-    --sidebar-primary-foreground: 222 25% 5%;
-    --sidebar-accent: 222 18% 13%;
-    --sidebar-accent-foreground: 210 20% 94%;
-    --sidebar-border: 222 18% 15%;
-    --sidebar-ring: 183 100% 50%;
+    /* Elevation shadows — soft, tinted, never pure black */
+    --shadow-sm: 0 1px 2px hsl(224 40% 3% / 0.4);
+    --shadow-md: 0 4px 12px -2px hsl(224 40% 3% / 0.5);
+    --shadow-lg: 0 16px 40px -12px hsl(224 40% 3% / 0.6);
+
+    --glow-cyan: 0 0 30px hsl(var(--brand-400) / 0.28);
+    --glow-purple: 0 0 30px hsl(var(--violet-400) / 0.24);
+    --glow-green: 0 0 30px hsl(var(--teal-400) / 0.24);
+
+    --gradient-hero: linear-gradient(135deg, hsl(var(--neutral-950)) 0%, hsl(226 30% 8%) 50%, hsl(var(--neutral-950)) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(var(--surface-elevated)), hsl(var(--surface)));
+    --gradient-primary: linear-gradient(135deg, hsl(var(--brand-400)), hsl(200 76% 58%));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--violet-400)), hsl(288 52% 56%));
+    --gradient-shine: linear-gradient(135deg, hsl(var(--brand-400) / 0.1), hsl(var(--violet-400) / 0.1));
+
+    --sidebar-background: var(--surface);
+    --sidebar-foreground: 213 20% 80%;
+    --sidebar-primary: var(--brand-400);
+    --sidebar-primary-foreground: 224 34% 6%;
+    --sidebar-accent: 220 22% 13%;
+    --sidebar-accent-foreground: 213 25% 92%;
+    --sidebar-border: 220 18% 18%;
+    --sidebar-ring: var(--brand-400);
   }
 
+  /* ---- Light theme — re-tuned, not inverted ---- */
   .light {
-    --background: 210 20% 96%;
-    --foreground: 222 25% 10%;
+    --background: var(--neutral-50);
+    --foreground: 222 30% 11%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 25% 10%;
+    --surface: 0 0% 100%;
+    --surface-elevated: 0 0% 100%;
+    --surface-inset: 210 30% 96%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 25% 10%;
+    --card: var(--surface);
+    --card-foreground: var(--foreground);
+    --popover: var(--surface-elevated);
+    --popover-foreground: var(--foreground);
 
-    --primary: 183 100% 40%;
-    --primary-foreground: 0 0% 100%;
+    --text-secondary: 215 17% 40%;
+    --text-tertiary: 215 14% 52%;
+    --text-disabled: 213 20% 72%;
 
-    --secondary: 270 60% 50%;
-    --secondary-foreground: 0 0% 100%;
+    --primary: var(--brand-600);
+    --primary-foreground: 210 40% 98%;
 
-    --muted: 210 15% 90%;
-    --muted-foreground: 215 15% 45%;
+    --secondary: var(--violet-600);
+    --secondary-foreground: 210 40% 98%;
 
-    --accent: 142 60% 40%;
-    --accent-foreground: 0 0% 100%;
+    --muted: 210 30% 94%;
+    --muted-foreground: var(--text-secondary);
 
-    --destructive: 0 72% 50%;
-    --destructive-foreground: 0 0% 100%;
+    --accent: var(--teal-500);
+    --accent-foreground: 210 40% 98%;
 
-    --border: 210 15% 85%;
-    --input: 210 15% 88%;
-    --ring: 183 100% 40%;
+    --destructive: 358 64% 48%;
+    --destructive-foreground: 210 40% 98%;
 
-    --glow-cyan: 0 0 30px hsl(183 100% 40% / 0.2);
-    --glow-purple: 0 0 30px hsl(270 60% 50% / 0.2);
-    --glow-green: 0 0 30px hsl(142 60% 40% / 0.2);
+    --border: 214 24% 88%;
+    --border-subtle: 214 27% 92%;
+    --border-strong: 213 20% 78%;
+    --input: 214 24% 90%;
+    --ring: var(--brand-600);
 
-    --gradient-hero: linear-gradient(135deg, hsl(210 20% 96%) 0%, hsl(200 20% 98%) 50%, hsl(210 20% 96%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(210 15% 97%));
-    --gradient-primary: linear-gradient(135deg, hsl(183 100% 40%), hsl(200 100% 50%));
-    --gradient-secondary: linear-gradient(135deg, hsl(270 60% 50%), hsl(290 70% 45%));
-    --gradient-shine: linear-gradient(135deg, hsl(183 100% 40% / 0.08), hsl(270 60% 50% / 0.08));
+    --shadow-sm: 0 1px 2px hsl(220 30% 30% / 0.06);
+    --shadow-md: 0 4px 12px -2px hsl(220 30% 30% / 0.08);
+    --shadow-lg: 0 16px 40px -12px hsl(220 30% 30% / 0.14);
+
+    --glow-cyan: 0 0 30px hsl(var(--brand-600) / 0.18);
+    --glow-purple: 0 0 30px hsl(var(--violet-600) / 0.16);
+    --glow-green: 0 0 30px hsl(var(--teal-500) / 0.16);
+
+    --gradient-hero: linear-gradient(135deg, hsl(var(--neutral-50)) 0%, hsl(0 0% 100%) 50%, hsl(var(--neutral-50)) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(210 30% 98%));
+    --gradient-primary: linear-gradient(135deg, hsl(var(--brand-600)), hsl(200 72% 46%));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--violet-600)), hsl(288 48% 46%));
+    --gradient-shine: linear-gradient(135deg, hsl(var(--brand-600) / 0.08), hsl(var(--violet-600) / 0.08));
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 222 25% 10%;
-    --sidebar-primary: 183 100% 40%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 15% 90%;
-    --sidebar-accent-foreground: 222 25% 10%;
-    --sidebar-border: 210 15% 85%;
-    --sidebar-ring: 183 100% 40%;
+    --sidebar-foreground: 222 30% 11%;
+    --sidebar-primary: var(--brand-600);
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 210 30% 94%;
+    --sidebar-accent-foreground: 222 30% 11%;
+    --sidebar-border: 214 24% 88%;
+    --sidebar-ring: var(--brand-600);
   }
 }
 
@@ -123,12 +205,32 @@
     @apply bg-background text-foreground;
     font-family: 'Space Grotesk', sans-serif;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3 {
     font-family: 'Syne', sans-serif;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  /* Consistent, visible focus rings everywhere */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring) / 0.7);
+    outline-offset: 2px;
+  }
+
+  /* Motion is optional, never required */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
+
 
 @layer utilities {
   .glow-cyan {
