@@ -24,14 +24,14 @@ const categoryStyles = {
   cyan: "bg-primary/10 text-primary border-primary/20",
   purple: "bg-secondary/10 text-secondary border-secondary/20",
   green: "bg-accent/10 text-accent border-accent/20",
-  orange: "bg-orange-500/10 text-orange-400 border-orange-500/20",
+  orange: "bg-accent/[0.08] text-accent border-accent/20",
 };
 
 const spotlightColors: Record<string, string> = {
-  cyan: "hsla(183, 100%, 50%, 0.08)",
-  purple: "hsla(183, 100%, 50%, 0.08)",
-  green: "hsla(183, 100%, 50%, 0.08)",
-  orange: "hsla(183, 100%, 50%, 0.08)",
+  cyan: "hsl(178 29% 50% / 0.06)",
+  purple: "hsl(178 29% 50% / 0.06)",
+  green: "hsl(178 29% 50% / 0.06)",
+  orange: "hsl(178 29% 50% / 0.06)",
 };
 
 const ProjectCard = ({ project }: { project: Project }) => {

@@ -99,7 +99,7 @@ const ProjectDetail = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                <Card className="border-border/50 bg-muted/60 backdrop-blur-sm p-6 overflow-hidden relative">
+                <Card className="border-border-subtle bg-card shadow-elev-sm p-6 overflow-hidden relative">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-primary/[0.03] to-transparent pointer-events-none rounded-full -translate-y-1/2 translate-x-1/2" />
 
                   <div className="flex items-start justify-between gap-4 mb-5 relative z-10">
@@ -242,7 +242,7 @@ const ProjectDetail = () => {
               <AnimatePresence>
                 {matches.length > 0 && (
                   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                    <Card className="border-border/50 bg-muted/60 backdrop-blur-sm p-6">
+                    <Card className="border-border-subtle bg-card shadow-elev-sm p-6">
                       <div className="flex items-center justify-between mb-5">
                         <div className="flex items-center gap-2.5">
                           <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
@@ -371,7 +371,7 @@ const ProjectDetail = () => {
 
             <div className="space-y-4">
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 }}>
-                <Card className="border-border/50 bg-muted/60 backdrop-blur-sm p-5 sticky top-8">
+                <Card className="border-border-subtle bg-card shadow-elev-sm p-5 sticky top-8">
                   <div className="flex items-center gap-3 mb-4 pb-4 border-b border-border/30">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20 flex items-center justify-center shrink-0">
                       {project.creator?.avatar_url ? (
@@ -409,7 +409,7 @@ const ProjectDetail = () => {
                   <div className="pt-3 border-t border-border/30 space-y-2.5">
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-mono text-muted-foreground/60">Category</span>
-                      <div className={`px-2 py-0.5 rounded-full text-[9px] font-mono bg-cyan-500/10 border border-cyan-500/20 text-cyan-400`}>
+                      <div className={`px-2 py-0.5 rounded-full text-[9px] font-mono bg-primary/[0.07] border border-cyan-500/20 text-primary`}>
                         {project.category}
                       </div>
                     </div>
@@ -434,7 +434,7 @@ const ProjectDetail = () => {
               </motion.div>
 
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
-                <Card className="border-border/50 bg-muted/60 backdrop-blur-sm p-5">
+                <Card className="border-border-subtle bg-card shadow-elev-sm p-5">
                   <h3 className="text-xs font-semibold text-foreground mb-3">Why Post on Shipyard?</h3>
                   <ul className="space-y-2">
                     {[

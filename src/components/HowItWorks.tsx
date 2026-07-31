@@ -116,7 +116,7 @@ const HowItWorks = () => {
                   className={`relative rounded-3xl p-8 bg-gradient-to-br from-card/90 to-card/30 border transition-all duration-300 ${
                     isHovered 
                       ? `${colors.glow} bg-card/60 -translate-y-1.5`
-                      : "border-foreground/5 bg-card/30"
+                      : "border-border-subtle bg-card/30"
                   }`}
                 >
                   {/* Step & Icon */}
@@ -138,7 +138,7 @@ const HowItWorks = () => {
                   </p>
 
                   {/* Live Visual status bar on card */}
-                  <div className="mt-4 pt-4 border-t border-foreground/5 flex items-center justify-between">
+                  <div className="mt-4 pt-4 border-t border-border-subtle flex items-center justify-between">
                     <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">Status:</span>
                     <span className={`text-[10px] font-bold font-mono uppercase tracking-wider flex items-center gap-1.5 ${isHovered ? colors.glowText : "text-muted-foreground"}`}>
                       <span className={`w-1.5 h-1.5 rounded-full ${isHovered ? "bg-accent animate-pulse" : "bg-foreground/10"}`} />
@@ -152,7 +152,7 @@ const HowItWorks = () => {
         </div>
 
         {/* Big visual illustration box matching active step */}
-        <div className="mt-16 p-8 rounded-3xl border border-foreground/5 bg-card/[0.01] backdrop-blur-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="mt-16 p-8 rounded-3xl border border-border-subtle bg-card relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-primary/5 to-transparent pointer-events-none rounded-3xl" />
           
           <div className="max-w-md relative z-10">
@@ -168,7 +168,7 @@ const HowItWorks = () => {
             </p>
           </div>
 
-          <div className="relative z-10 flex gap-4 shrink-0 font-mono text-[10px] bg-background/40 border border-foreground/5 rounded-2xl p-4 w-full md:w-auto overflow-x-auto">
+          <div className="relative z-10 flex gap-4 shrink-0 font-mono text-[10px] bg-background/40 border border-border-subtle rounded-2xl p-4 w-full md:w-auto overflow-x-auto">
             {hoveredIdx === 0 && (
               <div className="space-y-1 text-primary">
                 <p>➜ git clone git@github.com:builder/agent.git</p>

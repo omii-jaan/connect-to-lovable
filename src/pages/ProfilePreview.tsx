@@ -33,7 +33,7 @@ const ProfilePreview = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Top bar */}
-      <div className="fixed top-0 left-0 right-0 h-14 border-b border-foreground/5 bg-background/80 backdrop-blur-xl flex items-center px-4 z-50">
+      <div className="fixed top-0 left-0 right-0 h-14 border-b border-border-subtle bg-background/80 backdrop-blur-xl flex items-center px-4 z-50">
         <Link to="/" className="flex items-center gap-2 text-sm font-mono text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="w-4 h-4" />
           Back to Shipyard
@@ -51,7 +51,7 @@ const ProfilePreview = () => {
 
       <main className="max-w-5xl mx-auto px-4 py-8 space-y-6">
         {/* Profile Header */}
-        <div className="rounded-2xl border border-foreground/10 bg-card p-6 md:p-8">
+        <div className="rounded-2xl border border-border-subtle bg-card p-6 md:p-8">
           <div className="flex flex-col md:flex-row md:items-start gap-6">
             <div className="relative shrink-0">
               <div className="w-20 h-20 rounded-full bg-gradient-primary flex items-center justify-center overflow-hidden">
@@ -87,7 +87,7 @@ const ProfilePreview = () => {
                   {MOCK_PROFILE.role}
                 </span>
                 {MOCK_PROFILE.stack.slice(0, 3).map((tech) => (
-                  <span key={tech} className="px-2 py-0.5 text-[10px] font-mono rounded-md bg-foreground/5 border border-foreground/10 text-muted-foreground">
+                  <span key={tech} className="px-2 py-0.5 text-[10px] font-mono rounded-md bg-foreground/5 border border-border-subtle text-muted-foreground">
                     {tech}
                   </span>
                 ))}
@@ -98,7 +98,7 @@ const ProfilePreview = () => {
                 )}
               </div>
             </div>
-            <button className="self-start px-4 py-2 rounded-lg border border-foreground/10 bg-foreground/5 text-xs font-bold text-foreground hover:bg-foreground/10 hover:border-foreground/20 transition-all flex items-center gap-2 shrink-0">
+            <button className="self-start px-4 py-2 rounded-lg border border-border-subtle bg-foreground/5 text-xs font-bold text-foreground hover:bg-foreground/10 hover:border-foreground/20 transition-all flex items-center gap-2 shrink-0">
               <Pencil className="w-3 h-3" />
               Edit Profile
             </button>
@@ -113,7 +113,7 @@ const ProfilePreview = () => {
             { label: "Vibe Score", value: `${MOCK_PROFILE.vibe_score}%`, icon: Zap, color: "secondary" },
             { label: "Active Contracts", value: 3, icon: FileText, color: "primary" },
           ].map((stat, i) => (
-            <div key={i} className="rounded-xl border border-foreground/5 bg-card p-4">
+            <div key={i} className="rounded-xl border border-border-subtle bg-card p-4">
               <div className={`w-7 h-7 rounded-lg flex items-center justify-center mb-3 ${
                 stat.color === "primary" ? "bg-primary/10 border border-primary/20" :
                 stat.color === "accent" ? "bg-accent/10 border border-accent/20" :
@@ -136,7 +136,7 @@ const ProfilePreview = () => {
           {/* Left: Stack + Social */}
           <div className="lg:col-span-2 space-y-6">
             {/* Tech Stack */}
-            <div className="rounded-2xl border border-foreground/5 bg-card p-6">
+            <div className="rounded-2xl border border-border-subtle bg-card p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-display font-bold text-lg text-foreground">Tech Stack</h3>
                 <button className="text-[10px] font-mono text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
@@ -145,7 +145,7 @@ const ProfilePreview = () => {
               </div>
               <div className="flex flex-wrap gap-2">
                 {MOCK_PROFILE.stack.map((tech) => (
-                  <span key={tech} className="px-3 py-1.5 text-xs font-mono rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80 hover:border-primary/30 hover:bg-primary/5 transition-colors">
+                  <span key={tech} className="px-3 py-1.5 text-xs font-mono rounded-lg bg-foreground/5 border border-border-subtle text-foreground/80 hover:border-primary/30 hover:bg-primary/5 transition-colors">
                     {tech}
                   </span>
                 ))}
@@ -153,7 +153,7 @@ const ProfilePreview = () => {
             </div>
 
             {/* Social Links */}
-            <div className="rounded-2xl border border-foreground/5 bg-card p-6">
+            <div className="rounded-2xl border border-border-subtle bg-card p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-display font-bold text-lg text-foreground">Social Links</h3>
                 <button className="text-[10px] font-mono text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
@@ -163,7 +163,7 @@ const ProfilePreview = () => {
               <div className="space-y-2">
                 {Object.entries(MOCK_PROFILE.social_links).map(([platform, url]) => (
                   <a key={platform} href={url} target="_blank" rel="noreferrer" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-foreground/5 transition-colors group">
-                    <div className="w-7 h-7 rounded-lg bg-foreground/5 border border-foreground/10 flex items-center justify-center shrink-0">
+                    <div className="w-7 h-7 rounded-lg bg-foreground/5 border border-border-subtle flex items-center justify-center shrink-0">
                       {platform.toLowerCase() === "github" ? <Github className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" /> : <Globe className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />}
                     </div>
                     <span className="text-xs font-mono text-muted-foreground group-hover:text-foreground capitalize">{platform}</span>
@@ -177,7 +177,7 @@ const ProfilePreview = () => {
 
           {/* Right: Identity + Recent */}
           <div className="space-y-6">
-            <div className="rounded-2xl border border-foreground/5 bg-card p-6">
+            <div className="rounded-2xl border border-border-subtle bg-card p-6">
               <h3 className="font-display font-bold text-lg text-foreground mb-4">Identity</h3>
               <div className="space-y-4">
                 <div>
@@ -205,7 +205,7 @@ const ProfilePreview = () => {
             </div>
 
             {/* Recent Ships */}
-            <div className="rounded-2xl border border-foreground/5 bg-card p-6">
+            <div className="rounded-2xl border border-border-subtle bg-card p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-display font-bold text-lg text-foreground">Recent Ships</h3>
                 <button className="text-[10px] font-mono text-primary hover:text-primary/80 transition-colors">View all</button>

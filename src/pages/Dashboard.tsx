@@ -279,7 +279,7 @@ const Dashboard = () => {
       {/* ---- Main Area ---- */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* ---- Top Bar ---- */}
-        <header className="h-14 border-b border-border/50 bg-muted/80 backdrop-blur-xl flex items-center justify-between px-4 md:px-6 shrink-0">
+        <header className="h-14 border-b border-border-subtle bg-card flex items-center justify-between px-4 md:px-6 shrink-0">
           <div className="flex items-center gap-3">
             <span className="text-xs font-mono text-muted-foreground/60 hidden sm:block">{`[~] $`}</span>
             <span className="text-xs font-mono text-primary hidden sm:block">{`./${activeTab}`}</span>
@@ -769,7 +769,7 @@ const Dashboard = () => {
                     onClick={() => setContractFilter(f)}
                     className={`px-3 py-1.5 text-xs font-mono rounded-lg border transition-colors ${
                       contractFilter === f
-                        ? "bg-cyan-500/10 border-cyan-500/30 text-cyan-400"
+                        ? "bg-primary/[0.07] border-primary/25 text-primary"
                         : "bg-transparent border-border/40 text-muted-foreground hover:border-border"
                     }`}
                   >
@@ -795,8 +795,8 @@ const Dashboard = () => {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1.5">
                               <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-mono font-medium ${
-                                contract.status === "active" ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20" :
-                                contract.status === "pending" ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" :
+                                contract.status === "active" ? "bg-primary/[0.07] text-primary border border-cyan-500/20" :
+                                contract.status === "pending" ? "bg-amber-500/10 text-accent border border-amber-500/20" :
                                 contract.status === "completed" ? "bg-green-500/10 text-green-400 border border-green-500/20" :
                                 contract.status === "disputed" ? "bg-red-500/10 text-red-400 border border-red-500/20" :
                                 "bg-muted text-muted-foreground border border-border"
@@ -862,8 +862,8 @@ const Dashboard = () => {
                               key={ms.id}
                               className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-mono ${
                                 ms.status === "paid" || ms.status === "approved" ? "bg-green-500/8 text-green-400 border border-green-500/15" :
-                                ms.status === "in_progress" ? "bg-cyan-500/8 text-cyan-400 border border-cyan-500/15" :
-                                ms.status === "submitted" ? "bg-amber-500/8 text-amber-400 border border-amber-500/15" :
+                                ms.status === "in_progress" ? "bg-cyan-500/8 text-primary border border-cyan-500/15" :
+                                ms.status === "submitted" ? "bg-amber-500/8 text-accent border border-amber-500/15" :
                                 "bg-muted/50 text-muted-foreground border border-border/40"
                               }`}
                             >
@@ -897,7 +897,7 @@ const Dashboard = () => {
                             <>
                               <button
                                 onClick={() => toast({ title: "Contract accepted", description: `${contract.title} is now active`, duration: 4000 })}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500/20 transition-colors"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium rounded-lg bg-primary/[0.07] text-primary border border-cyan-500/20 hover:bg-cyan-500/20 transition-colors"
                               >
                                 <Check className="w-3.5 h-3.5" />
                                 Accept
@@ -915,7 +915,7 @@ const Dashboard = () => {
                             <>
                               <button
                                 onClick={() => toast({ title: "Work submitted", description: `Milestone delivered for review on ${contract.title}`, duration: 4000 })}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500/20 transition-colors"
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium rounded-lg bg-primary/[0.07] text-primary border border-cyan-500/20 hover:bg-cyan-500/20 transition-colors"
                               >
                                 <ArrowUpCircle className="w-3.5 h-3.5" />
                                 Submit Work
@@ -1305,7 +1305,7 @@ const Dashboard = () => {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="rounded-xl border border-border/50 bg-muted/60 backdrop-blur-sm p-5">
+                <div className="rounded-xl border border-border-subtle bg-card shadow-elev-sm p-5">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                       <Briefcase className="w-4 h-4 text-primary" /> Open Projects
@@ -1340,7 +1340,7 @@ const Dashboard = () => {
                   </Link>
                 </div>
 
-                <div className="rounded-xl border border-border/50 bg-muted/60 backdrop-blur-sm p-5">
+                <div className="rounded-xl border border-border-subtle bg-card shadow-elev-sm p-5">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                       <Mail className="w-4 h-4 text-primary" /> Your Invitations
@@ -1358,7 +1358,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-border/50 bg-muted/60 backdrop-blur-sm p-5">
+              <div className="rounded-xl border border-border-subtle bg-card shadow-elev-sm p-5">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-primary" /> Matching Preferences
@@ -1380,7 +1380,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-border/50 bg-muted/60 backdrop-blur-sm p-5">
+              <div className="rounded-xl border border-border-subtle bg-card shadow-elev-sm p-5">
                 <h3 className="text-sm font-semibold text-foreground flex items-center gap-2 mb-4">
                   <BarChart3 className="w-4 h-4 text-accent" /> Quick Stats
                 </h3>
@@ -1452,7 +1452,7 @@ const Dashboard = () => {
                       onClick={() => setTheme(t.mode)}
                       className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-mono transition-colors ${
                         theme === t.mode
-                          ? "bg-cyan-500/10 border-cyan-500/30 text-cyan-400"
+                          ? "bg-primary/[0.07] border-primary/25 text-primary"
                           : "bg-transparent border-border/40 text-muted-foreground hover:border-border"
                       }`}
                     >
@@ -1575,7 +1575,7 @@ const InvitationCard = ({ inv, index }: { inv: Invitation; index: number }) => {
             <div className="flex items-center justify-between gap-2 mb-0.5">
               <p className="text-xs font-semibold text-foreground">{inv.project?.title || "Project"}</p>
               <div className={`px-2 py-0.5 rounded-full text-[8px] font-mono font-bold border shrink-0 ${
-                responded === "pending" ? "bg-amber-500/10 text-amber-400 border-amber-500/20" :
+                responded === "pending" ? "bg-amber-500/10 text-accent border-amber-500/20" :
                 responded === "accepted" ? "bg-accent/10 text-accent border-accent/20" :
                 "bg-muted text-muted-foreground border-border/40"
               }`}>

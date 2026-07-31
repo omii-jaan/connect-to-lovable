@@ -277,7 +277,7 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
       layout
     >
       <Link to={`/projects/${project.id}`}>
-        <Card className="group relative border-border/50 bg-muted/60 backdrop-blur-sm hover:bg-muted/80 hover:border-primary/30 hover:shadow-[0_0_30px_-5px] hover:shadow-primary/10 transition-all duration-300 p-5 h-full flex flex-col overflow-hidden">
+        <Card className="group relative border-border-subtle bg-card shadow-elev-sm hover:bg-muted/80 hover:border-primary/30 hover:shadow-[0_0_30px_-5px] hover:shadow-primary/10 transition-all duration-300 p-5 h-full flex flex-col overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
           <div className="flex items-start justify-between mb-3 relative z-10">
@@ -359,7 +359,7 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
 
           {project.interest_count >= 5 && (
             <div className="absolute top-3 right-12">
-              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[8px] font-mono text-amber-400">
+              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[8px] font-mono text-accent">
                 <Flame className="w-2.5 h-2.5" /> Popular
               </div>
             </div>
@@ -371,12 +371,12 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
 };
 
 const CATEGORY_STYLES: Record<string, { border: string; bg: string; text: string; dot: string }> = {
-  "AI Agents":              { border: "border-cyan-500/30", bg: "bg-cyan-500/10", text: "text-cyan-400", dot: "bg-cyan-400" },
-  "Data Engineering":       { border: "border-emerald-500/30", bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400" },
-  "DevOps & Infrastructure": { border: "border-purple-500/30", bg: "bg-purple-500/10", text: "text-purple-400", dot: "bg-purple-400" },
-  "Developer Tools":        { border: "border-amber-500/30", bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400" },
-  "Automation":             { border: "border-pink-500/30", bg: "bg-pink-500/10", text: "text-pink-400", dot: "bg-pink-400" },
-  "Web Development":        { border: "border-blue-500/30", bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400" },
+  "AI Agents":               { border: "border-primary/25", bg: "bg-primary/[0.07]", text: "text-primary", dot: "bg-primary" },
+  "Data Engineering":        { border: "border-border-strong", bg: "bg-surface-elevated", text: "text-text-secondary", dot: "bg-text-tertiary" },
+  "DevOps & Infrastructure": { border: "border-accent/25", bg: "bg-accent/[0.07]", text: "text-accent", dot: "bg-accent" },
+  "Developer Tools":         { border: "border-border-strong", bg: "bg-surface-elevated", text: "text-text-secondary", dot: "bg-text-tertiary" },
+  "Automation":              { border: "border-primary/25", bg: "bg-primary/[0.07]", text: "text-primary", dot: "bg-primary" },
+  "Web Development":         { border: "border-accent/25", bg: "bg-accent/[0.07]", text: "text-accent", dot: "bg-accent" },
 };
 
 const ProjectListItem = ({ project, index, saved, onToggleSave }: { project: HireProject; index: number; saved: boolean; onToggleSave: () => void }) => {

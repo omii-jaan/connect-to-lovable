@@ -48,7 +48,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
       ref={ref}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`relative rounded-3xl p-6 bg-gradient-to-br from-card/80 to-card/40 border border-foreground/5 group cursor-pointer transition-all duration-300 hover:-translate-y-1.5 overflow-hidden backdrop-blur-md ${styles.glow}`}
+      className={`relative rounded-3xl p-6 bg-card border border-border-subtle group cursor-pointer transition-all duration-300 hover:-translate-y-1.5 overflow-hidden ${styles.glow}`}
       style={{ "--glow-x": "-9999px", "--glow-y": "-9999px" } as React.CSSProperties}
     >
       {/* Mouse-following glow overlay */}
@@ -111,7 +111,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
         {builder.stack.map((tech) => (
           <span 
             key={tech} 
-            className="px-2.5 py-0.5 text-[10px] rounded-md bg-foreground/5 border border-foreground/5 text-foreground/80 font-mono transition-colors group-hover:bg-foreground/10 group-hover:border-foreground/10"
+            className="px-2.5 py-0.5 text-[10px] rounded-md bg-foreground/5 border border-border-subtle text-foreground/80 font-mono transition-colors group-hover:bg-foreground/10 group-hover:border-border-subtle"
           >
             {tech}
           </span>
@@ -119,7 +119,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
       </div>
 
       {/* Telemetry */}
-      <div className="mb-5 p-2.5 rounded-xl bg-background/20 border border-foreground/5">
+      <div className="mb-5 p-2.5 rounded-xl bg-background/20 border border-border-subtle">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <span className="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider">Telemetry</span>
@@ -148,7 +148,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
       </div>
 
       {/* Metrics & Bottom Profile Link */}
-      <div className="flex items-center justify-between pt-4 border-t border-foreground/5 relative z-10">
+      <div className="flex items-center justify-between pt-4 border-t border-border-subtle relative z-10">
         <div className="flex items-center gap-4 text-xs text-muted-foreground font-mono">
           <span className="flex items-center gap-1.5">
             <Star className="w-3.5 h-3.5 text-primary" />

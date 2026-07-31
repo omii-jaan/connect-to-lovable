@@ -138,9 +138,9 @@ const Login = () => {
         </div>
 
         {/* Terminal auth card */}
-        <div className="relative rounded-3xl border border-foreground/10 bg-muted/95 backdrop-blur-2xl shadow-[0_8px_40px_rgba(0,0,0,0.45)] overflow-hidden">
+        <div className="relative rounded-3xl border border-border-subtle bg-card shadow-elev-lg overflow-hidden">
           {/* Terminal title bar */}
-          <div className="flex items-center justify-between px-5 py-3 border-b border-foreground/10 bg-card">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-border-subtle bg-card">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
               <span className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
@@ -157,7 +157,7 @@ const Login = () => {
           </div>
 
           {/* Terminal log area */}
-          <div ref={logContainerRef} className="px-5 pt-4 pb-2 bg-muted max-h-28 overflow-y-auto border-b border-foreground/5">
+          <div ref={logContainerRef} className="px-5 pt-4 pb-2 bg-muted max-h-28 overflow-y-auto border-b border-border-subtle">
             {logLines.map((line, i) => (
               <p
                 key={i}
@@ -200,7 +200,7 @@ const Login = () => {
                 type="button"
                 onClick={handleGithub}
                 disabled={loading}
-                className="group relative flex items-center gap-2.5 px-4 py-3 rounded-xl bg-background/40 border border-foreground/10 text-left font-mono text-xs text-muted-foreground hover:text-foreground hover:border-primary/30 hover:bg-primary/[0.04] transition-all disabled:opacity-50"
+                className="group relative flex items-center gap-2.5 px-4 py-3 rounded-xl bg-background/40 border border-border-subtle text-left font-mono text-xs text-muted-foreground hover:text-foreground hover:border-primary/30 hover:bg-primary/[0.04] transition-all disabled:opacity-50"
               >
                 <Github className="w-4 h-4 shrink-0" />
                 <span className="flex flex-col">
@@ -212,7 +212,7 @@ const Login = () => {
                 type="button"
                 onClick={handleGoogle}
                 disabled={loading}
-                className="group relative flex items-center gap-2.5 px-4 py-3 rounded-xl bg-background/40 border border-foreground/10 text-left font-mono text-xs text-muted-foreground hover:text-foreground hover:border-primary/30 hover:bg-primary/[0.04] transition-all disabled:opacity-50"
+                className="group relative flex items-center gap-2.5 px-4 py-3 rounded-xl bg-background/40 border border-border-subtle text-left font-mono text-xs text-muted-foreground hover:text-foreground hover:border-primary/30 hover:bg-primary/[0.04] transition-all disabled:opacity-50"
               >
                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -249,7 +249,7 @@ const Login = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="builder@shipyard.dev"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-background/40 border border-foreground/10 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all font-mono"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-background/40 border border-border-subtle text-sm text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all font-mono"
                   />
                 </div>
               </div>
@@ -277,7 +277,7 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••••••"
-                    className="w-full pl-9 pr-9 py-2.5 rounded-lg bg-background/40 border border-foreground/10 text-sm text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all font-mono"
+                    className="w-full pl-9 pr-9 py-2.5 rounded-lg bg-background/40 border border-border-subtle text-sm text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all font-mono"
                   />
                   <button
                     type="button"
@@ -297,7 +297,7 @@ const Login = () => {
                   onChange={(e) => setRemember(e.target.checked)}
                   className="sr-only peer"
                 />
-                <span className="w-3.5 h-3.5 rounded border border-foreground/15 bg-foreground/5 peer-checked:bg-primary peer-checked:border-primary flex items-center justify-center transition-all shrink-0">
+                <span className="w-3.5 h-3.5 rounded border border-border bg-foreground/5 peer-checked:bg-primary peer-checked:border-primary flex items-center justify-center transition-all shrink-0">
                   {remember && (
                     <svg className="w-2 h-2 text-primary-foreground" viewBox="0 0 12 12" fill="none">
                       <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -324,7 +324,7 @@ const Login = () => {
             </form>
 
             {/* Status footer */}
-            <div className="mt-4 pt-4 border-t border-foreground/5 flex items-center justify-between">
+            <div className="mt-4 pt-4 border-t border-border-subtle flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-muted-foreground/60">{`[~] $`}</span>
                 <span className="text-[10px] font-mono text-muted-foreground/60">{statusText}</span>

@@ -65,7 +65,7 @@ const Navbar = () => {
 
   return (
     <header className="fixed top-4 left-1/2 -translate-x-1/2 w-[92%] max-w-6xl z-50 transition-all duration-300">
-      <nav className="px-6 py-3.5 rounded-full border border-foreground/10 bg-card/60 backdrop-blur-xl flex items-center justify-between shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+      <nav className="px-6 py-3.5 rounded-full border border-border-subtle bg-card/95 backdrop-blur-xl flex items-center justify-between shadow-elev-md">
         {/* Logo and Live Indicator */}
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-2">
@@ -112,7 +112,7 @@ const Navbar = () => {
           {/* Command Palette Trigger */}
           <button
             onClick={() => setCmdOpen(true)}
-            className="w-8 h-8 rounded-full bg-foreground/5 border border-foreground/10 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-200"
+            className="w-8 h-8 rounded-full bg-foreground/5 border border-border-subtle flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-200"
             title="Search (⌘K)"
           >
             <Search className="w-3.5 h-3.5" />
@@ -121,7 +121,7 @@ const Navbar = () => {
           {/* Theme Toggle */}
           <button
             onClick={cycleTheme}
-            className="w-8 h-8 rounded-full bg-foreground/5 border border-foreground/10 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-200"
+            className="w-8 h-8 rounded-full bg-foreground/5 border border-border-subtle flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-200"
             title={`Theme: ${theme}`}
           >
             {themeIcon}
@@ -131,7 +131,7 @@ const Navbar = () => {
           <div className="relative">
             <button
               onClick={() => setNotifOpen(!notifOpen)}
-              className="relative w-8 h-8 rounded-full bg-foreground/5 border border-foreground/10 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-200"
+              className="relative w-8 h-8 rounded-full bg-foreground/5 border border-border-subtle flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-200"
             >
               <Bell className="w-3.5 h-3.5" />
               <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-primary text-[7px] font-bold text-primary-foreground flex items-center justify-center">3</span>
@@ -139,8 +139,8 @@ const Navbar = () => {
 
             {/* Notifications Dropdown */}
             {notifOpen && (
-              <div className="absolute right-0 mt-2 w-72 rounded-2xl border border-foreground/10 bg-card/95 backdrop-blur-2xl shadow-2xl py-3 animate-in fade-in zoom-in-95 duration-150 z-50">
-                <div className="px-4 pb-2 border-b border-foreground/10">
+              <div className="absolute right-0 mt-2 w-72 rounded-2xl border border-border-subtle bg-popover shadow-elev-lg py-3 animate-in fade-in zoom-in-95 duration-150 z-50">
+                <div className="px-4 pb-2 border-b border-border-subtle">
                   <p className="text-xs font-bold text-foreground">Notifications</p>
                 </div>
                 <div className="max-h-80 overflow-y-auto">
@@ -150,7 +150,7 @@ const Navbar = () => {
                     { icon: Star, text: "Project starred: Multi-Agent Pipeline", time: "3h ago", color: "text-secondary" },
                   ].map((n, i) => (
                     <div key={i} className="flex items-start gap-3 px-4 py-3 hover:bg-foreground/5 transition-colors cursor-pointer">
-                      <div className={`w-7 h-7 rounded-lg bg-foreground/5 border border-foreground/10 flex items-center justify-center shrink-0 ${n.color}`}>
+                      <div className={`w-7 h-7 rounded-lg bg-foreground/5 border border-border-subtle flex items-center justify-center shrink-0 ${n.color}`}>
                         <n.icon className="w-3.5 h-3.5" />
                       </div>
                       <div className="min-w-0 flex-1">
@@ -160,7 +160,7 @@ const Navbar = () => {
                     </div>
                   ))}
                 </div>
-                <div className="border-t border-foreground/10 px-4 py-2">
+                <div className="border-t border-border-subtle px-4 py-2">
                   <button className="text-[10px] font-mono text-primary hover:text-primary/80 transition-colors">View all notifications</button>
                 </div>
               </div>
@@ -175,7 +175,7 @@ const Navbar = () => {
             <div className="relative">
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-foreground/5 border border-foreground/10 hover:bg-foreground/10 transition-all"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-foreground/5 border border-border-subtle hover:bg-foreground/10 transition-all"
               >
                 <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center">
                   {user.user_metadata?.avatar_url ? (
@@ -199,8 +199,8 @@ const Navbar = () => {
               </button>
 
               {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-52 rounded-2xl border border-foreground/10 bg-card/95 backdrop-blur-2xl shadow-2xl py-2 animate-in fade-in zoom-in-95 duration-150 z-50">
-                  <div className="px-4 pb-2 border-b border-foreground/10 mb-1">
+                <div className="absolute right-0 mt-2 w-52 rounded-2xl border border-border-subtle bg-popover shadow-elev-lg py-2 animate-in fade-in zoom-in-95 duration-150 z-50">
+                  <div className="px-4 pb-2 border-b border-border-subtle mb-1">
                     <p className="text-sm font-semibold text-foreground">{userName}</p>
                     <p className="text-[10px] font-mono text-primary">{`> ${userRole.toLowerCase()} --online`}</p>
                   </div>
@@ -225,7 +225,7 @@ const Navbar = () => {
                     <User className="w-4 h-4 text-accent" />
                     Profile
                   </Link>
-                  <hr className="border-foreground/10 my-1" />
+                  <hr className="border-border-subtle my-1" />
                   <button
                     onClick={handleSignOut}
                     className="flex items-center gap-2 w-full px-4 py-2 text-sm text-destructive hover:bg-destructive/10">
@@ -253,7 +253,7 @@ const Navbar = () => {
 
         {/* Mobile menu trigger */}
         <button 
-          className="md:hidden w-8 h-8 rounded-full bg-foreground/5 border border-foreground/10 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          className="md:hidden w-8 h-8 rounded-full bg-foreground/5 border border-border-subtle flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
           onClick={() => setOpen(!open)}
         >
           <Menu className="w-4 h-4" />
@@ -273,12 +273,12 @@ const Navbar = () => {
           onClick={() => setOpen(false)}
         />
         <div
-          className={`absolute top-0 right-0 h-full w-[82vw] max-w-sm bg-card border-l border-foreground/10 shadow-2xl transition-transform duration-300 ease-out ${
+          className={`absolute top-0 right-0 h-full w-[82vw] max-w-sm bg-card border-l border-border-subtle shadow-elev-lg transition-transform duration-300 ease-out ${
             open ? "translate-x-0" : "translate-x-full"
           }`}
         >
           {/* Terminal title bar */}
-          <div className="flex items-center gap-2 px-4 py-3.5 border-b border-foreground/10 bg-[#111622]">
+          <div className="flex items-center gap-2 px-4 py-3.5 border-b border-border-subtle bg-[#111622]">
             <div className="flex gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
               <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
@@ -295,7 +295,7 @@ const Navbar = () => {
 
           {/* User info */}
           {user && (
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-foreground/5 bg-card/[0.02]">
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-border-subtle bg-card/[0.02]">
               <div className="w-9 h-9 rounded-full bg-gradient-primary flex items-center justify-center shrink-0">
                 {user.user_metadata?.avatar_url ? (
                   <img
@@ -390,7 +390,7 @@ const Navbar = () => {
           </div>
 
           {/* Bottom status bar */}
-          <div className="absolute bottom-0 left-0 right-0 px-4 py-2.5 border-t border-foreground/5 bg-[#111622] flex items-center justify-between">
+          <div className="absolute bottom-0 left-0 right-0 px-4 py-2.5 border-t border-border-subtle bg-[#111622] flex items-center justify-between">
             <span className="text-[10px] font-mono text-muted-foreground/50">{`[~] $`}</span>
             <span className="text-[10px] font-mono text-muted-foreground/50">
               {theme} mode
@@ -403,8 +403,8 @@ const Navbar = () => {
       {cmdOpen && (
         <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[12vh]" onClick={() => setCmdOpen(false)}>
           <div className="absolute inset-0 bg-background/40 backdrop-blur-sm" />
-          <div className="relative w-full max-w-lg rounded-2xl border border-foreground/10 bg-card/95 backdrop-blur-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-foreground/10">
+          <div className="relative w-full max-w-lg rounded-2xl border border-border-subtle bg-popover shadow-elev-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-border-subtle">
               <Search className="w-4 h-4 text-muted-foreground shrink-0" />
               <input
                 autoFocus
@@ -428,7 +428,7 @@ const Navbar = () => {
                 <FolderGit2 className="w-4 h-4 text-accent" />
                 <span>My Ships</span>
               </button>
-              <div className="px-4 py-2 text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-1 border-t border-foreground/5">Pages</div>
+              <div className="px-4 py-2 text-[10px] font-bold text-muted-foreground uppercase tracking-wider mt-1 border-t border-border-subtle">Pages</div>
               <button onClick={() => { setCmdOpen(false); navigate("/"); }} className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-foreground hover:bg-primary/10 transition-colors">
                 <Zap className="w-4 h-4 text-primary" />
                 <span>Landing</span>
