@@ -13,7 +13,7 @@ const CTASection = () => {
         {/* Core Header */}
         <BlurFade delay={0.1} direction="up">
           <div className="text-center mb-16 max-w-2xl mx-auto">
-            <h2 className="font-display font-black text-3xl md:text-5xl text-white mb-4 leading-tight">
+            <h2 className="font-display font-black text-3xl md:text-5xl text-foreground mb-4 leading-tight">
               Ready to change how <br />
               <span className="gradient-text-cyan text-glow-cyan">software is built & hired?</span>
             </h2>
@@ -38,7 +38,7 @@ const CTASection = () => {
                   For AI Builders
                 </span>
                 
-                <h3 className="font-display font-black text-2xl md:text-3xl text-white mb-4">
+                <h3 className="font-display font-black text-2xl md:text-3xl text-foreground mb-4">
                   Dock your builds. <br />
                   <span className="gradient-text-cyan text-glow-cyan">Earn 100% of your vibe.</span>
                 </h3>
@@ -47,7 +47,7 @@ const CTASection = () => {
                   Join 2,400+ builders showcasing live code, integrations, and active agents. Get discovered by tech-forward founders looking for speed and quality.
                 </p>
 
-                <ul className="space-y-3 mb-8 text-xs text-white/80 font-mono">
+                <ul className="space-y-3 mb-8 text-xs text-foreground/80 font-mono">
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                     No resumes, no cover letters, only live URLs
@@ -81,7 +81,7 @@ const CTASection = () => {
                   For Founders
                 </span>
                 
-                <h3 className="font-display font-black text-2xl md:text-3xl text-white mb-4">
+                <h3 className="font-display font-black text-2xl md:text-3xl text-foreground mb-4">
                   Match instantly. <br />
                   <span className="gradient-text-purple text-glow-purple">Hire based on code proof.</span>
                 </h3>
@@ -90,7 +90,7 @@ const CTASection = () => {
                   Search developers by exact API usages or patterns. Review live telemetry graphs of active repositories instead of looking at portfolios.
                 </p>
 
-                <ul className="space-y-3 mb-8 text-xs text-white/80 font-mono">
+                <ul className="space-y-3 mb-8 text-xs text-foreground/80 font-mono">
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
                     Query by exact code snippet imports

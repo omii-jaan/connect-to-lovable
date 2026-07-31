@@ -67,7 +67,7 @@ const HowItWorks = () => {
         <BlurFade delay={0.1} direction="up">
           <div className="text-center mb-20">
             <p className="text-accent text-sm font-semibold uppercase tracking-widest mb-3">Shipyard Assembly Line</p>
-            <h2 className="font-display font-black text-4xl md:text-5xl text-white">
+            <h2 className="font-display font-black text-4xl md:text-5xl text-foreground">
               Three steps to go from <br />
               <span className="gradient-text-cyan text-glow-cyan">builder to hired.</span>
             </h2>
@@ -116,7 +116,7 @@ const HowItWorks = () => {
                   className={`relative rounded-3xl p-8 bg-gradient-to-br from-card/90 to-card/30 border transition-all duration-300 ${
                     isHovered 
                       ? `${colors.glow} bg-card/60 -translate-y-1.5`
-                      : "border-white/5 bg-card/30"
+                      : "border-foreground/5 bg-card/30"
                   }`}
                 >
                   {/* Step & Icon */}
@@ -130,7 +130,7 @@ const HowItWorks = () => {
                   </div>
 
                   {/* Title & Description */}
-                  <h3 className={`font-display font-black text-xl text-white mb-3 transition-colors ${isHovered ? colors.glowText : ""}`}>
+                  <h3 className={`font-display font-black text-xl text-foreground mb-3 transition-colors ${isHovered ? colors.glowText : ""}`}>
                     {step.title}
                   </h3>
                   <p className="text-muted-foreground text-sm leading-relaxed mb-6 min-h-[72px]">
@@ -138,10 +138,10 @@ const HowItWorks = () => {
                   </p>
 
                   {/* Live Visual status bar on card */}
-                  <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+                  <div className="mt-4 pt-4 border-t border-foreground/5 flex items-center justify-between">
                     <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">Status:</span>
                     <span className={`text-[10px] font-bold font-mono uppercase tracking-wider flex items-center gap-1.5 ${isHovered ? colors.glowText : "text-muted-foreground"}`}>
-                      <span className={`w-1.5 h-1.5 rounded-full ${isHovered ? "bg-accent animate-pulse" : "bg-white/10"}`} />
+                      <span className={`w-1.5 h-1.5 rounded-full ${isHovered ? "bg-accent animate-pulse" : "bg-foreground/10"}`} />
                       {step.flowLabel}
                     </span>
                   </div>
@@ -152,11 +152,11 @@ const HowItWorks = () => {
         </div>
 
         {/* Big visual illustration box matching active step */}
-        <div className="mt-16 p-8 rounded-3xl border border-white/5 bg-white/[0.01] backdrop-blur-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="mt-16 p-8 rounded-3xl border border-foreground/5 bg-card/[0.01] backdrop-blur-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-primary/5 to-transparent pointer-events-none rounded-3xl" />
           
           <div className="max-w-md relative z-10">
-            <h4 className="font-display font-bold text-lg text-white mb-2 uppercase tracking-wide">
+            <h4 className="font-display font-bold text-lg text-foreground mb-2 uppercase tracking-wide">
               {hoveredIdx === 0 && "Step 1: The Code Docking Engine"}
               {hoveredIdx === 1 && "Step 2: The Semantic Parser"}
               {hoveredIdx === 2 && "Step 3: Direct Escrow Hiring"}
@@ -168,29 +168,29 @@ const HowItWorks = () => {
             </p>
           </div>
 
-          <div className="relative z-10 flex gap-4 shrink-0 font-mono text-[10px] bg-black/40 border border-white/5 rounded-2xl p-4 w-full md:w-auto overflow-x-auto">
+          <div className="relative z-10 flex gap-4 shrink-0 font-mono text-[10px] bg-background/40 border border-foreground/5 rounded-2xl p-4 w-full md:w-auto overflow-x-auto">
             {hoveredIdx === 0 && (
               <div className="space-y-1 text-primary">
                 <p>➜ git clone git@github.com:builder/agent.git</p>
-                <p className="text-white/60">➜ Analyzing imports: [openai, langchain]</p>
-                <p className="text-white/60">➜ Shipped to: <span className="underline">shipyard.dock/agent-xyz</span></p>
+                <p className="text-foreground/60">➜ Analyzing imports: [openai, langchain]</p>
+                <p className="text-foreground/60">➜ Shipped to: <span className="underline">shipyard.dock/agent-xyz</span></p>
                 <p className="text-accent font-bold">✔ DOCKED SUCCESSFUL</p>
               </div>
             )}
             {hoveredIdx === 1 && (
               <div className="space-y-1 text-secondary">
                 <p>➜ founder_query: "Vector db chat assistant"</p>
-                <p className="text-white/60">➜ Scanning repository semantic maps...</p>
-                <p className="text-white/60">➜ Matched: <span className="underline">@arjun_builds (98% match)</span></p>
+                <p className="text-foreground/60">➜ Scanning repository semantic maps...</p>
+                <p className="text-foreground/60">➜ Matched: <span className="underline">@arjun_builds (98% match)</span></p>
                 <p className="text-accent font-bold">➜ Matching complete.</p>
               </div>
             )}
             {hoveredIdx === 2 && (
               <div className="space-y-1 text-accent">
                 <p>➜ escrow_agreement: "Create bot dashboard"</p>
-                <p className="text-white/60">➜ Escrow status: [funded, locked]</p>
-                <p className="text-white/60">➜ Contract key: 0x8a927d...8b99</p>
-                <p className="text-white font-bold">➜ Ready to code.</p>
+                <p className="text-foreground/60">➜ Escrow status: [funded, locked]</p>
+                <p className="text-foreground/60">➜ Contract key: 0x8a927d...8b99</p>
+                <p className="text-foreground font-bold">➜ Ready to code.</p>
               </div>
             )}
           </div>
