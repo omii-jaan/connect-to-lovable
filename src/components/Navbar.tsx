@@ -1,4 +1,4 @@
-import { Zap, X, Menu, LogOut, User, FolderGit2, LayoutDashboard, Sun, Moon, Monitor, Bell, Search, ChevronRight } from "lucide-react";
+import { Zap, X, Menu, LogOut, User, FolderGit2, LayoutDashboard, Sun, Moon, Monitor, Bell, Search, ChevronRight, Star } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -95,7 +95,7 @@ const Navbar = () => {
           ].map((link) => (
             <a
               key={link.label}
-              href={link.href || `#${link.id}`}
+              href={`#${link.id}`}
               className={`relative px-3 py-2 transition-colors duration-200 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:h-[2px] after:bg-primary after:rounded-full after:transition-all after:duration-300 ${
                 link.id && activeSection === link.id
                   ? "text-primary text-glow-cyan after:w-4/5"

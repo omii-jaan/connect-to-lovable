@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { profileApi, projectApi, contractApi } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import type { Profile, Project, Contract, ContractMilestone, HireProject, Invitation } from "@/types";
 import { MOCK_HIRE_PROJECTS, MOCK_INVITATIONS } from "@/lib/marketplace-data";
 import { toast } from "@/hooks/use-toast";
@@ -637,7 +638,7 @@ const Dashboard = () => {
                           <div className="flex items-center gap-2">
                             <span className="flex items-center gap-1 text-[9px] font-mono text-muted-foreground/60">
                               <Star className="w-2.5 h-2.5" />
-                              {project.view_count || 0}
+                              {project.views_count || 0}
                             </span>
                             <span className="text-[9px] font-mono text-muted-foreground/40">
                               {format(new Date(project.created_at), "MMM d")}
@@ -714,7 +715,7 @@ const Dashboard = () => {
                               </div>
                             </td>
                             <td className="px-4 py-3 hidden md:table-cell text-xs font-mono text-muted-foreground">
-                              {project.view_count || 0}
+                              {project.views_count || 0}
                             </td>
                             <td className="px-4 py-3 hidden md:table-cell text-xs font-mono text-muted-foreground">
                               {format(new Date(project.created_at), "MMM d")}
@@ -1540,7 +1541,7 @@ const Dashboard = () => {
 };
 
 const InvitationCard = ({ inv, index }: { inv: Invitation; index: number }) => {
-  const [responded, setResponded] = useState<"pending" | "accepted" | "declined">(inv.status);
+  const [responded, setResponded] = useState<Invitation["status"]>(inv.status);
   const [responding, setResponding] = useState(false);
 
   const handleRespond = async (action: "accepted" | "declined") => {

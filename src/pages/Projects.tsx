@@ -27,8 +27,8 @@ const SORT_OPTIONS = [
 const Projects = () => {
   const [search, setSearch] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [budgetRange, setBudgetRange] = useState(BUDGET_RANGES[0]);
-  const [timelineMax, setTimelineMax] = useState(TIMELINE_OPTIONS[0]);
+  const [budgetRange, setBudgetRange] = useState<(typeof BUDGET_RANGES)[number]>(BUDGET_RANGES[0]);
+  const [timelineMax, setTimelineMax] = useState<(typeof TIMELINE_OPTIONS)[number]>(TIMELINE_OPTIONS[0]);
   const [sortBy, setSortBy] = useState("newest");
   const [saved, setSaved] = useState<Set<string>>(new Set());
   const [view, setView] = useState<"grid" | "list">("grid");
