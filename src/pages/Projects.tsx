@@ -371,12 +371,12 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
 };
 
 const CATEGORY_STYLES: Record<string, { border: string; bg: string; text: string; dot: string }> = {
-  "AI Agents":              { border: "border-cyan-500/30", bg: "bg-cyan-500/10", text: "text-cyan-400", dot: "bg-cyan-400" },
-  "Data Engineering":       { border: "border-emerald-500/30", bg: "bg-emerald-500/10", text: "text-emerald-400", dot: "bg-emerald-400" },
-  "DevOps & Infrastructure": { border: "border-purple-500/30", bg: "bg-purple-500/10", text: "text-purple-400", dot: "bg-purple-400" },
-  "Developer Tools":        { border: "border-amber-500/30", bg: "bg-amber-500/10", text: "text-amber-400", dot: "bg-amber-400" },
-  "Automation":             { border: "border-pink-500/30", bg: "bg-pink-500/10", text: "text-pink-400", dot: "bg-pink-400" },
-  "Web Development":        { border: "border-blue-500/30", bg: "bg-blue-500/10", text: "text-blue-400", dot: "bg-blue-400" },
+  "AI Agents":               { border: "border-primary/25", bg: "bg-primary/[0.07]", text: "text-primary", dot: "bg-primary" },
+  "Data Engineering":        { border: "border-border-strong", bg: "bg-surface-elevated", text: "text-text-secondary", dot: "bg-text-tertiary" },
+  "DevOps & Infrastructure": { border: "border-accent/25", bg: "bg-accent/[0.07]", text: "text-accent", dot: "bg-accent" },
+  "Developer Tools":         { border: "border-border-strong", bg: "bg-surface-elevated", text: "text-text-secondary", dot: "bg-text-tertiary" },
+  "Automation":              { border: "border-primary/25", bg: "bg-primary/[0.07]", text: "text-primary", dot: "bg-primary" },
+  "Web Development":         { border: "border-accent/25", bg: "bg-accent/[0.07]", text: "text-accent", dot: "bg-accent" },
 };
 
 const ProjectListItem = ({ project, index, saved, onToggleSave }: { project: HireProject; index: number; saved: boolean; onToggleSave: () => void }) => {
