@@ -112,9 +112,10 @@
     --shadow-md: 0 4px 12px -2px hsl(224 40% 3% / 0.5);
     --shadow-lg: 0 16px 40px -12px hsl(224 40% 3% / 0.6);
 
-    --glow-cyan: 0 0 30px hsl(var(--brand-400) / 0.28);
-    --glow-purple: 0 0 30px hsl(var(--violet-400) / 0.24);
-    --glow-green: 0 0 30px hsl(var(--teal-400) / 0.24);
+    /* Glows are accents, not the point — kept intentionally faint */
+    --glow-cyan: 0 0 24px hsl(var(--brand-400) / 0.10);
+    --glow-purple: 0 0 24px hsl(var(--violet-400) / 0.08);
+    --glow-green: 0 0 24px hsl(var(--teal-400) / 0.08);
 
     --gradient-hero: linear-gradient(135deg, hsl(var(--neutral-950)) 0%, hsl(226 30% 8%) 50%, hsl(var(--neutral-950)) 100%);
     --gradient-card: linear-gradient(145deg, hsl(var(--surface-elevated)), hsl(var(--surface)));
@@ -175,9 +176,9 @@
     --shadow-md: 0 4px 12px -2px hsl(220 30% 30% / 0.08);
     --shadow-lg: 0 16px 40px -12px hsl(220 30% 30% / 0.14);
 
-    --glow-cyan: 0 0 30px hsl(var(--brand-600) / 0.18);
-    --glow-purple: 0 0 30px hsl(var(--violet-600) / 0.16);
-    --glow-green: 0 0 30px hsl(var(--teal-500) / 0.16);
+    --glow-cyan: 0 0 24px hsl(var(--brand-600) / 0.08);
+    --glow-purple: 0 0 24px hsl(var(--violet-600) / 0.07);
+    --glow-green: 0 0 24px hsl(var(--teal-500) / 0.07);
 
     --gradient-hero: linear-gradient(135deg, hsl(var(--neutral-50)) 0%, hsl(0 0% 100%) 50%, hsl(var(--neutral-50)) 100%);
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(210 30% 98%));
