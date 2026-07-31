@@ -246,11 +246,11 @@
   }
 
   .text-glow-cyan {
-    text-shadow: 0 0 20px hsl(183 100% 50% / 0.7);
+    text-shadow: 0 0 20px hsl(var(--brand-400) / 0.6);
   }
 
   .text-glow-purple {
-    text-shadow: 0 0 20px hsl(270 60% 62% / 0.7);
+    text-shadow: 0 0 20px hsl(var(--violet-400) / 0.6);
   }
 
   .gradient-text-cyan {
@@ -269,11 +269,11 @@
 
   .card-shine {
     background: var(--gradient-card);
-    border: 1px solid hsl(183 100% 50% / 0.1);
+    border: 1px solid hsl(var(--brand-400) / 0.1);
   }
 
   .card-shine:hover {
-    border-color: hsl(183 100% 50% / 0.3);
+    border-color: hsl(var(--brand-400) / 0.3);
     box-shadow: var(--glow-cyan);
   }
 
@@ -288,7 +288,7 @@
   }
 
   .animate-float {
-    animation: float 4s ease-in-out infinite;
+    animation: float 4s var(--ease-standard) infinite;
   }
 
   .animate-pulse-glow {
@@ -301,12 +301,12 @@
   }
 
   @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 15px hsl(183 100% 50% / 0.3); }
-    50% { box-shadow: 0 0 40px hsl(183 100% 50% / 0.6); }
+    0%, 100% { box-shadow: 0 0 15px hsl(var(--brand-400) / 0.3); }
+    50% { box-shadow: 0 0 40px hsl(var(--brand-400) / 0.55); }
   }
 
   .bg-canvas-dots {
-    background-image: radial-gradient(circle, hsl(183 100% 50% / 0.1) 1px, transparent 1px);
+    background-image: radial-gradient(circle, hsl(var(--brand-400) / 0.1) 1px, transparent 1px);
     background-size: 20px 20px;
   }
 
