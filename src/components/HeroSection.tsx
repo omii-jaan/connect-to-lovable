@@ -141,6 +141,10 @@ const HeroSection = () => {
       <div className="absolute top-1/4 left-5 w-40 h-40 bg-primary/[0.03] rounded-full blur-[90px]" />
       <div className="absolute bottom-1/4 right-5 w-60 h-60 bg-secondary/[0.03] rounded-full blur-[110px]" />
 
+      {/* Decorative 3D wireframe orb behind the terminal */}
+      <HeroOrb className="hidden lg:block absolute right-[6%] top-1/2 -translate-y-1/2 w-[520px] h-[520px] opacity-40" />
+
+
       <div className="relative z-10 container max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
