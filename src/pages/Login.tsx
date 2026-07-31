@@ -133,7 +133,7 @@ const Login = () => {
 
           <h1 className="font-display font-bold text-3xl md:text-4xl text-foreground text-center leading-tight">
             Dock back into{" "}
-            <span className="gradient-text-cyan text-glow-cyan">the yard</span>
+            <span className="gradient-text-cyan">the yard</span>
           </h1>
         </div>
 

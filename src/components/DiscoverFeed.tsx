@@ -207,7 +207,7 @@ const DiscoverFeed = () => {
                     </div>
                     <div className="text-right">
                       <span className="text-xs text-muted-foreground">Vibe Score:</span>
-                      <span className="ml-1.5 font-mono text-sm font-black text-primary">{matchedBuilder.vibeScore}%</span>
+                      <span className="ml-1.5 font-mono text-sm font-bold text-primary">{matchedBuilder.vibeScore}%</span>
                     </div>
                   </div>
 
