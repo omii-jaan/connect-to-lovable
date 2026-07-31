@@ -4,7 +4,10 @@ import heroBg from "@/assets/hero-bg.jpg";
 import { ArrowRight, Sparkles, Users, Rocket, Terminal, RefreshCw, Send } from "lucide-react";
 import { NumberTicker } from "@/components/magicui/number-ticker";
 import { WordRotate } from "@/components/magicui/word-rotate";
+import HeroOrb from "@/components/HeroOrb";
+import { useTilt } from "@/hooks/useTilt";
 import { toast } from "@/hooks/use-toast";
+
 
 const LOG_REPLIES: Record<string, string[]> = {
   default: [
@@ -70,6 +73,9 @@ const HeroSection = () => {
   const logEndRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { ref: tiltRef, style: tiltStyle, handlers: tiltHandlers } = useTilt<HTMLDivElement>({ max: 5 });
+
+
 
   useEffect(() => {
     if (logContainerRef.current) {
@@ -135,6 +141,10 @@ const HeroSection = () => {
       <div className="absolute top-1/4 left-5 w-40 h-40 bg-primary/[0.03] rounded-full blur-[90px]" />
       <div className="absolute bottom-1/4 right-5 w-60 h-60 bg-secondary/[0.03] rounded-full blur-[110px]" />
 
+      {/* Decorative 3D wireframe orb behind the terminal */}
+      <HeroOrb className="hidden lg:block absolute right-[6%] top-1/2 -translate-y-1/2 w-[520px] h-[520px] opacity-40" />
+
+
       <div className="relative z-10 container max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
@@ -192,8 +202,9 @@ const HeroSection = () => {
           </div>
 
           {/* Right Column: Interactive Terminal */}
-          <div className="lg:col-span-6 w-full flex flex-col">
-            <div className="relative w-full rounded-2xl border border-foreground/15 bg-card/40 backdrop-blur-2xl shadow-2xl overflow-hidden">
+          <div className="lg:col-span-6 w-full flex flex-col" ref={tiltRef} {...tiltHandlers}>
+            <div style={tiltStyle} className="relative w-full rounded-2xl border border-foreground/15 bg-card/40 backdrop-blur-2xl shadow-2xl overflow-hidden">
+
               
               {/* Terminal Header */}
               <div className="flex items-center justify-between px-4 py-3 bg-surface-elevated/40 border-b border-border-subtle">

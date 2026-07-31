@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import HeroSection from "@/components/HeroSection";
+import LiveActivityStrip from "@/components/LiveActivityStrip";
 import MarqueeSection from "@/components/MarqueeSection";
 import FeaturedBuilders from "@/components/FeaturedBuilders";
 import FeaturedProjects from "@/components/FeaturedProjects";
@@ -15,6 +16,7 @@ const Index = () => {
       <Navbar />
       <main>
         <ErrorBoundary><HeroSection /></ErrorBoundary>
+        <ErrorBoundary><LiveActivityStrip /></ErrorBoundary>
         <MarqueeSection />
         <FeaturedBuilders />
         <HowItWorks />
@@ -26,5 +28,6 @@ const Index = () => {
     </div>
   );
 };
+
 
 export default Index;
