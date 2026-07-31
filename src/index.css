@@ -11,49 +11,52 @@
 
 @layer base {
   :root {
-    /* ---- Neutral ramp (slate, cool-tinted) ---- */
-    --neutral-50: 210 40% 98%;
-    --neutral-100: 210 33% 95%;
-    --neutral-200: 214 27% 89%;
-    --neutral-300: 213 20% 79%;
-    --neutral-400: 215 16% 63%;
-    --neutral-500: 215 14% 50%;
-    --neutral-600: 215 17% 38%;
-    --neutral-700: 216 22% 27%;
-    --neutral-800: 218 27% 17%;
-    --neutral-900: 222 30% 11%;
-    --neutral-950: 224 34% 6%;
+    /* ---- Neutral ramp (ink, cool-tinted, deep) ---- */
+    --neutral-50: 40 18% 97%;
+    --neutral-100: 38 14% 94%;
+    --neutral-200: 36 12% 88%;
+    --neutral-300: 30 9% 78%;
+    --neutral-400: 220 8% 62%;
+    --neutral-500: 220 9% 48%;
+    --neutral-600: 220 12% 36%;
+    --neutral-700: 221 16% 25%;
+    --neutral-800: 222 20% 15%;
+    --neutral-900: 224 24% 9%;
+    --neutral-950: 226 28% 5%;
 
-    /* ---- Brand ramp (cyan, slightly desaturated off-pure) ---- */
-    --brand-50: 185 60% 96%;
-    --brand-100: 185 62% 90%;
-    --brand-200: 185 65% 80%;
-    --brand-300: 185 68% 67%;
-    --brand-400: 185 74% 55%;
-    --brand-500: 186 80% 46%;
-    --brand-600: 187 78% 38%;
-    --brand-700: 188 72% 30%;
-    --brand-800: 189 62% 24%;
-    --brand-900: 190 52% 19%;
-    --brand-950: 192 46% 12%;
+    /* ---- Brand ramp (deep teal — desaturated, expensive, never neon) ---- */
+    --brand-50: 180 24% 95%;
+    --brand-100: 180 24% 88%;
+    --brand-200: 179 24% 76%;
+    --brand-300: 178 26% 62%;
+    --brand-400: 178 29% 50%;
+    --brand-500: 179 33% 40%;
+    --brand-600: 180 36% 31%;
+    --brand-700: 181 36% 24%;
+    --brand-800: 182 34% 18%;
+    --brand-900: 183 30% 13%;
+    --brand-950: 185 28% 9%;
 
-    /* ---- Support accents (muted, cool-leaning) ---- */
-    --violet-400: 268 62% 70%;
-    --violet-500: 268 54% 58%;
-    --violet-600: 269 50% 48%;
-    --teal-400: 162 58% 55%;
-    --teal-500: 163 62% 42%;
-    --amber-400: 38 82% 62%;
-    --rose-500: 358 62% 52%;
+    /* ---- Support accents (metallic, low-chroma) ---- */
+    --champagne-300: 38 34% 80%;
+    --champagne-400: 37 30% 70%;
+    --champagne-500: 36 26% 58%;
+    --violet-400: 250 16% 68%;
+    --violet-500: 250 14% 56%;
+    --violet-600: 250 14% 44%;
+    --teal-400: 172 24% 60%;
+    --teal-500: 173 28% 44%;
+    --amber-400: 38 42% 66%;
+    --rose-500: 356 38% 52%;
 
-    /* ---- Dark theme (default) — its own palette, not an inversion ---- */
+    /* ---- Dark theme (default) — ink with warm off-white type ---- */
     --background: var(--neutral-950);
-    --foreground: 213 25% 92%;
+    --foreground: 40 14% 92%;
 
     /* Elevation: page < surface < elevated */
-    --surface: 222 26% 9%;
-    --surface-elevated: 220 24% 12%;
-    --surface-inset: 226 34% 5%;
+    --surface: 225 24% 7%;
+    --surface-elevated: 223 20% 10%;
+    --surface-inset: 227 30% 4%;
 
     --card: var(--surface);
     --card-foreground: var(--foreground);
@@ -61,31 +64,31 @@
     --popover-foreground: var(--foreground);
 
     /* Text hierarchy */
-    --text-secondary: 215 16% 66%;
-    --text-tertiary: 215 15% 52%;
-    --text-disabled: 216 16% 38%;
+    --text-secondary: 38 8% 68%;
+    --text-tertiary: 30 6% 52%;
+    --text-disabled: 220 8% 36%;
 
-    --primary: var(--brand-400);
-    --primary-foreground: 224 34% 6%;
+    --primary: var(--brand-300);
+    --primary-foreground: 226 28% 5%;
 
-    --secondary: var(--violet-400);
-    --secondary-foreground: 213 25% 92%;
+    --secondary: var(--champagne-400);
+    --secondary-foreground: 226 28% 5%;
 
-    --muted: 220 22% 13%;
+    --muted: 224 18% 12%;
     --muted-foreground: var(--text-secondary);
 
-    --accent: var(--teal-400);
-    --accent-foreground: 224 34% 6%;
+    --accent: var(--champagne-400);
+    --accent-foreground: 226 28% 5%;
 
-    --destructive: 358 66% 56%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 356 44% 50%;
+    --destructive-foreground: 40 18% 97%;
 
     /* Borders get lighter in dark mode, never darker */
-    --border: 220 18% 18%;
-    --border-subtle: 220 18% 14%;
-    --border-strong: 218 16% 26%;
-    --input: 220 20% 15%;
-    --ring: var(--brand-400);
+    --border: 222 14% 17%;
+    --border-subtle: 223 16% 13%;
+    --border-strong: 220 12% 26%;
+    --input: 223 16% 14%;
+    --ring: var(--brand-300);
 
     --radius: 0.75rem;
 
@@ -107,31 +110,32 @@
     --duration-enter: 300ms;
     --duration-page: 500ms;
 
-    /* Elevation shadows — soft, tinted, never pure black */
-    --shadow-sm: 0 1px 2px hsl(224 40% 3% / 0.4);
-    --shadow-md: 0 4px 12px -2px hsl(224 40% 3% / 0.5);
-    --shadow-lg: 0 16px 40px -12px hsl(224 40% 3% / 0.6);
+    /* Elevation shadows — deep, tinted, layered like real light */
+    --shadow-sm: 0 1px 1px hsl(227 40% 2% / 0.5), 0 2px 6px -2px hsl(227 40% 2% / 0.45);
+    --shadow-md: 0 2px 4px hsl(227 40% 2% / 0.45), 0 10px 24px -8px hsl(227 40% 2% / 0.6);
+    --shadow-lg: 0 4px 8px hsl(227 40% 2% / 0.5), 0 28px 60px -20px hsl(227 40% 2% / 0.75);
 
     /* Glows are accents, not the point — kept intentionally faint */
-    --glow-cyan: 0 0 24px hsl(var(--brand-400) / 0.10);
-    --glow-purple: 0 0 24px hsl(var(--violet-400) / 0.08);
-    --glow-green: 0 0 24px hsl(var(--teal-400) / 0.08);
+    --glow-cyan: 0 0 24px hsl(var(--brand-300) / 0.08);
+    --glow-purple: 0 0 24px hsl(var(--champagne-400) / 0.07);
+    --glow-green: 0 0 24px hsl(var(--teal-400) / 0.07);
 
-    --gradient-hero: linear-gradient(135deg, hsl(var(--neutral-950)) 0%, hsl(226 30% 8%) 50%, hsl(var(--neutral-950)) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(var(--surface-elevated)), hsl(var(--surface)));
-    --gradient-primary: linear-gradient(135deg, hsl(var(--brand-400)), hsl(200 76% 58%));
-    --gradient-secondary: linear-gradient(135deg, hsl(var(--violet-400)), hsl(288 52% 56%));
-    --gradient-shine: linear-gradient(135deg, hsl(var(--brand-400) / 0.1), hsl(var(--violet-400) / 0.1));
+    --gradient-hero: linear-gradient(160deg, hsl(var(--neutral-950)) 0%, hsl(225 26% 7%) 55%, hsl(var(--neutral-950)) 100%);
+    --gradient-card: linear-gradient(160deg, hsl(var(--surface-elevated)), hsl(var(--surface)));
+    --gradient-primary: linear-gradient(140deg, hsl(var(--brand-300)), hsl(var(--brand-500)));
+    --gradient-secondary: linear-gradient(140deg, hsl(var(--champagne-300)), hsl(var(--champagne-500)));
+    --gradient-shine: linear-gradient(140deg, hsl(var(--foreground) / 0.06), hsl(var(--foreground) / 0.01));
 
     --sidebar-background: var(--surface);
-    --sidebar-foreground: 213 20% 80%;
-    --sidebar-primary: var(--brand-400);
-    --sidebar-primary-foreground: 224 34% 6%;
-    --sidebar-accent: 220 22% 13%;
-    --sidebar-accent-foreground: 213 25% 92%;
-    --sidebar-border: 220 18% 18%;
-    --sidebar-ring: var(--brand-400);
+    --sidebar-foreground: 38 10% 80%;
+    --sidebar-primary: var(--brand-300);
+    --sidebar-primary-foreground: 226 28% 5%;
+    --sidebar-accent: 224 18% 12%;
+    --sidebar-accent-foreground: 40 14% 92%;
+    --sidebar-border: 222 14% 17%;
+    --sidebar-ring: var(--brand-300);
   }
+
 
   /* ---- Light theme — re-tuned, not inverted ---- */
   .light {
