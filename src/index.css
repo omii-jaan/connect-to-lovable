@@ -272,12 +272,15 @@
 
   .card-shine {
     background: var(--gradient-card);
-    border: 1px solid hsl(var(--brand-400) / 0.1);
+    border: 1px solid hsl(var(--border-subtle));
+    transition: border-color var(--duration-micro) var(--ease-standard),
+                box-shadow var(--duration-enter) var(--ease-standard),
+                transform var(--duration-micro) var(--ease-standard);
   }
 
   .card-shine:hover {
-    border-color: hsl(var(--brand-400) / 0.3);
-    box-shadow: var(--glow-cyan);
+    border-color: hsl(var(--border-strong));
+    box-shadow: var(--shadow-md);
   }
 
   .noise-overlay::before {
