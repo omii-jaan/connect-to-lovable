@@ -246,23 +246,25 @@
     box-shadow: var(--glow-green);
   }
 
+  /* Text glow retained as a whisper so headlines stay crisp, not neon */
   .text-glow-cyan {
-    text-shadow: 0 0 20px hsl(var(--brand-400) / 0.6);
+    text-shadow: 0 0 24px hsl(var(--brand-400) / 0.14);
   }
 
   .text-glow-purple {
-    text-shadow: 0 0 20px hsl(var(--violet-400) / 0.6);
+    text-shadow: 0 0 24px hsl(var(--violet-400) / 0.12);
   }
 
+  /* Accent type is a single restrained hue, not a rainbow sweep */
   .gradient-text-cyan {
-    background: var(--gradient-primary);
+    background: linear-gradient(180deg, hsl(var(--brand-300)), hsl(var(--brand-500)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .gradient-text-purple {
-    background: var(--gradient-secondary);
+    background: linear-gradient(180deg, hsl(var(--foreground)), hsl(215 16% 58%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
