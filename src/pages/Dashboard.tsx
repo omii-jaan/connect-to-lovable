@@ -279,7 +279,7 @@ const Dashboard = () => {
       {/* ---- Main Area ---- */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* ---- Top Bar ---- */}
-        <header className="h-14 border-b border-border/50 bg-muted/80 backdrop-blur-xl flex items-center justify-between px-4 md:px-6 shrink-0">
+        <header className="h-14 border-b border-border-subtle bg-card flex items-center justify-between px-4 md:px-6 shrink-0">
           <div className="flex items-center gap-3">
             <span className="text-xs font-mono text-muted-foreground/60 hidden sm:block">{`[~] $`}</span>
             <span className="text-xs font-mono text-primary hidden sm:block">{`./${activeTab}`}</span>
@@ -1305,7 +1305,7 @@ const Dashboard = () => {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="rounded-xl border border-border/50 bg-muted/60 backdrop-blur-sm p-5">
+                <div className="rounded-xl border border-border-subtle bg-card shadow-elev-sm p-5">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                       <Briefcase className="w-4 h-4 text-primary" /> Open Projects
@@ -1340,7 +1340,7 @@ const Dashboard = () => {
                   </Link>
                 </div>
 
-                <div className="rounded-xl border border-border/50 bg-muted/60 backdrop-blur-sm p-5">
+                <div className="rounded-xl border border-border-subtle bg-card shadow-elev-sm p-5">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                       <Mail className="w-4 h-4 text-primary" /> Your Invitations
@@ -1358,7 +1358,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-border/50 bg-muted/60 backdrop-blur-sm p-5">
+              <div className="rounded-xl border border-border-subtle bg-card shadow-elev-sm p-5">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-primary" /> Matching Preferences
@@ -1380,7 +1380,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-border/50 bg-muted/60 backdrop-blur-sm p-5">
+              <div className="rounded-xl border border-border-subtle bg-card shadow-elev-sm p-5">
                 <h3 className="text-sm font-semibold text-foreground flex items-center gap-2 mb-4">
                   <BarChart3 className="w-4 h-4 text-accent" /> Quick Stats
                 </h3>

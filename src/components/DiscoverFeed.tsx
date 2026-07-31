@@ -101,7 +101,7 @@ const DiscoverFeed = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           
           {/* Left Column: Match Controls (4 cols) */}
-          <div className="lg:col-span-5 flex flex-col justify-between rounded-3xl border border-foreground/5 bg-card/40 p-6 backdrop-blur-md">
+          <div className="lg:col-span-5 flex flex-col justify-between rounded-3xl border border-border-subtle bg-card p-6">
             <div>
               <div className="flex items-center gap-2 mb-6">
                 <Cpu className="w-5 h-5 text-primary" />
@@ -128,7 +128,7 @@ const DiscoverFeed = () => {
                     className={`w-full text-left p-4 rounded-2xl border transition-all duration-300 ${
                       selectedRole === role.id
                         ? "bg-primary/5 border-primary/30 shadow-[0_0_15px_rgba(183,100,50,0.1)]"
-                        : "bg-card/[0.02] border-foreground/5 hover:bg-card/[0.04] hover:border-foreground/10"
+                        : "bg-card/[0.02] border-border-subtle hover:bg-card/[0.04] hover:border-border-subtle"
                     }`}
                   >
                     <div className="flex justify-between items-center mb-1">
@@ -141,7 +141,7 @@ const DiscoverFeed = () => {
               </div>
             </div>
 
-            <div className="mt-8 pt-4 border-t border-foreground/5">
+            <div className="mt-8 pt-4 border-t border-border-subtle">
               <Link to="/login" className="w-full py-3.5 rounded-full bg-gradient-primary text-primary-foreground font-bold text-xs glow-cyan transition-all hover:scale-[1.02] flex items-center justify-center gap-2">
                 Launch Custom Match Request
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -170,7 +170,7 @@ const DiscoverFeed = () => {
                   </linearGradient>
                 </defs>
               </svg>
-              <div className="absolute w-8 h-8 rounded-full bg-card border border-foreground/10 flex items-center justify-center glow-cyan">
+              <div className="absolute w-8 h-8 rounded-full bg-card border border-border-subtle flex items-center justify-center glow-cyan">
                 <Activity className={`w-3.5 h-3.5 text-primary ${matchingState === "scanning" ? "animate-pulse" : ""}`} />
               </div>
             </div>
@@ -180,7 +180,7 @@ const DiscoverFeed = () => {
           <div className="lg:col-span-5 flex flex-col justify-center items-center relative min-h-[350px]">
             {matchingState === "scanning" ? (
               // Scanner view
-              <div className="w-full h-full flex flex-col justify-center items-center rounded-3xl border border-foreground/5 bg-card/20 backdrop-blur-md p-8 relative overflow-hidden">
+              <div className="w-full h-full flex flex-col justify-center items-center rounded-3xl border border-border-subtle bg-surface-elevated p-8 relative overflow-hidden">
                 {/* Simulated radar scan line */}
                 <div 
                   className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent animate-bounce opacity-70"
@@ -190,14 +190,14 @@ const DiscoverFeed = () => {
                   <Zap className="w-5 h-5 text-primary animate-pulse" />
                 </div>
                 <p className="text-xs font-mono text-foreground tracking-widest uppercase mb-1">Scanning Git History...</p>
-                <div className="w-40 bg-foreground/5 h-1.5 rounded-full overflow-hidden border border-foreground/5">
+                <div className="w-40 bg-foreground/5 h-1.5 rounded-full overflow-hidden border border-border-subtle">
                   <div className="bg-primary h-full transition-all duration-100" style={{ width: `${scanProgress}%` }} />
                 </div>
                 <p className="text-[10px] text-muted-foreground font-mono mt-3 uppercase">Matching telemetry score: {scanProgress}%</p>
               </div>
             ) : (
               // Matched builder display
-              <div className="w-full h-full rounded-3xl border border-primary/20 bg-gradient-to-br from-card to-card/65 p-6 backdrop-blur-md shadow-2xl flex flex-col justify-between animate-in fade-in zoom-in-95 duration-300">
+              <div className="w-full h-full rounded-3xl border border-primary/20 bg-card p-6 shadow-elev-lg flex flex-col justify-between animate-in fade-in zoom-in-95 duration-300">
                 <div>
                   {/* Match Header */}
                   <div className="flex justify-between items-center mb-6">
@@ -243,7 +243,7 @@ const DiscoverFeed = () => {
                       <p className="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider mb-1.5">Stack Match</p>
                       <div className="flex flex-wrap gap-1">
                         {matchedBuilder.skills.map((skill) => (
-                          <span key={skill} className="px-2 py-0.5 text-[9px] font-mono rounded bg-foreground/5 border border-foreground/5 text-foreground/80">
+                          <span key={skill} className="px-2 py-0.5 text-[9px] font-mono rounded bg-foreground/5 border border-border-subtle text-foreground/80">
                             {skill}
                           </span>
                         ))}
@@ -253,12 +253,12 @@ const DiscoverFeed = () => {
                 </div>
 
                 {/* Bottom stats and action */}
-                <div className="pt-4 border-t border-foreground/5 flex items-center justify-between">
+                <div className="pt-4 border-t border-border-subtle flex items-center justify-between">
                   <div className="flex gap-4 text-xs font-mono text-muted-foreground">
                     <span className="flex items-center gap-1.5"><Star className="w-3.5 h-3.5 text-primary" /> {matchedBuilder.stars}</span>
                     <span className="flex items-center gap-1.5"><Code2 className="w-3.5 h-3.5 text-secondary" /> {matchedBuilder.projects} shipped</span>
                   </div>
-                  <Link to="/login" className="px-4 py-2 rounded-full bg-foreground/5 hover:bg-foreground/10 border border-foreground/10 text-foreground font-bold text-xs transition-all active:scale-95 inline-block">
+                  <Link to="/login" className="px-4 py-2 rounded-full bg-foreground/5 hover:bg-foreground/10 border border-border-subtle text-foreground font-bold text-xs transition-all active:scale-95 inline-block">
                     Open Contract
                   </Link>
                 </div>

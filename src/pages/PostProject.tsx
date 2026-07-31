@@ -126,7 +126,7 @@ const PostProject = () => {
               <AnimatePresence mode="wait">
                 {step === 0 && (
                   <motion.div key="step0" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="space-y-4">
-                    <Card className="border-border/50 bg-muted/60 backdrop-blur-sm p-6">
+                    <Card className="border-border-subtle bg-card shadow-elev-sm p-6">
                       <h2 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
                         <Briefcase className="w-4 h-4 text-primary" /> Basic Information
                       </h2>
@@ -170,7 +170,7 @@ const PostProject = () => {
 
                 {step === 1 && (
                   <motion.div key="step1" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="space-y-4">
-                    <Card className="border-border/50 bg-muted/60 backdrop-blur-sm p-6">
+                    <Card className="border-border-subtle bg-card shadow-elev-sm p-6">
                       <h2 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
                         <CircleDollarSign className="w-4 h-4 text-accent" /> Budget & Timeline
                       </h2>
@@ -228,7 +228,7 @@ const PostProject = () => {
 
                 {step === 2 && (
                   <motion.div key="step2" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="space-y-4">
-                    <Card className="border-border/50 bg-muted/60 backdrop-blur-sm p-6">
+                    <Card className="border-border-subtle bg-card shadow-elev-sm p-6">
                       <h2 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
                         <Target className="w-4 h-4 text-secondary" /> Skills & Success Criteria
                       </h2>
@@ -277,7 +277,7 @@ const PostProject = () => {
                       </div>
                     </Card>
 
-                    <Card className="border-border/50 bg-muted/60 backdrop-blur-sm p-6">
+                    <Card className="border-border-subtle bg-card shadow-elev-sm p-6">
                       <h2 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
                         <Eye className="w-4 h-4 text-muted-foreground" /> Visibility
                       </h2>
@@ -309,7 +309,7 @@ const PostProject = () => {
 
                 {step === 3 && (
                   <motion.div key="step3" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="space-y-4">
-                    <Card className="border-border/50 bg-muted/60 backdrop-blur-sm p-6">
+                    <Card className="border-border-subtle bg-card shadow-elev-sm p-6">
                       <h2 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-accent" /> Review & Publish
                       </h2>
@@ -385,7 +385,7 @@ const PostProject = () => {
 
             <div className="lg:col-span-2">
               <div className="sticky top-8 space-y-4">
-                <Card className="border-border/50 bg-muted/60 backdrop-blur-sm p-5">
+                <Card className="border-border-subtle bg-card shadow-elev-sm p-5">
                   <div className="flex items-center gap-2 mb-4">
                     <Zap className="w-4 h-4 text-primary" />
                     <h2 className="text-sm font-semibold text-foreground">Live Preview</h2>
@@ -422,7 +422,7 @@ const PostProject = () => {
                   </AnimatePresence>
                 </Card>
 
-                <Card className="border-border/50 bg-muted/60 backdrop-blur-sm p-5">
+                <Card className="border-border-subtle bg-card shadow-elev-sm p-5">
                   <h2 className="text-xs font-semibold text-foreground mb-3">Tips</h2>
                   <ul className="space-y-2">
                     {[

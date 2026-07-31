@@ -277,7 +277,7 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
       layout
     >
       <Link to={`/projects/${project.id}`}>
-        <Card className="group relative border-border/50 bg-muted/60 backdrop-blur-sm hover:bg-muted/80 hover:border-primary/30 hover:shadow-[0_0_30px_-5px] hover:shadow-primary/10 transition-all duration-300 p-5 h-full flex flex-col overflow-hidden">
+        <Card className="group relative border-border-subtle bg-card shadow-elev-sm hover:bg-muted/80 hover:border-primary/30 hover:shadow-[0_0_30px_-5px] hover:shadow-primary/10 transition-all duration-300 p-5 h-full flex flex-col overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
           <div className="flex items-start justify-between mb-3 relative z-10">

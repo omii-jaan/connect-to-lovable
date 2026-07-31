@@ -105,7 +105,7 @@ const BuilderProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="fixed top-0 left-0 right-0 h-14 border-b border-foreground/5 bg-background/80 backdrop-blur-xl flex items-center px-4 z-50">
+      <div className="fixed top-0 left-0 right-0 h-14 border-b border-border-subtle bg-background/80 backdrop-blur-xl flex items-center px-4 z-50">
         <Link to="/" className="flex items-center gap-2 text-sm font-mono text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="w-4 h-4" />
           Back to Shipyard
@@ -121,7 +121,7 @@ const BuilderProfile = () => {
       <div className="h-14" />
 
       <main className="max-w-5xl mx-auto px-4 py-8 space-y-6">
-        <div className="rounded-2xl border border-foreground/10 bg-card p-6 md:p-8">
+        <div className="rounded-2xl border border-border-subtle bg-card p-6 md:p-8">
           <div className="flex flex-col md:flex-row md:items-start gap-6">
             <div className="shrink-0">
               <div className="w-20 h-20 rounded-full bg-gradient-primary flex items-center justify-center overflow-hidden">
@@ -156,7 +156,7 @@ const BuilderProfile = () => {
                   {profile.role}
                 </span>
                 {profile.stack.slice(0, 4).map((tech) => (
-                  <span key={tech} className="px-2 py-0.5 text-[10px] font-mono rounded-md bg-foreground/5 border border-foreground/10 text-muted-foreground">
+                  <span key={tech} className="px-2 py-0.5 text-[10px] font-mono rounded-md bg-foreground/5 border border-border-subtle text-muted-foreground">
                     {tech}
                   </span>
                 ))}
@@ -177,7 +177,7 @@ const BuilderProfile = () => {
             { label: "Vibe Score", value: `${profile.vibe_score}%`, icon: Zap, color: "secondary" },
             { label: "Active Contracts", value: projects.filter(p => p.status === "verified").length, icon: FileText, color: "primary" },
           ].map((stat, i) => (
-            <div key={i} className="rounded-xl border border-foreground/5 bg-card p-4">
+            <div key={i} className="rounded-xl border border-border-subtle bg-card p-4">
               <div className={`w-7 h-7 rounded-lg flex items-center justify-center mb-3 ${
                 stat.color === "primary" ? "bg-primary/10 border border-primary/20" :
                 stat.color === "accent" ? "bg-accent/10 border border-accent/20" :
@@ -197,11 +197,11 @@ const BuilderProfile = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            <div className="rounded-2xl border border-foreground/5 bg-card p-6">
+            <div className="rounded-2xl border border-border-subtle bg-card p-6">
               <h3 className="font-display font-bold text-lg text-foreground mb-4">Tech Stack</h3>
               <div className="flex flex-wrap gap-2">
                 {profile.stack.map((tech) => (
-                  <span key={tech} className="px-3 py-1.5 text-xs font-mono rounded-lg bg-foreground/5 border border-foreground/10 text-foreground/80">
+                  <span key={tech} className="px-3 py-1.5 text-xs font-mono rounded-lg bg-foreground/5 border border-border-subtle text-foreground/80">
                     {tech}
                   </span>
                 ))}
@@ -209,7 +209,7 @@ const BuilderProfile = () => {
             </div>
 
             {Object.keys(profile.social_links).length > 0 && (
-              <div className="rounded-2xl border border-foreground/5 bg-card p-6">
+              <div className="rounded-2xl border border-border-subtle bg-card p-6">
                 <h3 className="font-display font-bold text-lg text-foreground mb-4">Social Links</h3>
                 <div className="space-y-2">
                   {Object.entries(profile.social_links).map(([platform, url]) => (
@@ -220,7 +220,7 @@ const BuilderProfile = () => {
                       rel="noreferrer"
                       className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-foreground/5 transition-colors group"
                     >
-                      <div className="w-7 h-7 rounded-lg bg-foreground/5 border border-foreground/10 flex items-center justify-center shrink-0">
+                      <div className="w-7 h-7 rounded-lg bg-foreground/5 border border-border-subtle flex items-center justify-center shrink-0">
                         {platform.toLowerCase() === "github" ? (
                           <Github className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />
                         ) : (
@@ -236,7 +236,7 @@ const BuilderProfile = () => {
               </div>
             )}
 
-            <div className="rounded-2xl border border-foreground/5 bg-card p-6">
+            <div className="rounded-2xl border border-border-subtle bg-card p-6">
               <h3 className="font-display font-bold text-lg text-foreground mb-4">
                 Ships {projects.length > 0 && <span className="text-sm font-mono text-muted-foreground font-normal">({projects.length})</span>}
               </h3>
@@ -264,7 +264,7 @@ const BuilderProfile = () => {
           </div>
 
           <div className="space-y-6">
-            <div className="rounded-2xl border border-foreground/5 bg-card p-6">
+            <div className="rounded-2xl border border-border-subtle bg-card p-6">
               <h3 className="font-display font-bold text-lg text-foreground mb-4">Identity</h3>
               <div className="space-y-4">
                 <div>

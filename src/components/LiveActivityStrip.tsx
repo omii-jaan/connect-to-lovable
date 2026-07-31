@@ -74,7 +74,7 @@ const LiveActivityStrip = () => {
   return (
     <section aria-label="Live marketplace activity" className="px-6">
       <div className="container max-w-6xl mx-auto">
-        <div className="rounded-2xl border border-border-subtle bg-surface/60 backdrop-blur-xl shadow-elev-sm overflow-hidden">
+        <div className="rounded-2xl border border-border-subtle bg-card shadow-elev-sm overflow-hidden">
           <div className="grid grid-cols-2 lg:grid-cols-5 divide-x divide-border-subtle">
             {METRICS.map((metric, i) => {
               const Icon = metric.icon;

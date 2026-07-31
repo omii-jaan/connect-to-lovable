@@ -203,7 +203,7 @@ const HeroSection = () => {
 
           {/* Right Column: Interactive Terminal */}
           <div className="lg:col-span-6 w-full flex flex-col" ref={tiltRef} {...tiltHandlers}>
-            <div style={tiltStyle} className="relative w-full rounded-2xl border border-foreground/15 bg-card/40 backdrop-blur-2xl shadow-2xl overflow-hidden">
+            <div style={tiltStyle} className="relative w-full rounded-2xl border border-border bg-card shadow-elev-lg overflow-hidden">
 
               
               {/* Terminal Header */}
@@ -221,12 +221,12 @@ const HeroSection = () => {
               </div>
 
               {/* Preset Tabs */}
-              <div className="flex border-b border-foreground/15 bg-card/[0.01]">
+              <div className="flex border-b border-border bg-card/[0.01]">
                 {PRESETS.map((preset) => (
                   <button
                     key={preset.id}
                     onClick={() => { setActivePreset(preset); runSimulation(preset.prompt); }}
-                    className={`flex-1 py-2 text-[11px] font-bold tracking-wider border-r border-foreground/15 last:border-r-0 transition-colors ${
+                    className={`flex-1 py-2 text-[11px] font-bold tracking-wider border-r border-border last:border-r-0 transition-colors ${
                       activePreset.id === preset.id
                         ? "bg-primary/10 text-primary border-b border-b-primary"
                         : "text-muted-foreground hover:text-foreground hover:bg-card/[0.02]"
@@ -273,7 +273,7 @@ const HeroSection = () => {
                 </div>
 
                 {/* Input area */}
-                <form onSubmit={handleSubmit} className="mt-3 pt-3 border-t border-foreground/10 flex gap-2">
+                <form onSubmit={handleSubmit} className="mt-3 pt-3 border-t border-border-subtle flex gap-2">
                   <span className="text-primary text-xs mt-2 shrink-0">
                     {`$`}
                   </span>
@@ -297,7 +297,7 @@ const HeroSection = () => {
                   <button
                     type="button"
                     onClick={() => runSimulation(activePreset.prompt)}
-                    className="px-2 py-1.5 rounded-lg bg-foreground/5 border border-foreground/10 text-muted-foreground hover:text-foreground transition-all text-[10px]"
+                    className="px-2 py-1.5 rounded-lg bg-foreground/5 border border-border-subtle text-muted-foreground hover:text-foreground transition-all text-[10px]"
                     title="Reset"
                   >
                     <RefreshCw className={`w-3 h-3 ${state === "running" ? "animate-spin" : ""}`} />
