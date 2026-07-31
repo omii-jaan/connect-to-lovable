@@ -108,7 +108,7 @@ const ProjectDetail = () => {
                         <Briefcase className="w-7 h-7 text-primary" />
                       </div>
                       <div>
-                        <h1 className="font-display font-black text-2xl text-foreground">{project.title}</h1>
+                        <h1 className="font-display font-bold text-2xl text-foreground">{project.title}</h1>
                         <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
                           <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border border-accent/30 bg-accent/10 text-accent`}>
                             ● {project.status.toUpperCase()}

@@ -100,7 +100,7 @@ const Projects = () => {
                 <span className="text-xs font-mono text-primary/60">/marketplace</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-primary/60 animate-pulse" />
               </div>
-              <h1 className="font-display font-black text-4xl text-foreground">
+              <h1 className="font-display font-bold text-4xl text-foreground">
                 Discover <span className="gradient-text-cyan">Projects</span>
               </h1>
               <p className="text-sm font-mono text-muted-foreground mt-1">

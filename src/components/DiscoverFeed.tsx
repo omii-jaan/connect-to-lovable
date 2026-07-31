@@ -87,7 +87,7 @@ const DiscoverFeed = () => {
         <BlurFade delay={0.1} direction="up">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <p className="text-secondary text-sm font-semibold uppercase tracking-widest mb-3">AI Matching Core</p>
-            <h2 className="font-display font-black text-3xl md:text-5xl text-foreground mb-4">
+            <h2 className="font-display font-bold text-3xl md:text-5xl text-foreground mb-4">
               Meet the Match Engine
             </h2>
             <p className="text-muted-foreground text-sm leading-relaxed">
@@ -171,7 +171,7 @@ const DiscoverFeed = () => {
                 </defs>
               </svg>
               <div className="absolute w-8 h-8 rounded-full bg-card border border-foreground/10 flex items-center justify-center glow-cyan">
-                <Activity className={`w-3.5 h-3.5 text-primary ${matchingState === "scanning" ? "animate-pulse text-glow-cyan" : ""}`} />
+                <Activity className={`w-3.5 h-3.5 text-primary ${matchingState === "scanning" ? "animate-pulse" : ""}`} />
               </div>
             </div>
           </div>
@@ -207,7 +207,7 @@ const DiscoverFeed = () => {
                     </div>
                     <div className="text-right">
                       <span className="text-xs text-muted-foreground">Vibe Score:</span>
-                      <span className="ml-1.5 font-mono text-sm font-black text-primary text-glow-cyan">{matchedBuilder.vibeScore}%</span>
+                      <span className="ml-1.5 font-mono text-sm font-black text-primary">{matchedBuilder.vibeScore}%</span>
                     </div>
                   </div>
 
@@ -220,7 +220,7 @@ const DiscoverFeed = () => {
                     />
                     <div>
                       <div className="flex items-center gap-1">
-                        <span className="font-display font-black text-lg text-foreground">{matchedBuilder.name}</span>
+                        <span className="font-display font-bold text-lg text-foreground">{matchedBuilder.name}</span>
                         <ShieldCheck className="w-4 h-4 text-primary" />
                       </div>
                       <p className="text-xs text-muted-foreground">{matchedBuilder.handle}</p>

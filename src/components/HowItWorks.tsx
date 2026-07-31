@@ -37,19 +37,19 @@ const colorMap = {
     icon: "text-primary bg-primary/10 border-primary/20",
     step: "text-primary",
     glow: "shadow-[0_0_20px_rgba(183,100,50,0.15)] border-primary/40",
-    glowText: "text-primary text-glow-cyan",
+    glowText: "text-primary",
   },
   purple: {
     icon: "text-secondary bg-secondary/10 border-secondary/20",
     step: "text-secondary",
     glow: "shadow-[0_0_20px_rgba(168,85,247,0.15)] border-secondary/40",
-    glowText: "text-secondary text-glow-purple",
+    glowText: "text-secondary",
   },
   green: {
     icon: "text-accent bg-accent/10 border-accent/20",
     step: "text-accent",
     glow: "shadow-[0_0_20px_rgba(142,76,55,0.15)] border-accent/40",
-    glowText: "text-accent text-glow-green",
+    glowText: "text-accent",
   },
 };
 
@@ -67,9 +67,9 @@ const HowItWorks = () => {
         <BlurFade delay={0.1} direction="up">
           <div className="text-center mb-20">
             <p className="text-accent text-sm font-semibold uppercase tracking-widest mb-3">Shipyard Assembly Line</p>
-            <h2 className="font-display font-black text-4xl md:text-5xl text-foreground">
+            <h2 className="font-display font-bold text-4xl md:text-5xl text-foreground">
               Three steps to go from <br />
-              <span className="gradient-text-cyan text-glow-cyan">builder to hired.</span>
+              <span className="gradient-text-cyan">builder to hired.</span>
             </h2>
           </div>
         </BlurFade>
@@ -124,13 +124,13 @@ const HowItWorks = () => {
                     <div className={`w-14 h-14 rounded-2xl border flex items-center justify-center shrink-0 transition-transform ${isHovered ? "scale-110" : ""} ${colors.icon}`}>
                       <Icon className="w-6 h-6" />
                     </div>
-                    <span className={`font-display font-black text-4xl opacity-15 font-mono ${colors.step}`}>
+                    <span className={`font-display font-bold text-4xl opacity-15 font-mono ${colors.step}`}>
                       {step.step}
                     </span>
                   </div>
 
                   {/* Title & Description */}
-                  <h3 className={`font-display font-black text-xl text-foreground mb-3 transition-colors ${isHovered ? colors.glowText : ""}`}>
+                  <h3 className={`font-display font-bold text-xl text-foreground mb-3 transition-colors ${isHovered ? colors.glowText : ""}`}>
                     {step.title}
                   </h3>
                   <p className="text-muted-foreground text-sm leading-relaxed mb-6 min-h-[72px]">

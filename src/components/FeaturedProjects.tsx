@@ -101,7 +101,7 @@ const FeaturedProjects = () => {
               <p className="text-secondary text-sm font-semibold uppercase tracking-widest mb-2">Live Builds</p>
               <h2 className="font-display font-bold text-3xl md:text-4xl text-foreground">
                 Products that ship. <br />
-                <span className="gradient-text-purple">Not side-projects.</span>
+                <span className="text-muted-foreground">Not side-projects.</span>
               </h2>
             </div>
             <Link to="/projects" className="text-sm font-medium text-muted-foreground hover:text-secondary transition-colors flex items-center gap-1 self-start md:self-auto">

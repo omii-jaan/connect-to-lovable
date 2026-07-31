@@ -89,7 +89,7 @@ const PostProject = () => {
               <ArrowLeft className="w-4 h-4" />
             </Link>
             <div>
-              <h1 className="font-display font-black text-2xl text-foreground">Post a Project</h1>
+              <h1 className="font-display font-bold text-2xl text-foreground">Post a Project</h1>
               <p className="text-xs font-mono text-muted-foreground mt-0.5">Get matched with the perfect builder</p>
             </div>
           </div>

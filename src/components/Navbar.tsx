@@ -72,7 +72,7 @@ const Navbar = () => {
             <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center glow-cyan">
               <Zap className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="font-display font-black text-xl tracking-wider gradient-text-cyan">SHIPYARD</span>
+            <span className="font-display font-bold text-xl tracking-wider gradient-text-cyan">SHIPYARD</span>
           </Link>
           
           {/* Live Online Badge */}
