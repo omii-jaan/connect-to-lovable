@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import BuilderCard, { Builder } from "./BuilderCard";
 import { BlurFade } from "@/components/magicui/blur-fade";
+import SectionEyebrow from "@/components/SectionEyebrow";
 
 const builders: Builder[] = [
   {
@@ -79,16 +80,16 @@ const builders: Builder[] = [
 
 const FeaturedBuilders = () => {
   return (
-    <section id="builders" className="py-24 px-6">
+    <section id="builders" className="py-16 md:py-24 px-6">
       <div className="container max-w-6xl mx-auto">
         {/* Header */}
         <BlurFade delay={0.1} direction="up">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
             <div>
-              <p className="text-primary text-sm font-semibold uppercase tracking-widest mb-2">Docked at Shipyard</p>
+              <SectionEyebrow>Docked at Shipyard</SectionEyebrow>
               <h2 className="font-display font-bold text-h1 text-foreground">
                 Proof over resumes. <br />
-                <span className="gradient-text-cyan">Real ships, real builders.</span>
+                <span className="text-content-tertiary">Real ships, real builders.</span>
               </h2>
             </div>
             <Link to="/login" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 self-start md:self-auto">

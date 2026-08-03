@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Upload, Search, Handshake, ArrowRight } from "lucide-react";
 import { BlurFade } from "@/components/magicui/blur-fade";
+import SectionEyebrow from "@/components/SectionEyebrow";
 
 const steps = [
   {
@@ -59,7 +60,7 @@ const HowItWorks = () => {
   const [hoveredIdx, setHoveredIdx] = useState<number>(0);
 
   return (
-    <section id="hire" className="py-28 px-6 relative">
+    <section id="how-it-works" className="py-16 md:py-24 px-6 relative">
       {/* Grid background lines */}
       <div className="absolute inset-0 bg-canvas-dots opacity-40 pointer-events-none" />
 
@@ -67,11 +68,11 @@ const HowItWorks = () => {
         
         {/* Header */}
         <BlurFade delay={0.1} direction="up">
-          <div className="text-center mb-20">
-            <p className="text-accent text-sm font-semibold uppercase tracking-widest mb-3">Shipyard Assembly Line</p>
+          <div className="text-center mb-14">
+            <SectionEyebrow centered>Shipyard assembly line</SectionEyebrow>
             <h2 className="font-display font-bold text-h1 text-foreground">
               Three steps to go from <br />
-              <span className="gradient-text-cyan">builder to hired.</span>
+              <span className="text-content-tertiary">builder to hired.</span>
             </h2>
           </div>
         </BlurFade>

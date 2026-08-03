@@ -1,10 +1,11 @@
 import { ArrowRight, Zap, Terminal, Compass } from "lucide-react";
 import { Link } from "react-router-dom";
 import { BlurFade } from "@/components/magicui/blur-fade";
+import SectionEyebrow from "@/components/SectionEyebrow";
 
 const CTASection = () => {
   return (
-    <section id="hire" className="py-28 px-6 relative overflow-hidden">
+    <section id="hire" className="py-16 md:py-24 px-6 relative overflow-hidden">
       {/* Glow dividers */}
       <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
 
@@ -13,10 +14,10 @@ const CTASection = () => {
         {/* Core Header */}
         <BlurFade delay={0.1} direction="up">
           <div className="text-center mb-16 max-w-2xl mx-auto">
-            <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground mb-4">Get started</p>
+            <SectionEyebrow centered>Get started</SectionEyebrow>
             <h2 className="font-display font-bold text-h1 text-foreground mb-4">
               Ready to change how <br />
-              <span className="gradient-text-cyan">software is built &amp; hired?</span>
+              <span className="text-content-tertiary">software is built &amp; hired?</span>
             </h2>
             <p className="text-muted-foreground text-sm">
               Whether you are a developer shipping agentic architectures or a founder building the future, we have a port docked for you.
@@ -26,7 +27,7 @@ const CTASection = () => {
 
         {/* Dual Cards Grid */}
         <BlurFade delay={0.2} direction="up">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
           
           {/* Card 1: For Builders */}
           <div className="relative rounded-2xl p-8 md:p-10 border border-border-subtle bg-surface group hover:border-border-strong hover:shadow-[var(--shadow-lg)] hover:-translate-y-0.5 transition-all duration-300 ease-standard overflow-hidden">
@@ -41,7 +42,7 @@ const CTASection = () => {
                 
                 <h3 className="font-display font-bold text-2xl md:text-3xl text-foreground mb-4 tracking-[-0.02em]">
                   Dock your builds. <br />
-                  <span className="gradient-text-cyan">Earn 100% of your vibe.</span>
+                  <span className="text-content-tertiary">Earn 100% of your vibe.</span>
                 </h3>
                 
                 <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
@@ -64,7 +65,7 @@ const CTASection = () => {
                 </ul>
               </div>
 
-              <Link to="/login" className="group w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-primary text-primary-foreground font-bold text-xs glow-cyan transition-all hover:brightness-110">
+              <Link to="/login" className="group w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-gradient-primary text-primary-foreground font-semibold text-xs shadow-elev-md transition-all duration-micro ease-standard hover:shadow-glow-cyan">
                 Join the Yard as Builder
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </Link>
@@ -107,7 +108,7 @@ const CTASection = () => {
                 </ul>
               </div>
 
-              <a href="/#discover" className="group w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border border-border-strong bg-surface-elevated text-foreground font-semibold text-xs transition-all duration-micro ease-standard hover:bg-muted">
+              <a href="/#discover" className="group w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg border border-border-strong bg-surface-elevated text-foreground font-semibold text-xs transition-all duration-micro ease-standard hover:bg-muted">
                 Search Shipped Projects
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </a>

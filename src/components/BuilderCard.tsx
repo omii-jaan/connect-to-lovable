@@ -49,7 +49,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
       ref={ref}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`relative rounded-3xl p-6 bg-card border border-border-subtle group cursor-pointer transition-all duration-300 hover:-translate-y-1.5 overflow-hidden ${styles.glow}`}
+      className={`relative flex h-full flex-col rounded-2xl p-6 bg-card border border-border-subtle group cursor-pointer transition-all duration-300 hover:-translate-y-1.5 overflow-hidden ${styles.glow}`}
       style={{ "--glow-x": "-9999px", "--glow-y": "-9999px" } as React.CSSProperties}
     >
       {/* Mouse-following glow overlay */}
@@ -134,7 +134,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
       </div>
 
       {/* Metrics & Bottom Profile Link */}
-      <div className="flex items-center justify-between pt-4 border-t border-border-subtle relative z-10">
+      <div className="mt-auto flex items-center justify-between pt-4 border-t border-border-subtle relative z-10">
         <div className="flex items-center gap-4 text-xs text-muted-foreground font-mono">
           <span className="flex items-center gap-1.5">
             <Star className="w-3.5 h-3.5 text-primary" />

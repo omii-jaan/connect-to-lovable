@@ -3,6 +3,7 @@ import { Cpu, UserCheck, ShieldCheck, Star, Code2, ArrowRight, Activity, Zap } f
 import { Link } from "react-router-dom";
 import { BlurFade } from "@/components/magicui/blur-fade";
 import TechBadge from "@/components/TechBadge";
+import SectionEyebrow from "@/components/SectionEyebrow";
 
 interface MatchedBuilder {
   name: string;
@@ -78,7 +79,7 @@ const DiscoverFeed = () => {
   };
 
   return (
-    <section id="discover" className="py-24 px-6 relative overflow-hidden bg-background/20">
+    <section id="discover" className="py-16 md:py-24 px-6 relative overflow-hidden bg-background/20">
       {/* Background decorations */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-[radial-gradient(circle_at_center,hsl(270_60%_62%_/_0.03),transparent_70%)] pointer-events-none" />
 
@@ -87,7 +88,7 @@ const DiscoverFeed = () => {
         {/* Title Block */}
         <BlurFade delay={0.1} direction="up">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <p className="text-secondary-bright text-sm font-semibold uppercase tracking-widest mb-3">AI Matching Core</p>
+            <SectionEyebrow centered>AI matching core</SectionEyebrow>
             <h2 className="font-display font-bold text-h1 text-foreground mb-4">
               Meet the Match Engine
             </h2>
@@ -145,7 +146,7 @@ const DiscoverFeed = () => {
             </div>
 
             <div className="mt-8 pt-4 border-t border-border-subtle">
-              <Link to="/login" className="w-full py-3.5 rounded-full bg-gradient-primary text-primary-foreground font-bold text-xs glow-cyan transition-all hover:scale-[1.02] flex items-center justify-center gap-2">
+              <Link to="/login" className="w-full py-3.5 rounded-lg bg-gradient-primary text-primary-foreground font-semibold text-xs shadow-elev-md transition-all duration-micro ease-standard hover:shadow-glow-cyan flex items-center justify-center gap-2">
                 Launch Custom Match Request
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
@@ -173,7 +174,7 @@ const DiscoverFeed = () => {
                   </linearGradient>
                 </defs>
               </svg>
-              <div className="absolute w-8 h-8 rounded-full bg-card border border-border-subtle flex items-center justify-center glow-cyan">
+              <div className="absolute w-8 h-8 rounded-full bg-card border border-border-subtle flex items-center justify-center shadow-elev-sm">
                 <Activity className={`w-3.5 h-3.5 text-primary ${matchingState === "scanning" ? "animate-pulse" : ""}`} />
               </div>
             </div>
