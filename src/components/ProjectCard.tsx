@@ -103,9 +103,9 @@ const ProjectCard = ({ project }: { project: Project }) => {
 
         <div className="flex items-center justify-between pt-4 border-t border-border">
           <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Eye className="w-3.5 h-3.5" /> {project.views.toLocaleString()} views
+            <Eye className="w-3.5 h-3.5" aria-hidden="true" /> {project.views.toLocaleString()} views
           </span>
-          <span onClick={(e) => e.stopPropagation()} className="flex items-center gap-1 text-xs text-primary hover:underline cursor-pointer" onMouseDown={() => setOpen(true)}>
+          <span aria-hidden="true" className="flex items-center gap-1 text-xs text-primary group-hover:underline">
             View Details <ExternalLink className="w-3 h-3" />
           </span>
         </div>
@@ -129,8 +129,13 @@ const ProjectCard = ({ project }: { project: Project }) => {
                   </div>
                 </div>
               </div>
-              <button onClick={() => setOpen(false)} className="w-7 h-7 rounded-lg bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors">
-                <X className="w-3.5 h-3.5 text-muted-foreground" />
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label={`Close ${project.title} details`}
+                className="w-9 h-9 rounded-lg bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+              >
+                <X className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
 
