@@ -93,14 +93,14 @@ const Projects = () => {
     <div className="min-h-screen bg-background">
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none h-96" />
-        <div className="max-w-7xl mx-auto px-4 py-8 relative">
+        <main id="main" className="max-w-7xl mx-auto px-4 py-8 relative">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs font-mono text-primary">/marketplace</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-primary/60 animate-pulse" />
               </div>
-              <h1 className="font-display font-bold text-4xl text-foreground">
+              <h1 id="main-heading" className="font-display font-bold text-4xl text-foreground">
                 Discover <span className="gradient-text-cyan">Projects</span>
               </h1>
               <p className="text-sm font-mono text-muted-foreground mt-1">
@@ -129,6 +129,7 @@ const Projects = () => {
               <div className="flex items-center h-9 px-3 rounded-lg bg-muted/50 border border-border/50 text-xs font-mono text-muted-foreground">
                 <CircleDollarSign className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
                 <select
+                  aria-label="Filter by budget"
                   value={budgetRange.label}
                   onChange={(e) => setBudgetRange(BUDGET_RANGES.find((b) => b.label === e.target.value) || BUDGET_RANGES[0])}
                   className="bg-transparent border-none outline-none text-xs font-mono text-muted-foreground cursor-pointer py-1"
@@ -141,6 +142,7 @@ const Projects = () => {
               <div className="flex items-center h-9 px-3 rounded-lg bg-muted/50 border border-border/50 text-xs font-mono text-muted-foreground">
                 <Clock className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
                 <select
+                  aria-label="Filter by timeline"
                   value={timelineMax.label}
                   onChange={(e) => setTimelineMax(TIMELINE_OPTIONS.find((t) => t.label === e.target.value) || TIMELINE_OPTIONS[0])}
                   className="bg-transparent border-none outline-none text-xs font-mono text-muted-foreground cursor-pointer py-1"
@@ -153,6 +155,7 @@ const Projects = () => {
               <div className="flex items-center h-9 px-3 rounded-lg bg-muted/50 border border-border/50 text-xs font-mono text-muted-foreground">
                 <ArrowUpDown className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
                 <select
+                  aria-label="Sort projects"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                   className="bg-transparent border-none outline-none text-xs font-mono text-muted-foreground cursor-pointer py-1"
@@ -270,7 +273,7 @@ const Projects = () => {
             <span>Showing {filtered.length} of {MOCK_HIRE_PROJECTS.filter(p => p.status === "open").length} open projects</span>
             <span>Updated in real-time</span>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
@@ -311,6 +314,9 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
               </div>
             </div>
             <button
+              type="button"
+              aria-label={saved ? `Remove ${project.title} from saved projects` : `Save ${project.title}`}
+              aria-pressed={saved}
               onClick={(e) => { e.preventDefault(); onToggleSave(); }}
               className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 ${
                 saved
@@ -428,6 +434,9 @@ const ProjectListItem = ({ project, index, saved, onToggleSave }: { project: Hir
                 {project.category}
               </div>
               <button
+                type="button"
+                aria-label={saved ? `Remove ${project.title} from saved projects` : `Save ${project.title}`}
+                aria-pressed={saved}
                 onClick={(e) => { e.preventDefault(); onToggleSave(); }}
                 className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${
                   saved ? "text-primary" : "text-muted-foreground hover:text-muted-foreground"
