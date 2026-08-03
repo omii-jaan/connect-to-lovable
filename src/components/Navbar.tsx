@@ -131,6 +131,10 @@ const Navbar = () => {
             {themeIcon}
           </button>
 
+          {/* Motion preference */}
+          <MotionToggle />
+
+
           {/* Notifications */}
           <div className="relative">
             <button
