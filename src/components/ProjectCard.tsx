@@ -22,7 +22,7 @@ export interface Project {
 
 const categoryStyles = {
   cyan: "bg-primary/10 text-primary border-primary/20",
-  purple: "bg-secondary/10 text-secondary border-secondary/20",
+  purple: "bg-secondary/10 text-secondary-bright border-secondary/20",
   green: "bg-accent/10 text-accent border-accent/20",
   orange: "bg-accent/[0.08] text-accent border-accent/20",
 };
@@ -42,9 +42,19 @@ const ProjectCard = ({ project }: { project: Project }) => {
     <>
       <div
         ref={ref}
+        role="button"
+        tabIndex={0}
+        aria-haspopup="dialog"
+        aria-label={`View details for ${project.title} by ${project.builder}`}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={() => setOpen(true)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen(true);
+          }
+        }}
         className={`relative card-shine rounded-2xl p-5 group cursor-pointer transition-all duration-300 hover:-translate-y-1 overflow-hidden ${project.featured ? "border-primary/25 glow-cyan" : ""}`}
         style={{ "--glow-x": "-9999px", "--glow-y": "-9999px" } as React.CSSProperties}
       >
