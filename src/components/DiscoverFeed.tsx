@@ -258,7 +258,7 @@ const DiscoverFeed = () => {
                 <div className="pt-4 border-t border-border-subtle flex items-center justify-between">
                   <div className="flex gap-4 text-xs font-mono text-muted-foreground">
                     <span className="flex items-center gap-1.5"><Star className="w-3.5 h-3.5 text-primary" /> {matchedBuilder.stars}</span>
-                    <span className="flex items-center gap-1.5"><Code2 className="w-3.5 h-3.5 text-secondary" /> {matchedBuilder.projects} shipped</span>
+                    <span className="flex items-center gap-1.5"><Code2 className="w-3.5 h-3.5 text-secondary-bright" /> {matchedBuilder.projects} shipped</span>
                   </div>
                   <Link to="/login" className="px-4 py-2 rounded-full bg-foreground/5 hover:bg-foreground/10 border border-border-subtle text-foreground font-bold text-xs transition-all active:scale-95 inline-block">
                     Open Contract

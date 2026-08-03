@@ -23,9 +23,9 @@ const badgeStyles = {
     spotlight: "hsla(183, 100%, 50%, 0.08)",
   },
   purple: {
-    badge: "bg-secondary/10 text-secondary border-secondary/20",
+    badge: "bg-secondary/10 text-secondary-bright border-secondary/20",
     glow: "group-hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] group-hover:border-secondary/40",
-    stamp: "text-secondary",
+    stamp: "text-secondary-bright",
     spotlight: "hsla(183, 100%, 50%, 0.08)",
   },
   green: {
@@ -155,7 +155,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
             {builder.stars}
           </span>
           <span className="flex items-center gap-1.5">
-            <Code2 className="w-3.5 h-3.5 text-secondary" />
+            <Code2 className="w-3.5 h-3.5 text-secondary-bright" />
             {builder.projects} shipped
           </span>
         </div>

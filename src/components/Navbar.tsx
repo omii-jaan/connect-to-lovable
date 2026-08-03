@@ -154,7 +154,7 @@ const Navbar = () => {
                   {[
                     { icon: User, text: "New builder matched: Arjun Mehta (98% vibe)", time: "2m ago", color: "text-primary" },
                     { icon: FolderGit2, text: "AI Dashboard Integration milestone approved", time: "1h ago", color: "text-accent" },
-                    { icon: Star, text: "Project starred: Multi-Agent Pipeline", time: "3h ago", color: "text-secondary" },
+                    { icon: Star, text: "Project starred: Multi-Agent Pipeline", time: "3h ago", color: "text-secondary-bright" },
                   ].map((n, i) => (
                     <div key={i} className="flex items-start gap-3 px-4 py-3 hover:bg-foreground/5 transition-colors cursor-pointer">
                       <div className={`w-7 h-7 rounded-lg bg-foreground/5 border border-border-subtle flex items-center justify-center shrink-0 ${n.color}`}>
@@ -226,7 +226,7 @@ const Navbar = () => {
                     to="/dashboard"
                     onClick={() => setUserMenuOpen(false)}
                     className="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-primary/10">
-                    <FolderGit2 className="w-4 h-4 text-secondary" />
+                    <FolderGit2 className="w-4 h-4 text-secondary-bright" />
                     My Ships
                   </Link>
                   <Link
@@ -437,7 +437,7 @@ const Navbar = () => {
                 <span>Dashboard</span>
               </button>
               <button onClick={() => { setCmdOpen(false); navigate("/dashboard"); }} className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-foreground hover:bg-primary/10 transition-colors">
-                <User className="w-4 h-4 text-secondary" />
+                <User className="w-4 h-4 text-secondary-bright" />
                 <span>Profile</span>
               </button>
               <button onClick={() => { setCmdOpen(false); navigate("/dashboard"); }} className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-foreground hover:bg-primary/10 transition-colors">
