@@ -3,7 +3,7 @@ import { ExternalLink, Rocket, Eye, X, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCardGlow } from "@/hooks/useCardGlow";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { toast } from "@/hooks/use-toast";
+import { legacyToast as toast } from "@/lib/notify";
 
 export interface Project {
   id: number;

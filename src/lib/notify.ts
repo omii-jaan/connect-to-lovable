@@ -50,3 +50,22 @@ export const notify = Object.assign(
     custom: sonnerToast.custom,
   },
 );
+
+type LegacyToast = {
+  title?: string;
+  description?: string;
+  variant?: "default" | "destructive";
+  duration?: number;
+};
+
+/**
+ * Object-form adapter for the legacy shadcn `toast({ title, description })`
+ * call shape, routed through sonner + the live announcer.
+ */
+export const legacyToast = ({ title, description, variant, duration }: LegacyToast) => {
+  const message = title ?? description ?? "";
+  const options = { description: title ? description : undefined, duration };
+  return variant === "destructive"
+    ? notify.error(message, options)
+    : notify(message, options);
+};

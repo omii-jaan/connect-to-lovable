@@ -6,7 +6,6 @@ import ScrollToTop from "@/components/ScrollToTop";
 import LiveAnnouncer from "@/components/LiveAnnouncer";
 import { announce } from "@/lib/announce";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -114,7 +113,6 @@ const App = () => (
           <MotionProvider>
             <LiveAnnouncer />
             <RouteAnnouncer />
-            <Toaster />
             <Sonner />
             <AuthProvider>
               <AppRoutes />

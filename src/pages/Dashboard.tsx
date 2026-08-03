@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Profile, Project, Contract, ContractMilestone, HireProject, Invitation } from "@/types";
 import { MOCK_HIRE_PROJECTS, MOCK_INVITATIONS } from "@/lib/marketplace-data";
-import { toast } from "@/hooks/use-toast";
+import { legacyToast as toast } from "@/lib/notify";
 import { format, formatDistanceToNow } from "date-fns";
 import {
   Bell, LayoutDashboard, FolderGit2, FileText, User, Settings, Briefcase,
