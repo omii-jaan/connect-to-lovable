@@ -181,6 +181,10 @@ const Navbar = () => {
           ) : user ? (
             <div className="relative">
               <button
+                type="button"
+                aria-label="Account menu"
+                aria-haspopup="menu"
+                aria-expanded={userMenuOpen}
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-foreground/5 border border-border-subtle hover:bg-foreground/10 transition-all"
               >
