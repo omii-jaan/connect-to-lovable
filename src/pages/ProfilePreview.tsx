@@ -1,5 +1,6 @@
 import { User, FolderGit2, FileText, Zap, Star, Check, Pencil, Globe, Github, ExternalLink, Calendar, Mail, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import TechBadge from "@/components/TechBadge";
 
 const MOCK_PROFILE = {
   full_name: "Arjun Mehta",
@@ -87,9 +88,7 @@ const ProfilePreview = () => {
                   {MOCK_PROFILE.role}
                 </span>
                 {MOCK_PROFILE.stack.slice(0, 3).map((tech) => (
-                  <span key={tech} className="px-2 py-0.5 text-[10px] font-mono rounded-md bg-foreground/5 border border-border-subtle text-muted-foreground">
-                    {tech}
-                  </span>
+                  <TechBadge key={tech} name={tech} size="sm" />
                 ))}
                 {MOCK_PROFILE.stack.length > 3 && (
                   <span className="text-[10px] font-mono text-muted-foreground">
@@ -145,9 +144,7 @@ const ProfilePreview = () => {
               </div>
               <div className="flex flex-wrap gap-2">
                 {MOCK_PROFILE.stack.map((tech) => (
-                  <span key={tech} className="px-3 py-1.5 text-xs font-mono rounded-lg bg-foreground/5 border border-border-subtle text-foreground hover:border-primary/30 hover:bg-primary/5 transition-colors">
-                    {tech}
-                  </span>
+                  <TechBadge key={tech} name={tech} size="md" className="rounded-lg px-3 py-1.5 text-xs" />
                 ))}
               </div>
             </div>

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useCardGlow } from "@/hooks/useCardGlow";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { legacyToast as toast } from "@/lib/notify";
+import TechBadge from "@/components/TechBadge";
 
 export interface Project {
   id: number;
@@ -85,9 +86,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
 
         <div className="flex flex-wrap gap-1.5 mb-4">
           {project.stack.map((tech) => (
-            <span key={tech} className="px-2 py-0.5 text-xs rounded-md bg-muted text-muted-foreground font-mono">
-              {tech}
-            </span>
+            <TechBadge key={tech} name={tech} size="sm" />
           ))}
         </div>
 
@@ -155,9 +154,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
               <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-2">Stack</p>
               <div className="flex flex-wrap gap-1.5">
                 {project.stack.map((tech) => (
-                  <span key={tech} className="px-2.5 py-1 text-[11px] rounded-md bg-muted text-foreground font-mono">
-                    {tech}
-                  </span>
+                  <TechBadge key={tech} name={tech} size="md" />
                 ))}
               </div>
             </div>

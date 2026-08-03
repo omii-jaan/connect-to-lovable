@@ -1,6 +1,7 @@
 import { ExternalLink, Star, Code2, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCardGlow } from "@/hooks/useCardGlow";
+import TechBadge from "@/components/TechBadge";
 
 export interface Builder {
   id: number;
@@ -99,12 +100,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
       {/* Tech Stack */}
       <div className="flex flex-wrap gap-1.5 mb-5 relative z-10">
         {builder.stack.map((tech) => (
-          <span 
-            key={tech} 
-            className="px-2.5 py-0.5 text-[10px] rounded-md bg-foreground/5 border border-border-subtle text-foreground font-mono transition-colors group-hover:bg-foreground/10 group-hover:border-border-subtle"
-          >
-            {tech}
-          </span>
+          <TechBadge key={tech} name={tech} size="sm" className="group-hover:bg-foreground/10" />
         ))}
       </div>
 

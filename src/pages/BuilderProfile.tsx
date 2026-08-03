@@ -4,6 +4,7 @@ import { User, FolderGit2, Star, Zap, FileText, Check, Globe, Github, ExternalLi
 import { format } from "date-fns";
 import { profileApi, projectApi } from "@/lib/api";
 import type { Profile, Project } from "@/types";
+import TechBadge from "@/components/TechBadge";
 
 const MOCK_PROFILE: Profile = {
   id: "b2",
@@ -156,9 +157,7 @@ const BuilderProfile = () => {
                   {profile.role}
                 </span>
                 {profile.stack.slice(0, 4).map((tech) => (
-                  <span key={tech} className="px-2 py-0.5 text-[10px] font-mono rounded-md bg-foreground/5 border border-border-subtle text-muted-foreground">
-                    {tech}
-                  </span>
+                  <TechBadge key={tech} name={tech} size="sm" />
                 ))}
                 {profile.stack.length > 4 && (
                   <span className="text-[10px] font-mono text-muted-foreground">
@@ -201,9 +200,7 @@ const BuilderProfile = () => {
               <h3 className="font-display font-bold text-lg text-foreground mb-4">Tech Stack</h3>
               <div className="flex flex-wrap gap-2">
                 {profile.stack.map((tech) => (
-                  <span key={tech} className="px-3 py-1.5 text-xs font-mono rounded-lg bg-foreground/5 border border-border-subtle text-foreground">
-                    {tech}
-                  </span>
+                  <TechBadge key={tech} name={tech} size="md" className="rounded-lg px-3 py-1.5 text-xs" />
                 ))}
               </div>
             </div>
