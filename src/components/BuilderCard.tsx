@@ -59,16 +59,6 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
         }}
       />
 
-      {/* Hologram stamp background */}
-      
-      {/* Hologram stamp background */}
-      <div className={`absolute -right-8 -top-8 w-28 h-28 pointer-events-none opacity-20 ${styles.stamp} transition-transform duration-700 group-hover:rotate-45`}>
-        <svg viewBox="0 0 100 100" fill="currentColor" className="w-full h-full">
-          <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="2" fill="none" strokeDasharray="4 4" />
-          <path d="M50 10 L50 90 M10 50 L90 50" stroke="currentColor" strokeWidth="1.5" />
-          <text x="50" y="55" fontSize="8" fontWeight="bold" textAnchor="middle" fill="currentColor">PORT DOCKED</text>
-        </svg>
-      </div>
 
       {/* Header Info */}
       <div className="flex items-start justify-between mb-4 relative z-10">
