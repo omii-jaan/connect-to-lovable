@@ -180,7 +180,8 @@
     --text-tertiary: 218 15% 54%;
     --text-disabled: 214 14% 70%;
 
-    --primary: 188 82% 32%;
+    /* Deep enough to clear AA on white for small mono text */
+    --primary: 190 86% 26%;
     --primary-foreground: 210 30% 99%;
 
     --secondary: var(--violet-500);
@@ -190,7 +191,7 @@
     --muted: 210 22% 93%;
     --muted-foreground: var(--text-secondary);
 
-    --accent: var(--green-500);
+    --accent: 150 74% 25%;
     --accent-foreground: 210 30% 99%;
 
     --destructive: 356 68% 48%;
@@ -200,7 +201,7 @@
     --border-subtle: 212 20% 92%;
     --border-strong: 212 14% 76%;
     --input: 212 18% 90%;
-    --ring: 188 82% 32%;
+    --ring: 190 86% 26%;
 
     --shadow-sm: 0 1px 2px hsl(220 25% 20% / 0.06), 0 2px 6px -2px hsl(220 25% 20% / 0.07);
     --shadow-md: 0 4px 16px hsl(220 25% 20% / 0.1);
@@ -229,12 +230,12 @@
 
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 220 28% 9%;
-    --sidebar-primary: 188 82% 32%;
+    --sidebar-primary: 190 86% 26%;
     --sidebar-primary-foreground: 210 30% 99%;
     --sidebar-accent: 210 22% 93%;
     --sidebar-accent-foreground: 220 28% 9%;
     --sidebar-border: 212 18% 88%;
-    --sidebar-ring: 188 82% 32%;
+    --sidebar-ring: 190 86% 26%;
   }
 
 }
