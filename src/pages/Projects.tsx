@@ -14,6 +14,7 @@ import { notify as toast } from "@/lib/notify";
 import { MOCK_HIRE_PROJECTS, CATEGORIES, BUDGET_RANGES, TIMELINE_OPTIONS } from "@/lib/marketplace-data";
 import { formatDistanceToNow } from "date-fns";
 import type { HireProject } from "@/types";
+import TechBadge from "@/components/TechBadge";
 
 const SORT_OPTIONS = [
   { label: "Newest", value: "newest" },
@@ -421,7 +422,7 @@ const ProjectListItem = ({ project, index, saved, onToggleSave }: { project: Hir
 
             <div className="hidden md:flex items-center gap-2 flex-wrap">
               {project.required_skills.slice(0, 2).map((s) => (
-                <span key={s} className="text-[9px] font-mono text-muted-foreground bg-muted/80 px-2 py-0.5 rounded-full border border-border/30">{s}</span>
+                <TechBadge key={s} name={s} size="xs" />
               ))}
             </div>
 
