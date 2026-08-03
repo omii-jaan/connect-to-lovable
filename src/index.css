@@ -261,20 +261,71 @@
     line-height: 1.05;
   }
 
-  /* Consistent, visible focus rings everywhere */
+  /* ---- Focus: one ring language for the entire product ----
+     Two-layer ring (surface halo + brand band) so the indicator reads
+     clearly on every surface elevation, in both themes. */
   :focus-visible {
-    outline: none;
-    box-shadow: var(--shadow-focus);
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
     border-radius: var(--radius);
   }
 
-  /* Motion is optional, never required */
+  /* Interactive primitives get the richer token ring with the surface halo. */
+  a:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  [role="tab"]:focus-visible,
+  [role="menuitem"]:focus-visible,
+  [role="option"]:focus-visible,
+  summary:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    box-shadow: var(--shadow-focus);
+  }
+
+  /* Mouse users never see the ring; keyboard users always do. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Motion is optional, never required.
+     Driven by data-motion on <html> (user setting) and by the OS query. */
+  html[data-motion="reduced"] *,
+  html[data-motion="reduced"] *::before,
+  html[data-motion="reduced"] *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Hover lift, tilt and parallax are decorative — remove them outright. */
+  html[data-motion="reduced"] .hover-lift:hover,
+  html[data-motion="reduced"] .card-shine:hover {
+    transform: none !important;
+  }
+
+  html[data-motion="reduced"] [data-tilt] {
+    transform: none !important;
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
+    html:not([data-motion="full"]) *,
+    html:not([data-motion="full"]) *::before,
+    html:not([data-motion="full"]) *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
+    }
+
+    html:not([data-motion="full"]) .hover-lift:hover,
+    html:not([data-motion="full"]) .card-shine:hover {
+      transform: none !important;
     }
   }
 }
