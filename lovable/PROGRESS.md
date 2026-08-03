@@ -15,7 +15,7 @@ Status legend: ✅ done · 🔧 in progress · ⏳ pending
 
 ## Layer 1 chunks (BUILD_PLAN.md)
 - ✅ **Chunk 1 — Auth + Onboarding**: Firebase Auth (email/password, Google, GitHub), /sign-up, /login, 4-step /onboarding, profiles document = auth uid, handles collection, protected routes.
-- ✅ **Chunk 2 — Public Builder Profile** (`/@:handle`): header (avatar, badges, stats, Follow/Message/More), sticky tabs, Overview tab with mock profile. Projects/Skills/Activity/Reviews = "Coming in a later step" empty states.
+- ⏳ **Chunk 2 — Public Builder Profile** (`/@:handle`): header (avatar, badges, stats, Follow/Message/More), sticky tabs, Overview tab with mock profile. Projects/Skills/Activity/Reviews = "Coming in a later step" empty states. **Prompt given, NOT yet built in AI Studio.**
 - ⏳ **Chunk 3 — Projects data model + Profile Projects tab** [DATA]: Firestore collections `projects`, `projectLikes`, `projectBookmarks` + security rules; real Projects tab grid on profile; seed 2 sample projects.
 - ⏳ Chunk 4 — Project creation modal + public project detail page.
 - ⏳ Chunk 5 — Home feed (For You / Trending, composer, live likes/follows).

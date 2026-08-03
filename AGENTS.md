@@ -15,7 +15,7 @@ Shipyards — the professional identity platform for AI builders ("LinkedIn for 
 7. Numeric data uses `tabular-nums`; body text max 65ch lines.
 
 ## Build status & order
-The build is executed chunk by chunk, one component per prompt, per `lovable/BUILD_PLAN.md` (Chunk 1 Auth + Onboarding ✅, Chunk 2 Builder Profile ✅, Chunk 3 = projects data model, then 4-12). Track progress in `lovable/PROGRESS.md`. Do not implement unreleased later layers (4: email identity, 5: smart breakdown) until the build plan reaches them.
+The build is executed chunk by chunk, one component per prompt, per `lovable/BUILD_PLAN.md` (Chunk 1 Auth + Onboarding ✅, Chunk 2 Builder Profile ⏳ next, Chunk 3 = projects data model, then 4-12). Track progress in `lovable/PROGRESS.md`. Do not implement unreleased later layers (4: email identity, 5: smart breakdown) until the build plan reaches them.
 
 ## Repository layout
 - `lovable/` — the build package (knowledge, schema, plan, progress). Keep it authoritative and up to date.
