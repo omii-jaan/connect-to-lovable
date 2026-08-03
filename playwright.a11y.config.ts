@@ -20,7 +20,18 @@ export default defineConfig({
     viewport: { width: 1280, height: 900 },
     trace: "on-first-retry",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        // Allow pinning a preinstalled Chromium (CI images, sandboxes).
+        launchOptions: process.env.CHROMIUM_PATH
+          ? { executablePath: process.env.CHROMIUM_PATH }
+          : {},
+      },
+    },
+  ],
   webServer: process.env.A11Y_BASE_URL
     ? undefined
     : {
