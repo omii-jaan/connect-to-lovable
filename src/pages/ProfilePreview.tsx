@@ -31,9 +31,9 @@ const MOCK_PROJECTS = [
 
 const ProfilePreview = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       {/* Top bar */}
-      <div className="fixed top-0 left-0 right-0 h-14 border-b border-border-subtle bg-background/80 backdrop-blur-xl flex items-center px-4 z-50">
+      <header className="fixed top-0 left-0 right-0 h-14 border-b border-border-subtle bg-background/80 backdrop-blur-xl flex items-center px-4 z-50">
         <Link to="/" className="flex items-center gap-2 text-sm font-mono text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="w-4 h-4" />
           Back to Shipyard
@@ -44,7 +44,7 @@ const ProfilePreview = () => {
           </div>
           <span className="font-display font-bold text-sm tracking-wider gradient-text-cyan">SHIPYARD</span>
         </div>
-      </div>
+      </header>
 
       {/* Spacer for fixed top bar */}
       <div className="h-14" />
@@ -61,7 +61,7 @@ const ProfilePreview = () => {
                   <User className="w-8 h-8 text-primary-foreground" />
                 )}
               </div>
-              <button className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary border-2 border-background flex items-center justify-center hover:bg-primary/80 transition-colors">
+              <button type="button" aria-label="Change profile photo" className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary border-2 border-background flex items-center justify-center hover:bg-primary/80 transition-colors">
                 <Pencil className="w-3 h-3 text-primary-foreground" />
               </button>
             </div>
@@ -98,7 +98,7 @@ const ProfilePreview = () => {
                 )}
               </div>
             </div>
-            <button className="self-start px-4 py-2 rounded-lg border border-border-subtle bg-foreground/5 text-xs font-bold text-foreground hover:bg-foreground/10 hover:border-foreground/20 transition-all flex items-center gap-2 shrink-0">
+            <button type="button" className="self-start px-4 py-2 rounded-lg border border-border-subtle bg-foreground/5 text-xs font-bold text-foreground hover:bg-foreground/10 hover:border-foreground/20 transition-all flex items-center gap-2 shrink-0">
               <Pencil className="w-3 h-3" />
               Edit Profile
             </button>
@@ -138,9 +138,9 @@ const ProfilePreview = () => {
             {/* Tech Stack */}
             <div className="rounded-2xl border border-border-subtle bg-card p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-display font-bold text-lg text-foreground">Tech Stack</h3>
-                <button className="text-[10px] font-mono text-primary hover:text-primary transition-colors flex items-center gap-1">
-                  <Pencil className="w-3 h-3" /> Edit
+                <h2 className="font-display font-bold text-lg text-foreground">Tech Stack</h2>
+                <button type="button" className="text-[10px] font-mono text-primary hover:text-primary transition-colors flex items-center gap-1">
+                  <Pencil className="w-3 h-3" aria-hidden="true" /> Edit
                 </button>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -155,9 +155,9 @@ const ProfilePreview = () => {
             {/* Social Links */}
             <div className="rounded-2xl border border-border-subtle bg-card p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-display font-bold text-lg text-foreground">Social Links</h3>
-                <button className="text-[10px] font-mono text-primary hover:text-primary transition-colors flex items-center gap-1">
-                  <Pencil className="w-3 h-3" /> Edit
+                <h2 className="font-display font-bold text-lg text-foreground">Social Links</h2>
+                <button type="button" className="text-[10px] font-mono text-primary hover:text-primary transition-colors flex items-center gap-1">
+                  <Pencil className="w-3 h-3" aria-hidden="true" /> Edit
                 </button>
               </div>
               <div className="space-y-2">
@@ -178,7 +178,7 @@ const ProfilePreview = () => {
           {/* Right: Identity + Recent */}
           <div className="space-y-6">
             <div className="rounded-2xl border border-border-subtle bg-card p-6">
-              <h3 className="font-display font-bold text-lg text-foreground mb-4">Identity</h3>
+              <h2 className="font-display font-bold text-lg text-foreground mb-4">Identity</h2>
               <div className="space-y-4">
                 <div>
                   <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">Email</p>
@@ -207,8 +207,8 @@ const ProfilePreview = () => {
             {/* Recent Ships */}
             <div className="rounded-2xl border border-border-subtle bg-card p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-display font-bold text-lg text-foreground">Recent Ships</h3>
-                <button className="text-[10px] font-mono text-primary hover:text-primary transition-colors">View all</button>
+                <h2 className="font-display font-bold text-lg text-foreground">Recent Ships</h2>
+                <button type="button" className="text-[10px] font-mono text-primary hover:text-primary transition-colors">View all</button>
               </div>
               <div className="space-y-3">
                 {MOCK_PROJECTS.map((project) => (
