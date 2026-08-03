@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
+import MotionToggle from "@/components/MotionToggle";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);

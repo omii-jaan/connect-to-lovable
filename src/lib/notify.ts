@@ -41,6 +41,10 @@ export const notify = Object.assign(
       announce(compose(message, options, "Loading"));
       return sonnerToast.loading(message, options);
     },
+    message: (message: string, options?: Options) => {
+      announce(compose(message, options));
+      return sonnerToast.message(message, options);
+    },
     dismiss: sonnerToast.dismiss,
     promise: sonnerToast.promise,
     custom: sonnerToast.custom,
