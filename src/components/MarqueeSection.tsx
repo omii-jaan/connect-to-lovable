@@ -1,5 +1,6 @@
 import { Marquee } from "@/components/magicui/marquee";
 import { BlurFade } from "@/components/magicui/blur-fade";
+import BrandMark from "@/components/BrandMark";
 
 const tools = [
   "OpenAI",
@@ -10,7 +11,7 @@ const tools = [
   "Anthropic",
   "Pinecone",
   "Next.js",
-  "Claude",
+  "Twilio",
   "Node.js",
 ];
 
@@ -31,12 +32,14 @@ const MarqueeSection = () => {
               {tools.map((tool) => (
                 <span
                   key={tool}
-                  className="mx-8 text-lg font-display font-semibold tracking-[-0.02em] text-text-tertiary transition-colors duration-micro ease-standard hover:text-foreground"
+                  className="mx-8 flex items-center gap-2.5 text-lg font-display font-semibold tracking-[-0.02em] text-text-tertiary transition-colors duration-micro ease-standard hover:text-foreground"
                 >
+                  <BrandMark name={tool} size={22} />
                   {tool}
                 </span>
               ))}
             </Marquee>
+
             {/* Edge fades keep the strip from ending abruptly */}
             <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent" />
             <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent" />

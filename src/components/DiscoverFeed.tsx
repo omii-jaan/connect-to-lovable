@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Cpu, UserCheck, ShieldCheck, Star, Code2, ArrowRight, Activity, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { BlurFade } from "@/components/magicui/blur-fade";
+import TechBadge from "@/components/TechBadge";
 
 interface MatchedBuilder {
   name: string;
@@ -245,9 +246,7 @@ const DiscoverFeed = () => {
                       <p className="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider mb-1.5">Stack Match</p>
                       <div className="flex flex-wrap gap-1">
                         {matchedBuilder.skills.map((skill) => (
-                          <span key={skill} className="px-2 py-0.5 text-[9px] font-mono rounded bg-foreground/5 border border-border-subtle text-foreground">
-                            {skill}
-                          </span>
+                          <TechBadge key={skill} name={skill} size="xs" />
                         ))}
                       </div>
                     </div>
