@@ -86,7 +86,7 @@ const FeaturedBuilders = () => {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
             <div>
               <p className="text-primary text-sm font-semibold uppercase tracking-widest mb-2">Docked at Shipyard</p>
-              <h2 className="font-display font-bold text-3xl md:text-4xl text-foreground">
+              <h2 className="font-display font-bold text-h1 text-foreground">
                 Proof over resumes. <br />
                 <span className="gradient-text-cyan">Real ships, real builders.</span>
               </h2>

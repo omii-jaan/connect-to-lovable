@@ -99,7 +99,7 @@ const FeaturedProjects = () => {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
             <div>
               <p className="text-secondary text-sm font-semibold uppercase tracking-widest mb-2">Live Builds</p>
-              <h2 className="font-display font-bold text-3xl md:text-4xl text-foreground">
+              <h2 className="font-display font-bold text-h1 text-foreground">
                 Products that ship. <br />
                 <span className="text-muted-foreground">Not side-projects.</span>
               </h2>

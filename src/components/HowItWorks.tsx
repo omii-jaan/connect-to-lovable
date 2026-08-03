@@ -67,7 +67,7 @@ const HowItWorks = () => {
         <BlurFade delay={0.1} direction="up">
           <div className="text-center mb-20">
             <p className="text-accent text-sm font-semibold uppercase tracking-widest mb-3">Shipyard Assembly Line</p>
-            <h2 className="font-display font-bold text-4xl md:text-5xl text-foreground">
+            <h2 className="font-display font-bold text-h1 text-foreground">
               Three steps to go from <br />
               <span className="gradient-text-cyan">builder to hired.</span>
             </h2>

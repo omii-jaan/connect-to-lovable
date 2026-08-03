@@ -136,10 +136,9 @@ const HeroSection = () => {
         style={{ backgroundImage: `url(${heroBg})` }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/30 to-background pointer-events-none" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full bg-[radial-gradient(circle_70%_50%_at_50%_-10%,hsl(var(--brand-400)/0.05),transparent_60%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-hero pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-mesh pointer-events-none" />
 
-      <div className="absolute top-1/4 left-5 w-40 h-40 bg-primary/[0.03] rounded-full blur-[90px]" />
-      <div className="absolute bottom-1/4 right-5 w-60 h-60 bg-secondary/[0.03] rounded-full blur-[110px]" />
 
       {/* Decorative 3D wireframe orb behind the terminal */}
       <HeroOrb className="hidden lg:block absolute right-[6%] top-1/2 -translate-y-1/2 w-[520px] h-[520px] opacity-40" />
@@ -150,12 +149,13 @@ const HeroSection = () => {
           
           {/* Left Column */}
           <div className="lg:col-span-6 flex flex-col items-start text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border-subtle bg-surface-elevated/60 text-muted-foreground text-[10px] font-semibold uppercase tracking-[0.18em] mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/10 text-primary text-xs font-semibold uppercase tracking-[0.1em] mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-breathing" />
               The Next Gen Port for Vibe Coding
             </div>
 
-            <h1 className="font-display font-bold text-5xl sm:text-6xl lg:text-7xl leading-[1.02] tracking-[-0.035em] text-foreground mb-6 flex flex-wrap items-baseline gap-x-3">
+            <h1 className="font-display font-bold text-hero text-foreground mb-6 flex flex-wrap items-baseline gap-x-3">
+
               Build.
               <WordRotate
                 words={["Dock.", "Deploy.", "Launch.", "Ship."]}
@@ -179,12 +179,13 @@ const HeroSection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto mb-12">
-              <a href="/projects" className="group flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-gradient-primary text-primary-foreground text-sm font-bold shadow-elev-md hover:brightness-110 transition-all duration-micro ease-standard">
+              <a href="/projects" className="group flex items-center justify-center gap-2.5 px-10 py-4 rounded-sm bg-gradient-primary text-primary-foreground text-base font-semibold shadow-glow-cyan hover:shadow-glow-cyan-lg hover:-translate-y-0.5 transition-all duration-micro ease-standard">
                 Browse Projects →
               </a>
-              <a href="/#discover" className="flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-border-strong bg-surface text-foreground font-semibold text-sm shadow-elev-sm hover:bg-muted transition-all duration-micro ease-standard">
+              <a href="/#discover" className="flex items-center justify-center gap-2 px-10 py-4 rounded-sm border border-border bg-surface-elevated text-foreground font-semibold text-base hover:border-primary/20 hover:shadow-glow-cyan-sm hover:-translate-y-0.5 transition-all duration-micro ease-standard">
                 Hire Vibe Builders
               </a>
+
 
             </div>
 
@@ -203,7 +204,7 @@ const HeroSection = () => {
 
           {/* Right Column: Interactive Terminal */}
           <div className="lg:col-span-6 w-full flex flex-col" ref={tiltRef} {...tiltHandlers}>
-            <div style={tiltStyle} className="relative w-full rounded-2xl border border-border bg-card shadow-elev-lg overflow-hidden">
+            <div style={tiltStyle} className="relative w-full rounded-xl border border-border bg-gradient-card shadow-elev-lg glow-cyan-lg overflow-hidden">
 
               
               {/* Terminal Header */}

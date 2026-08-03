@@ -12,9 +12,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Space Grotesk", "sans-serif"],
-        display: ["Syne", "sans-serif"],
+        sans: ["Space Grotesk", "system-ui", "sans-serif"],
+        display: ["Syne", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "Fira Code", "monospace"],
       },
+
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -90,6 +92,7 @@ export default {
           DEFAULT: "hsl(var(--surface))",
           elevated: "hsl(var(--surface-elevated))",
           inset: "hsl(var(--surface-inset))",
+          active: "hsl(var(--surface-active))",
         },
         content: {
           DEFAULT: "hsl(var(--foreground))",
@@ -99,17 +102,31 @@ export default {
         },
         "border-subtle": "hsl(var(--border-subtle))",
         "border-strong": "hsl(var(--border-strong))",
-        // Semantic neon tokens (legacy aliases, now token-driven)
+        violet: {
+          300: "hsl(var(--violet-300))",
+          400: "hsl(var(--violet-400))",
+          500: "hsl(var(--violet-500))",
+          600: "hsl(var(--violet-600))",
+        },
+        success: {
+          300: "hsl(var(--green-300))",
+          DEFAULT: "hsl(var(--green-400))",
+          500: "hsl(var(--green-500))",
+        },
+        // Brand accents — cyan / purple / green per design system v1.0
         neon: {
           cyan: "hsl(var(--brand-400))",
           purple: "hsl(var(--violet-400))",
-          green: "hsl(var(--teal-400))",
+          green: "hsl(var(--green-400))",
         },
       },
       fontSize: {
+        nano: ["0.625rem", { lineHeight: "1.4" }],
+        micro: ["0.6875rem", { lineHeight: "1.4" }],
         xs: ["0.75rem", { lineHeight: "1.4" }],
-        sm: ["0.875rem", { lineHeight: "1.4" }],
+        sm: ["0.875rem", { lineHeight: "1.5" }],
         base: ["1rem", { lineHeight: "1.5" }],
+        lede: ["1.125rem", { lineHeight: "1.65" }],
         lg: ["1.125rem", { lineHeight: "1.5" }],
         xl: ["1.25rem", { lineHeight: "1.4" }],
         "2xl": ["1.5rem", { lineHeight: "1.25" }],
@@ -117,6 +134,10 @@ export default {
         "4xl": ["2.25rem", { lineHeight: "1.15" }],
         "5xl": ["3rem", { lineHeight: "1.1" }],
         "6xl": ["3.75rem", { lineHeight: "1.05" }],
+        // Responsive display scale (spec clamp presets)
+        h2: ["clamp(1.75rem, 3.5vw, 2.5rem)", { lineHeight: "1.2", letterSpacing: "-0.02em" }],
+        h1: ["clamp(2.25rem, 5vw, 3.5rem)", { lineHeight: "1.2", letterSpacing: "-0.03em" }],
+        hero: ["clamp(3rem, 7vw, 5rem)", { lineHeight: "1.05", letterSpacing: "-0.03em" }],
       },
       spacing: {
         xs: "var(--space-xs)",
@@ -132,8 +153,11 @@ export default {
         entrance: "var(--ease-entrance)",
         standard: "var(--ease-standard)",
         snappy: "var(--ease-snappy)",
+        spring: "var(--ease-spring)",
+        smooth: "var(--ease-smooth)",
       },
       transitionDuration: {
+        fast: "var(--duration-fast)",
         micro: "var(--duration-micro)",
         enter: "var(--duration-enter)",
         page: "var(--duration-page)",
@@ -142,11 +166,20 @@ export default {
         "elev-sm": "var(--shadow-sm)",
         "elev-md": "var(--shadow-md)",
         "elev-lg": "var(--shadow-lg)",
+        dropdown: "var(--shadow-dropdown)",
+        "glow-cyan": "var(--glow-cyan)",
+        "glow-cyan-sm": "var(--glow-cyan-sm)",
+        "glow-cyan-lg": "var(--glow-cyan-lg)",
+        "glow-purple": "var(--glow-purple)",
+        "glow-green": "var(--glow-green)",
       },
       borderRadius: {
+        xs: "2px",
+        sm: "4px",
+        md: "6px",
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        xl: "12px",
+        "2xl": "16px",
       },
       backgroundImage: {
         "gradient-primary": "var(--gradient-primary)",
@@ -154,7 +187,10 @@ export default {
         "gradient-card": "var(--gradient-card)",
         "gradient-shine": "var(--gradient-shine)",
         "gradient-hero": "var(--gradient-hero)",
+        "gradient-mesh": "var(--gradient-mesh)",
+        "gradient-cta": "var(--gradient-cta)",
       },
+
 
       keyframes: {
         "accordion-down": {

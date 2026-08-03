@@ -87,7 +87,7 @@ const DiscoverFeed = () => {
         <BlurFade delay={0.1} direction="up">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <p className="text-secondary text-sm font-semibold uppercase tracking-widest mb-3">AI Matching Core</p>
-            <h2 className="font-display font-bold text-3xl md:text-5xl text-foreground mb-4">
+            <h2 className="font-display font-bold text-h1 text-foreground mb-4">
               Meet the Match Engine
             </h2>
             <p className="text-muted-foreground text-sm leading-relaxed">
