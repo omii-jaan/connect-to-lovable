@@ -86,7 +86,7 @@ const DiscoverFeed = () => {
         {/* Title Block */}
         <BlurFade delay={0.1} direction="up">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <p className="text-secondary text-sm font-semibold uppercase tracking-widest mb-3">AI Matching Core</p>
+            <p className="text-secondary-bright text-sm font-semibold uppercase tracking-widest mb-3">AI Matching Core</p>
             <h2 className="font-display font-bold text-h1 text-foreground mb-4">
               Meet the Match Engine
             </h2>
@@ -124,6 +124,8 @@ const DiscoverFeed = () => {
                 ].map((role) => (
                   <button
                     key={role.id}
+                    type="button"
+                    aria-pressed={selectedRole === role.id}
                     onClick={() => startMatching(role.id)}
                     className={`w-full text-left p-4 rounded-2xl border transition-all duration-300 ${
                       selectedRole === role.id

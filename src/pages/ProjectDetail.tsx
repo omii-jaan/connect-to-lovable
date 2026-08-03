@@ -124,12 +124,17 @@ const ProjectDetail = () => {
                     </div>
                     <div className="flex items-center gap-1.5 shrink-0">
                       <button
+                        type="button"
+                        aria-label={copied ? "Link copied to clipboard" : "Copy link to this project"}
                         onClick={handleShare}
                         className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground/40 hover:text-foreground hover:bg-card/[0.04] bg-muted border border-border/50 transition-all"
                       >
                         {copied ? <CheckCheck className="w-4 h-4 text-accent" /> : <Share2 className="w-4 h-4" />}
                       </button>
                       <button
+                        type="button"
+                        aria-label={saved ? "Remove from saved projects" : "Save this project"}
+                        aria-pressed={saved}
                         onClick={handleSave}
                         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
                           saved

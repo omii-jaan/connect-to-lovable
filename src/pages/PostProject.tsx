@@ -98,6 +98,9 @@ const PostProject = () => {
             {STEPS.map((label, i) => (
               <div key={label} className="flex items-center flex-1">
                 <button
+                  type="button"
+                  aria-current={i === step ? "step" : undefined}
+                  aria-disabled={i > step}
                   onClick={() => i <= step && setStep(i)}
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-mono transition-all ${
                     i === step ? "bg-primary/10 text-primary border border-primary/20" :
@@ -239,13 +242,13 @@ const PostProject = () => {
                             <Input placeholder="e.g. Python" value={skillInput} onChange={(e) => setSkillInput(e.target.value)}
                               onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addSkill())}
                               className="bg-background/80 border-border/50" />
-                            <Button variant="outline" size="icon" onClick={addSkill} className="shrink-0"><Plus className="w-4 h-4" /></Button>
+                            <Button variant="outline" size="icon" onClick={addSkill} aria-label="Add skill" className="shrink-0 min-h-11 min-w-11"><Plus className="w-4 h-4" aria-hidden="true" /></Button>
                           </div>
                           <div className="flex flex-wrap gap-1.5">
                             {skills.map((s) => (
                               <Badge key={s} variant="secondary" className="flex items-center gap-1 text-[10px] font-mono bg-background/80 border border-border/30">
                                 {s}
-                                <button onClick={() => removeSkill(s)} className="hover:text-destructive transition-colors"><X className="w-3 h-3" /></button>
+                                <button type="button" onClick={() => removeSkill(s)} aria-label={`Remove skill ${s}`} className="hover:text-destructive transition-colors"><X className="w-3 h-3" aria-hidden="true" /></button>
                               </Badge>
                             ))}
                             {skills.length === 0 && <span className="text-[10px] font-mono text-muted-foreground/40">Add skills to improve matching</span>}
@@ -257,13 +260,13 @@ const PostProject = () => {
                             <Input placeholder="e.g. FastAPI" value={techInput} onChange={(e) => setTechInput(e.target.value)}
                               onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTech())}
                               className="bg-background/80 border-border/50" />
-                            <Button variant="outline" size="icon" onClick={addTech} className="shrink-0"><Plus className="w-4 h-4" /></Button>
+                            <Button variant="outline" size="icon" onClick={addTech} aria-label="Add technology" className="shrink-0 min-h-11 min-w-11"><Plus className="w-4 h-4" aria-hidden="true" /></Button>
                           </div>
                           <div className="flex flex-wrap gap-1.5">
                             {techStack.map((t) => (
                               <Badge key={t} variant="outline" className="flex items-center gap-1 text-[10px] font-mono border-primary/30 bg-primary/[0.04] text-primary/90">
                                 {t}
-                                <button onClick={() => removeTech(t)} className="hover:text-destructive transition-colors"><X className="w-3 h-3" /></button>
+                                <button type="button" onClick={() => removeTech(t)} aria-label={`Remove technology ${t}`} className="hover:text-destructive transition-colors"><X className="w-3 h-3" aria-hidden="true" /></button>
                               </Badge>
                             ))}
                           </div>

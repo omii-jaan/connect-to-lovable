@@ -164,12 +164,18 @@ const Projects = () => {
               </div>
               <div className="flex items-center gap-1 border-l border-border/30 pl-2 ml-1">
                 <button
+                  type="button"
+                  aria-label="Grid view"
+                  aria-pressed={view === "grid"}
                   onClick={() => setView("grid")}
                   className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${view === "grid" ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground"}`}
                 >
                   <LayoutGrid className="w-3.5 h-3.5" />
                 </button>
                 <button
+                  type="button"
+                  aria-label="List view"
+                  aria-pressed={view === "list"}
                   onClick={() => setView("list")}
                   className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${view === "list" ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground"}`}
                 >
@@ -177,7 +183,7 @@ const Projects = () => {
                 </button>
               </div>
               {hasFilters && (
-                <button onClick={clearFilters} className="flex items-center gap-1 h-7 px-2 rounded text-[10px] font-mono text-destructive hover:bg-destructive/10 transition-colors">
+                <button type="button" onClick={clearFilters} aria-label="Clear all filters" className="flex items-center gap-1 h-7 px-2 rounded text-[10px] font-mono text-destructive hover:bg-destructive/10 transition-colors">
                   <X className="w-3 h-3" /> Clear
                 </button>
               )}
@@ -186,6 +192,8 @@ const Projects = () => {
 
           <div className="flex items-center gap-2 flex-wrap mb-6">
             <button
+              type="button"
+              aria-expanded={showFilters}
               onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-mono border transition-all ${
                 showFilters ? "bg-primary/10 border-primary/30 text-primary" : "bg-muted/50 border-border/50 text-muted-foreground hover:border-primary/20"
@@ -203,6 +211,8 @@ const Projects = () => {
               return (
                 <button
                   key={cat}
+                  type="button"
+                  aria-pressed={active}
                   onClick={() => toggleCategory(cat)}
                   className={`px-3 py-1.5 rounded-full text-[10px] font-mono border transition-all ${
                     active
