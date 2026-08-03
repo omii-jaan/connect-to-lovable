@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
+import { notify as toast } from "@/lib/notify";
 import type { AIParsedRequirements } from "@/types";
 import { CATEGORIES } from "@/lib/marketplace-data";
 

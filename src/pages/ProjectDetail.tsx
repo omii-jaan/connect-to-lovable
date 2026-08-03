@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { toast } from "sonner";
+import { notify as toast } from "@/lib/notify";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { MOCK_HIRE_PROJECTS, MOCK_MATCHES } from "@/lib/marketplace-data";
 import { formatDistanceToNow } from "date-fns";

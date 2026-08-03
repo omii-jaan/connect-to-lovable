@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { User, Session, AuthError } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
-import { toast } from "sonner";
+import { notify as toast } from "@/lib/notify";
 
 interface AuthContextType {
   user: User | null;
