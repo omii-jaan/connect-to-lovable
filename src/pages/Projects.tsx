@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { toast } from "sonner";
+import { notify as toast } from "@/lib/notify";
 import { MOCK_HIRE_PROJECTS, CATEGORIES, BUDGET_RANGES, TIMELINE_OPTIONS } from "@/lib/marketplace-data";
 import { formatDistanceToNow } from "date-fns";
 import type { HireProject } from "@/types";

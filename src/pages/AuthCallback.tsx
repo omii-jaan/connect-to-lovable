@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
-import { toast } from "sonner";
+import { notify as toast } from "@/lib/notify";
 import { Loader2 } from "lucide-react";
 
 const AuthCallback = () => {

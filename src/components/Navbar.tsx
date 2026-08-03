@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
+import MotionToggle from "@/components/MotionToggle";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -130,6 +131,10 @@ const Navbar = () => {
           >
             {themeIcon}
           </button>
+
+          {/* Motion preference */}
+          <MotionToggle />
+
 
           {/* Notifications */}
           <div className="relative">
@@ -262,16 +267,19 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile menu trigger */}
-        <button
-          type="button"
-          aria-label="Open navigation menu"
-          aria-expanded={open}
-          className="md:hidden w-8 h-8 rounded-full bg-foreground/5 border border-border-subtle flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-          onClick={() => setOpen(!open)}
-        >
-          <Menu className="w-4 h-4" />
-        </button>
+        {/* Mobile controls */}
+        <div className="md:hidden flex items-center gap-1.5">
+          <MotionToggle />
+          <button
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded={open}
+            className="min-h-11 min-w-11 rounded-full bg-foreground/5 border border-border-subtle flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            onClick={() => setOpen(!open)}
+          >
+            <Menu className="w-4 h-4" aria-hidden="true" />
+          </button>
+        </div>
       </nav>
 
       {/* Mobile Terminal Panel */}

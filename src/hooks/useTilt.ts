@@ -24,9 +24,25 @@ export function useTilt<T extends HTMLElement = HTMLDivElement>({
   const [tilt, setTilt] = useState({ x: 0, y: 0, active: false });
 
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    setEnabled(!reduced && fine);
+
+    const sync = () => {
+      const setting = document.documentElement.dataset.motion;
+      const reduced = setting === "reduced" || (setting !== "full" && query.matches);
+      setEnabled(!reduced && fine);
+    };
+
+    sync();
+    query.addEventListener("change", sync);
+    // The motion setting lives as an attribute on <html>; watch it directly.
+    const observer = new MutationObserver(sync);
+    observer.observe(document.documentElement, { attributeFilter: ["data-motion"] });
+
+    return () => {
+      query.removeEventListener("change", sync);
+      observer.disconnect();
+    };
   }, []);
 
   const onPointerMove = useCallback(

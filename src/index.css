@@ -180,7 +180,8 @@
     --text-tertiary: 218 15% 54%;
     --text-disabled: 214 14% 70%;
 
-    --primary: 188 82% 32%;
+    /* Deep enough to clear AA on white for small mono text */
+    --primary: 190 86% 26%;
     --primary-foreground: 210 30% 99%;
 
     --secondary: var(--violet-500);
@@ -190,7 +191,7 @@
     --muted: 210 22% 93%;
     --muted-foreground: var(--text-secondary);
 
-    --accent: var(--green-500);
+    --accent: 150 74% 25%;
     --accent-foreground: 210 30% 99%;
 
     --destructive: 356 68% 48%;
@@ -200,7 +201,7 @@
     --border-subtle: 212 20% 92%;
     --border-strong: 212 14% 76%;
     --input: 212 18% 90%;
-    --ring: 188 82% 32%;
+    --ring: 190 86% 26%;
 
     --shadow-sm: 0 1px 2px hsl(220 25% 20% / 0.06), 0 2px 6px -2px hsl(220 25% 20% / 0.07);
     --shadow-md: 0 4px 16px hsl(220 25% 20% / 0.1);
@@ -229,12 +230,12 @@
 
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 220 28% 9%;
-    --sidebar-primary: 188 82% 32%;
+    --sidebar-primary: 190 86% 26%;
     --sidebar-primary-foreground: 210 30% 99%;
     --sidebar-accent: 210 22% 93%;
     --sidebar-accent-foreground: 220 28% 9%;
     --sidebar-border: 212 18% 88%;
-    --sidebar-ring: 188 82% 32%;
+    --sidebar-ring: 190 86% 26%;
   }
 
 }
@@ -261,20 +262,71 @@
     line-height: 1.05;
   }
 
-  /* Consistent, visible focus rings everywhere */
+  /* ---- Focus: one ring language for the entire product ----
+     Two-layer ring (surface halo + brand band) so the indicator reads
+     clearly on every surface elevation, in both themes. */
   :focus-visible {
-    outline: none;
-    box-shadow: var(--shadow-focus);
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
     border-radius: var(--radius);
   }
 
-  /* Motion is optional, never required */
+  /* Interactive primitives get the richer token ring with the surface halo. */
+  a:focus-visible,
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  [role="tab"]:focus-visible,
+  [role="menuitem"]:focus-visible,
+  [role="option"]:focus-visible,
+  summary:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    box-shadow: var(--shadow-focus);
+  }
+
+  /* Mouse users never see the ring; keyboard users always do. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Motion is optional, never required.
+     Driven by data-motion on <html> (user setting) and by the OS query. */
+  html[data-motion="reduced"] *,
+  html[data-motion="reduced"] *::before,
+  html[data-motion="reduced"] *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Hover lift, tilt and parallax are decorative — remove them outright. */
+  html[data-motion="reduced"] .hover-lift:hover,
+  html[data-motion="reduced"] .card-shine:hover {
+    transform: none !important;
+  }
+
+  html[data-motion="reduced"] [data-tilt] {
+    transform: none !important;
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
+    html:not([data-motion="full"]) *,
+    html:not([data-motion="full"]) *::before,
+    html:not([data-motion="full"]) *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
+    }
+
+    html:not([data-motion="full"]) .hover-lift:hover,
+    html:not([data-motion="full"]) .card-shine:hover {
+      transform: none !important;
     }
   }
 }

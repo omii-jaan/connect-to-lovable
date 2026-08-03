@@ -1,7 +1,7 @@
 import { FormEvent, useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Github, Lock, Mail, Terminal, Zap } from "lucide-react";
-import { toast } from "sonner";
+import { notify as toast } from "@/lib/notify";
 import { useAuth } from "@/context/AuthContext";
 
 const TYPING_SPEED = 25;
