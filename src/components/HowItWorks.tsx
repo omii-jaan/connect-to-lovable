@@ -54,7 +54,9 @@ const colorMap = {
 };
 
 const HowItWorks = () => {
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(0);
+  // Always holds one active step — hovering (or focusing) another switches it,
+  // leaving the cards keeps the last one held instead of emptying the panel.
+  const [hoveredIdx, setHoveredIdx] = useState<number>(0);
 
   return (
     <section id="hire" className="py-28 px-6 relative">
@@ -87,8 +89,9 @@ const HowItWorks = () => {
                 key={step.step} 
                 className="relative"
                 onMouseEnter={() => setHoveredIdx(i)}
-                onMouseLeave={() => setHoveredIdx(null)}
+                onFocusCapture={() => setHoveredIdx(i)}
               >
+
                 {/* Connecting SVG wires on desktop */}
                 {i < steps.length - 1 && (
                   <div className="hidden md:block absolute top-[44px] left-[75%] right-[-15%] h-6 z-0 overflow-hidden">
