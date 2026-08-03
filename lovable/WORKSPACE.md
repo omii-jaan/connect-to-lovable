@@ -1,0 +1,46 @@
+# WORKSPACE KNOWLEDGE — Global Engineering Standards
+
+These rules apply to every project built in this workspace. They are always in context. Follow them strictly.
+
+## Code quality
+- **TypeScript strict.** Never use `any`. Define types/interfaces for all data shapes; derive them from the database schema where possible.
+- **One component per file.** Files in `src/components/` mirror pages (e.g. `ProjectCard.tsx`, `ProfileHeader.tsx`). Pages live in their own folder/file. Keep components small (<200 lines); split children.
+- **Naming conventions:**
+  - React components & files: `PascalCase.tsx`
+  - Hooks: `useXxx` (e.g. `useAuth`, `useProjects`)
+  - Utilities & lib files: `camelCase.ts`
+  - Database tables/columns: `snake_case`; tables plural.
+  - CSS classes: Tailwind utilities only; custom classes with `prefix-` if absolutely needed.
+- **No dead code.** Remove unused imports, variables, files. Run a cleanup pass at the end of each session.
+- **No console.log in production code.** Use a small `lib/logger` wrapper if logging is needed.
+- **Comments:** minimal; only when a decision is non-obvious. Do not add decorative comments.
+
+## Styling
+- **Tailwind CSS only**, combined with the design tokens as CSS custom properties (defined once in `src/index.css` / theme file).
+- NEVER invent new colors, radii, fonts, or shadows beyond the token set. Refer to project knowledge for tokens.
+- No inline `style={{ }}` for colors/layout except dynamic values (e.g. progress width).
+- Icons: Lucide only (`lucide-react`), stroke 1.5px. No emoji in UI.
+- Responsive-first: mobile base, then `sm`/`md`/`lg` breakpoints (640/768/1024/1280). Test in the preview device toggle before marking a chunk done.
+- Motion: use the token durations (100/150/250/350ms) and `cubic-bezier(0.4,0,0.2,1)`. Honor `prefers-reduced-motion`.
+
+## Data & backend
+- Backend = Supabase (via Lovable Cloud or a connected project).
+- **Row Level Security (RLS) enabled on every table.** When creating a table, write the policies in the same prompt. Default: public read for content tables; write only for owners. Never expose service-role keys client-side.
+- Use the typed Supabase client (`supabase-js`); no raw SQL in components. Complex queries/transforms go in `src/lib/` helpers or Edge Functions.
+- Server-side logic that needs secrets (AI calls, emails, payments, matching) goes in **Supabase Edge Functions**. Store keys as secrets, never in frontend code.
+- Real-time: use Supabase Realtime subscriptions for chat, notifications, feeds, live counts. Clean up subscriptions on unmount (avoid leaks).
+- Follow the schema in project knowledge / DB_SCHEMA. When a schema change is needed, describe the change in chat and let Lovable run the migration with approval.
+- Seeding: sample data should be realistic and flagged as sample (prefix names or a `is_sample` flag) so it can be wiped later.
+
+## Process (how to work with this workspace)
+- One change per prompt. Verify in preview; bookmark working versions.
+- When asked to fix a bug: reproduce, identify the specific component/line, fix only that, don't refactor unrelated code.
+- When a task is ambiguous, ask clarifying questions in Plan mode before editing.
+- Preserve what exists: never rewrite working code "for cleanliness" unless explicitly asked.
+- Keep routes/imports stable: if renaming a component, update ALL imports in the same change.
+- Accessibility: visible focus rings, aria-labels on icon buttons, semantic HTML, keyboard navigable, 4.5:1 contrast.
+- Performance: lazy-load heavy components (charts, editors), paginate lists, memoize expensive renders, keep bundle lean.
+
+## Design guardrails (workspace-wide)
+- Dark mode first. No glow/gradient/shadow effects for decoration. No glassmorphism except specified (top bar). No rounded corners over 12px except avatars/badges.
+- Copy: professional, precise, developer-friendly. No "vibe" marketing speak in the app UI.
