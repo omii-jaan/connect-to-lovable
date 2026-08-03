@@ -168,7 +168,7 @@ const Navbar = () => {
                   ))}
                 </div>
                 <div className="border-t border-border-subtle px-4 py-2">
-                  <button type="button" className="text-[10px] font-mono text-primary hover:text-primary/80 transition-colors">View all notifications</button>
+                  <button type="button" className="text-[10px] font-mono text-primary hover:text-primary transition-colors">View all notifications</button>
                 </div>
               </div>
             )}
@@ -332,7 +332,7 @@ const Navbar = () => {
 
           {/* Terminal navigation items */}
           <div className="flex flex-col py-3">
-            <div className="px-4 py-1.5 text-[10px] font-mono text-muted-foreground/50"># navigation</div>
+            <div className="px-4 py-1.5 text-[10px] font-mono text-muted-foreground"># navigation</div>
             <button
               onClick={() => { setOpen(false); document.getElementById("builders")?.scrollIntoView({ behavior: "smooth" }); }}
               className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-primary/5 transition-colors group"
@@ -360,7 +360,7 @@ const Navbar = () => {
 
             <div className="h-px bg-foreground/5 my-2 mx-4" />
 
-            <div className="px-4 py-1.5 text-[10px] font-mono text-muted-foreground/50"># user</div>
+            <div className="px-4 py-1.5 text-[10px] font-mono text-muted-foreground"># user</div>
             {user ? (
               <>
                 <Link
@@ -376,9 +376,9 @@ const Navbar = () => {
                   onClick={handleSignOut}
                   className="flex items-center gap-3 px-4 py-2.5 text-sm text-destructive hover:bg-destructive/5 transition-colors group"
                 >
-                  <span className="text-destructive/60 font-mono text-xs">{`>`}</span>
+                  <span className="text-destructive font-mono text-xs">{`>`}</span>
                   <span className="flex-1">signout --force</span>
-                  <ChevronRight className="w-3 h-3 text-destructive/40 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <ChevronRight className="w-3 h-3 text-destructive opacity-0 group-hover:opacity-100 transition-opacity" />
                 </button>
               </>
             ) : (
@@ -399,7 +399,7 @@ const Navbar = () => {
                 >
                   <span className="text-primary font-mono text-xs">{`>`}</span>
                   <span className="flex-1 text-primary">join --as builder</span>
-                  <ChevronRight className="w-3 h-3 text-primary/40 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <ChevronRight className="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
                 </Link>
               </>
             )}
@@ -407,8 +407,8 @@ const Navbar = () => {
 
           {/* Bottom status bar */}
           <div className="absolute bottom-0 left-0 right-0 px-4 py-2.5 border-t border-border-subtle bg-[#111622] flex items-center justify-between">
-            <span className="text-[10px] font-mono text-muted-foreground/50">{`[~] $`}</span>
-            <span className="text-[10px] font-mono text-muted-foreground/50">
+            <span className="text-[10px] font-mono text-muted-foreground">{`[~] $`}</span>
+            <span className="text-[10px] font-mono text-muted-foreground">
               {theme} mode
             </span>
           </div>
@@ -426,7 +426,7 @@ const Navbar = () => {
                 autoFocus
                 type="text"
                 placeholder="Search builders, projects, commands..."
-                className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground/50 outline-none border-none"
+                className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none border-none"
               />
               <kbd className="px-1.5 py-0.5 text-[10px] rounded bg-foreground/10 text-muted-foreground font-mono">ESC</kbd>
             </div>

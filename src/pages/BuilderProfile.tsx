@@ -92,7 +92,7 @@ const BuilderProfile = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <User className="w-12 h-12 text-muted-foreground/40" />
+          <User className="w-12 h-12 text-muted-foreground" />
           <p className="text-sm font-mono text-muted-foreground">{`> builder "${username}" not found`}</p>
           <Link to="/" className="text-xs font-mono text-primary hover:text-primary transition-colors flex items-center gap-1">
             <ArrowLeft className="w-3 h-3" />
@@ -147,7 +147,7 @@ const BuilderProfile = () => {
                 @{profile.username}
               </p>
               {profile.bio && (
-                <p className="text-sm text-muted-foreground/80 mb-4 max-w-xl">
+                <p className="text-sm text-muted-foreground mb-4 max-w-xl">
                   {profile.bio}
                 </p>
               )}
@@ -161,7 +161,7 @@ const BuilderProfile = () => {
                   </span>
                 ))}
                 {profile.stack.length > 4 && (
-                  <span className="text-[10px] font-mono text-muted-foreground/60">
+                  <span className="text-[10px] font-mono text-muted-foreground">
                     +{profile.stack.length - 4} more
                   </span>
                 )}
@@ -201,7 +201,7 @@ const BuilderProfile = () => {
               <h3 className="font-display font-bold text-lg text-foreground mb-4">Tech Stack</h3>
               <div className="flex flex-wrap gap-2">
                 {profile.stack.map((tech) => (
-                  <span key={tech} className="px-3 py-1.5 text-xs font-mono rounded-lg bg-foreground/5 border border-border-subtle text-foreground/80">
+                  <span key={tech} className="px-3 py-1.5 text-xs font-mono rounded-lg bg-foreground/5 border border-border-subtle text-foreground">
                     {tech}
                   </span>
                 ))}
@@ -228,8 +228,8 @@ const BuilderProfile = () => {
                         )}
                       </div>
                       <span className="text-xs font-mono text-muted-foreground group-hover:text-foreground capitalize">{platform}</span>
-                      <span className="ml-auto text-[10px] text-muted-foreground/40 group-hover:text-primary transition-colors truncate max-w-[200px]">{url}</span>
-                      <ExternalLink className="w-3 h-3 text-muted-foreground/30 group-hover:text-primary shrink-0" />
+                      <span className="ml-auto text-[10px] text-muted-foreground group-hover:text-primary transition-colors truncate max-w-[200px]">{url}</span>
+                      <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-primary shrink-0" />
                     </a>
                   ))}
                 </div>
@@ -241,7 +241,7 @@ const BuilderProfile = () => {
                 Ships {projects.length > 0 && <span className="text-sm font-mono text-muted-foreground font-normal">({projects.length})</span>}
               </h3>
               {projects.length === 0 ? (
-                <p className="text-xs font-mono text-muted-foreground/60 py-4">No ships yet</p>
+                <p className="text-xs font-mono text-muted-foreground py-4">No ships yet</p>
               ) : (
                 <div className="space-y-3">
                   {projects.map((project) => (
@@ -255,7 +255,7 @@ const BuilderProfile = () => {
                           {project.status} · {[(project.stack?.[0]), project.stack?.[1]].filter(Boolean).join(", ")}
                         </p>
                       </div>
-                      <ExternalLink className="w-3 h-3 text-muted-foreground/40 shrink-0" />
+                      <ExternalLink className="w-3 h-3 text-muted-foreground shrink-0" />
                     </div>
                   ))}
                 </div>
@@ -268,24 +268,24 @@ const BuilderProfile = () => {
               <h3 className="font-display font-bold text-lg text-foreground mb-4">Identity</h3>
               <div className="space-y-4">
                 <div>
-                  <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-1">Member Since</p>
-                  <p className="text-xs font-mono text-foreground/80 flex items-center gap-1.5">
-                    <Calendar className="w-3 h-3 text-muted-foreground/60" />
+                  <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">Member Since</p>
+                  <p className="text-xs font-mono text-foreground flex items-center gap-1.5">
+                    <Calendar className="w-3 h-3 text-muted-foreground" />
                     {format(new Date(profile.created_at), "MMMM yyyy")}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-1">Account Type</p>
+                  <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">Account Type</p>
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary uppercase tracking-wider">
                     {profile.role}
                   </span>
                 </div>
                 {profile.github_username && (
                   <div>
-                    <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-1">GitHub</p>
+                    <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">GitHub</p>
                     <div className="flex items-center gap-2">
                       <Github className="w-3.5 h-3.5 text-muted-foreground" />
-                      <span className="text-xs font-mono text-foreground/80">{profile.github_username}</span>
+                      <span className="text-xs font-mono text-foreground">{profile.github_username}</span>
                     </div>
                   </div>
                 )}

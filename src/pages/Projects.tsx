@@ -97,7 +97,7 @@ const Projects = () => {
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-mono text-primary/60">/marketplace</span>
+                <span className="text-xs font-mono text-primary">/marketplace</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-primary/60 animate-pulse" />
               </div>
               <h1 className="font-display font-bold text-4xl text-foreground">
@@ -127,7 +127,7 @@ const Projects = () => {
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               <div className="flex items-center h-9 px-3 rounded-lg bg-muted/50 border border-border/50 text-xs font-mono text-muted-foreground">
-                <CircleDollarSign className="w-3.5 h-3.5 mr-1.5 text-muted-foreground/60" />
+                <CircleDollarSign className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
                 <select
                   value={budgetRange.label}
                   onChange={(e) => setBudgetRange(BUDGET_RANGES.find((b) => b.label === e.target.value) || BUDGET_RANGES[0])}
@@ -139,7 +139,7 @@ const Projects = () => {
                 </select>
               </div>
               <div className="flex items-center h-9 px-3 rounded-lg bg-muted/50 border border-border/50 text-xs font-mono text-muted-foreground">
-                <Clock className="w-3.5 h-3.5 mr-1.5 text-muted-foreground/60" />
+                <Clock className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
                 <select
                   value={timelineMax.label}
                   onChange={(e) => setTimelineMax(TIMELINE_OPTIONS.find((t) => t.label === e.target.value) || TIMELINE_OPTIONS[0])}
@@ -151,7 +151,7 @@ const Projects = () => {
                 </select>
               </div>
               <div className="flex items-center h-9 px-3 rounded-lg bg-muted/50 border border-border/50 text-xs font-mono text-muted-foreground">
-                <ArrowUpDown className="w-3.5 h-3.5 mr-1.5 text-muted-foreground/60" />
+                <ArrowUpDown className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
@@ -168,7 +168,7 @@ const Projects = () => {
                   aria-label="Grid view"
                   aria-pressed={view === "grid"}
                   onClick={() => setView("grid")}
-                  className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${view === "grid" ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground"}`}
+                  className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${view === "grid" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-muted-foreground"}`}
                 >
                   <LayoutGrid className="w-3.5 h-3.5" />
                 </button>
@@ -177,7 +177,7 @@ const Projects = () => {
                   aria-label="List view"
                   aria-pressed={view === "list"}
                   onClick={() => setView("list")}
-                  className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${view === "list" ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground"}`}
+                  className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${view === "list" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-muted-foreground"}`}
                 >
                   <ListIcon className="w-3.5 h-3.5" />
                 </button>
@@ -266,7 +266,7 @@ const Projects = () => {
             </motion.div>
           )}
 
-          <div className="mt-12 pt-8 border-t border-border/30 flex items-center justify-between text-[10px] font-mono text-muted-foreground/40">
+          <div className="mt-12 pt-8 border-t border-border/30 flex items-center justify-between text-[10px] font-mono text-muted-foreground">
             <span>Showing {filtered.length} of {MOCK_HIRE_PROJECTS.filter(p => p.status === "open").length} open projects</span>
             <span>Updated in real-time</span>
           </div>
@@ -300,7 +300,7 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
                   {project.title}
                 </h3>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-[10px] font-mono text-muted-foreground/60">
+                  <span className="text-[10px] font-mono text-muted-foreground">
                     {formatDistanceToNow(new Date(project.created_at), { addSuffix: true })}
                   </span>
                   <span className={`inline-block w-1.5 h-1.5 rounded-full ${style?.dot || "bg-primary"} opacity-60`} />
@@ -315,14 +315,14 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
               className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 ${
                 saved
                   ? "text-primary bg-primary/10 border border-primary/20"
-                  : "text-muted-foreground/30 hover:text-muted-foreground hover:bg-card/[0.04] border border-transparent"
+                  : "text-muted-foreground hover:text-muted-foreground hover:bg-card/[0.04] border border-transparent"
               }`}
             >
               {saved ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
             </button>
           </div>
 
-          <p className="text-xs text-muted-foreground/80 leading-relaxed line-clamp-2 mb-4 flex-1 relative z-10">
+          <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 mb-4 flex-1 relative z-10">
             {project.description}
           </p>
 
@@ -333,7 +333,7 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
               </Badge>
             ))}
             {project.required_skills.length > 3 && (
-              <span className="text-[9px] font-mono text-muted-foreground/40 bg-muted/50 px-2 py-0.5 rounded-full border border-border/20">
+              <span className="text-[9px] font-mono text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-full border border-border/20">
                 +{project.required_skills.length - 3}
               </span>
             )}
@@ -348,14 +348,14 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
               </div>
               <div className="w-px h-4 bg-border/40" />
               <div className="flex items-center gap-1">
-                <Clock className="w-3 h-3 text-muted-foreground/60" />
+                <Clock className="w-3 h-3 text-muted-foreground" />
                 <span className="text-[10px] font-mono text-muted-foreground">{project.timeline_weeks}w</span>
               </div>
             </div>
           </div>
 
           <div className="flex items-center justify-between mt-3 relative z-10">
-            <div className="flex items-center gap-3 text-[10px] font-mono text-muted-foreground/50">
+            <div className="flex items-center gap-3 text-[10px] font-mono text-muted-foreground">
               <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{project.views_count}</span>
               <span className="flex items-center gap-1"><Sparkles className="w-3 h-3" />{project.interest_count}</span>
             </div>
@@ -410,7 +410,7 @@ const ProjectListItem = ({ project, index, saved, onToggleSave }: { project: Hir
               <h3 className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">
                 {project.title}
               </h3>
-              <p className="text-[11px] text-muted-foreground/70 truncate mt-0.5">{project.description}</p>
+              <p className="text-[11px] text-muted-foreground truncate mt-0.5">{project.description}</p>
             </div>
 
             <div className="hidden md:flex items-center gap-2 flex-wrap">
@@ -430,12 +430,12 @@ const ProjectListItem = ({ project, index, saved, onToggleSave }: { project: Hir
               <button
                 onClick={(e) => { e.preventDefault(); onToggleSave(); }}
                 className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${
-                  saved ? "text-primary" : "text-muted-foreground/30 hover:text-muted-foreground"
+                  saved ? "text-primary" : "text-muted-foreground hover:text-muted-foreground"
                 }`}
               >
                 {saved ? <BookmarkCheck className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
               </button>
-              <ChevronRight className="w-4 h-4 text-muted-foreground/20 group-hover:text-primary/60 transition-colors" />
+              <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
             </div>
           </div>
         </div>

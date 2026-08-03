@@ -48,7 +48,7 @@ const CTASection = () => {
                   Join 2,400+ builders showcasing live code, integrations, and active agents. Get discovered by tech-forward founders looking for speed and quality.
                 </p>
 
-                <ul className="space-y-3 mb-8 text-xs text-foreground/80 font-mono">
+                <ul className="space-y-3 mb-8 text-xs text-foreground font-mono">
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                     No resumes, no cover letters, only live URLs
@@ -91,7 +91,7 @@ const CTASection = () => {
                   Search developers by exact API usages or patterns. Review live telemetry graphs of active repositories instead of looking at portfolios.
                 </p>
 
-                <ul className="space-y-3 mb-8 text-xs text-foreground/80 font-mono">
+                <ul className="space-y-3 mb-8 text-xs text-foreground font-mono">
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
                     Query by exact code snippet imports

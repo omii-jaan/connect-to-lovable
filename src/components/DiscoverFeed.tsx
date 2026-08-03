@@ -105,7 +105,7 @@ const DiscoverFeed = () => {
             <div>
               <div className="flex items-center gap-2 mb-6">
                 <Cpu className="w-5 h-5 text-primary" />
-                <span className="text-xs font-bold text-foreground/80 uppercase tracking-wider font-mono">Semantic Queries</span>
+                <span className="text-xs font-bold text-foreground uppercase tracking-wider font-mono">Semantic Queries</span>
               </div>
 
               <h3 className="font-display font-bold text-xl text-foreground mb-4">
@@ -137,7 +137,7 @@ const DiscoverFeed = () => {
                       <span className="text-xs font-bold text-foreground">{role.label}</span>
                       <span className="text-[10px] text-muted-foreground font-mono">{role.count}</span>
                     </div>
-                    <p className="text-[10px] font-mono text-primary/75">{role.prompt}</p>
+                    <p className="text-[10px] font-mono text-primary">{role.prompt}</p>
                   </button>
                 ))}
               </div>
@@ -233,7 +233,7 @@ const DiscoverFeed = () => {
                   <div className="space-y-4 mb-6">
                     <div>
                       <p className="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider mb-1">Developer Specialty</p>
-                      <p className="text-sm font-semibold text-foreground/90">{matchedBuilder.specialty}</p>
+                      <p className="text-sm font-semibold text-foreground">{matchedBuilder.specialty}</p>
                     </div>
 
                     <div>
@@ -245,7 +245,7 @@ const DiscoverFeed = () => {
                       <p className="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider mb-1.5">Stack Match</p>
                       <div className="flex flex-wrap gap-1">
                         {matchedBuilder.skills.map((skill) => (
-                          <span key={skill} className="px-2 py-0.5 text-[9px] font-mono rounded bg-foreground/5 border border-border-subtle text-foreground/80">
+                          <span key={skill} className="px-2 py-0.5 text-[9px] font-mono rounded bg-foreground/5 border border-border-subtle text-foreground">
                             {skill}
                           </span>
                         ))}

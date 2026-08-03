@@ -79,7 +79,7 @@ const ProfilePreview = () => {
               <p className="text-sm font-mono text-muted-foreground mb-2">
                 @{MOCK_PROFILE.username}
               </p>
-              <p className="text-sm text-muted-foreground/80 mb-4 max-w-xl">
+              <p className="text-sm text-muted-foreground mb-4 max-w-xl">
                 {MOCK_PROFILE.bio}
               </p>
               <div className="flex flex-wrap items-center gap-2">
@@ -92,7 +92,7 @@ const ProfilePreview = () => {
                   </span>
                 ))}
                 {MOCK_PROFILE.stack.length > 3 && (
-                  <span className="text-[10px] font-mono text-muted-foreground/60">
+                  <span className="text-[10px] font-mono text-muted-foreground">
                     +{MOCK_PROFILE.stack.length - 3} more
                   </span>
                 )}
@@ -139,13 +139,13 @@ const ProfilePreview = () => {
             <div className="rounded-2xl border border-border-subtle bg-card p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-display font-bold text-lg text-foreground">Tech Stack</h3>
-                <button className="text-[10px] font-mono text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
+                <button className="text-[10px] font-mono text-primary hover:text-primary transition-colors flex items-center gap-1">
                   <Pencil className="w-3 h-3" /> Edit
                 </button>
               </div>
               <div className="flex flex-wrap gap-2">
                 {MOCK_PROFILE.stack.map((tech) => (
-                  <span key={tech} className="px-3 py-1.5 text-xs font-mono rounded-lg bg-foreground/5 border border-border-subtle text-foreground/80 hover:border-primary/30 hover:bg-primary/5 transition-colors">
+                  <span key={tech} className="px-3 py-1.5 text-xs font-mono rounded-lg bg-foreground/5 border border-border-subtle text-foreground hover:border-primary/30 hover:bg-primary/5 transition-colors">
                     {tech}
                   </span>
                 ))}
@@ -156,7 +156,7 @@ const ProfilePreview = () => {
             <div className="rounded-2xl border border-border-subtle bg-card p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-display font-bold text-lg text-foreground">Social Links</h3>
-                <button className="text-[10px] font-mono text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
+                <button className="text-[10px] font-mono text-primary hover:text-primary transition-colors flex items-center gap-1">
                   <Pencil className="w-3 h-3" /> Edit
                 </button>
               </div>
@@ -167,8 +167,8 @@ const ProfilePreview = () => {
                       {platform.toLowerCase() === "github" ? <Github className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" /> : <Globe className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />}
                     </div>
                     <span className="text-xs font-mono text-muted-foreground group-hover:text-foreground capitalize">{platform}</span>
-                    <span className="ml-auto text-[10px] text-muted-foreground/40 group-hover:text-primary transition-colors truncate max-w-[200px]">{url}</span>
-                    <ExternalLink className="w-3 h-3 text-muted-foreground/30 group-hover:text-primary shrink-0" />
+                    <span className="ml-auto text-[10px] text-muted-foreground group-hover:text-primary transition-colors truncate max-w-[200px]">{url}</span>
+                    <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-primary shrink-0" />
                   </a>
                 ))}
               </div>
@@ -181,24 +181,24 @@ const ProfilePreview = () => {
               <h3 className="font-display font-bold text-lg text-foreground mb-4">Identity</h3>
               <div className="space-y-4">
                 <div>
-                  <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-1">Email</p>
-                  <p className="text-xs font-mono text-foreground/80 truncate">arjun@shipyard.dev</p>
+                  <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">Email</p>
+                  <p className="text-xs font-mono text-foreground truncate">arjun@shipyard.dev</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-1">Member Since</p>
-                  <p className="text-xs font-mono text-foreground/80">March 2024</p>
+                  <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">Member Since</p>
+                  <p className="text-xs font-mono text-foreground">March 2024</p>
                 </div>
                 <div>
-                  <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-1">Account Type</p>
+                  <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">Account Type</p>
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary uppercase tracking-wider">
                     Builder
                   </span>
                 </div>
                 <div>
-                  <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-1">GitHub</p>
+                  <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">GitHub</p>
                   <div className="flex items-center gap-2">
                     <Github className="w-3.5 h-3.5 text-muted-foreground" />
-                    <span className="text-xs font-mono text-foreground/80">{MOCK_PROFILE.github_username}</span>
+                    <span className="text-xs font-mono text-foreground">{MOCK_PROFILE.github_username}</span>
                   </div>
                 </div>
               </div>
@@ -208,7 +208,7 @@ const ProfilePreview = () => {
             <div className="rounded-2xl border border-border-subtle bg-card p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-display font-bold text-lg text-foreground">Recent Ships</h3>
-                <button className="text-[10px] font-mono text-primary hover:text-primary/80 transition-colors">View all</button>
+                <button className="text-[10px] font-mono text-primary hover:text-primary transition-colors">View all</button>
               </div>
               <div className="space-y-3">
                 {MOCK_PROJECTS.map((project) => (
@@ -220,7 +220,7 @@ const ProfilePreview = () => {
                       <p className="text-xs font-semibold text-foreground truncate">{project.title}</p>
                       <p className="text-[10px] font-mono text-muted-foreground capitalize">{project.status}</p>
                     </div>
-                    <ExternalLink className="w-3 h-3 text-muted-foreground/40" />
+                    <ExternalLink className="w-3 h-3 text-muted-foreground" />
                   </div>
                 ))}
               </div>

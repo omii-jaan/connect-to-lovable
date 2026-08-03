@@ -153,10 +153,10 @@ const ProjectCard = ({ project }: { project: Project }) => {
             <p className="text-sm text-muted-foreground leading-relaxed mb-4">{project.description}</p>
 
             <div className="mb-4">
-              <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-2">Stack</p>
+              <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-2">Stack</p>
               <div className="flex flex-wrap gap-1.5">
                 {project.stack.map((tech) => (
-                  <span key={tech} className="px-2.5 py-1 text-[11px] rounded-md bg-muted text-foreground/80 font-mono">
+                  <span key={tech} className="px-2.5 py-1 text-[11px] rounded-md bg-muted text-foreground font-mono">
                     {tech}
                   </span>
                 ))}

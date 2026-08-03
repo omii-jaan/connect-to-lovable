@@ -167,7 +167,7 @@ const Login = () => {
                     : line.startsWith(">")
                     ? "text-primary"
                     : line.startsWith("#")
-                    ? "text-muted-foreground/60"
+                    ? "text-muted-foreground"
                     : "text-muted-foreground"
                 }`}
               >
@@ -204,7 +204,7 @@ const Login = () => {
               >
                 <Github className="w-4 h-4 shrink-0" />
                 <span className="flex flex-col">
-                  <span className="text-[10px] text-primary/70 font-semibold">{`>`}</span>
+                  <span className="text-[10px] text-primary font-semibold">{`>`}</span>
                   <span>github.auth()</span>
                 </span>
               </button>
@@ -221,7 +221,7 @@ const Login = () => {
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                 </svg>
                 <span className="flex flex-col">
-                  <span className="text-[10px] text-primary/70 font-semibold">{`>`}</span>
+                  <span className="text-[10px] text-primary font-semibold">{`>`}</span>
                   <span>google.auth()</span>
                 </span>
               </button>
@@ -230,7 +230,7 @@ const Login = () => {
             {/* Divider */}
             <div className="flex items-center gap-3 mb-5">
               <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-              <span className="text-[10px] font-mono text-muted-foreground/60">or</span>
+              <span className="text-[10px] font-mono text-muted-foreground">or</span>
               <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
             </div>
 
@@ -241,7 +241,7 @@ const Login = () => {
                   <span className="text-primary">{`$`}</span> email
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/60" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
                   <input
                     id="email"
                     type="email"
@@ -249,7 +249,7 @@ const Login = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="builder@shipyard.dev"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-background/40 border border-border-subtle text-sm text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all font-mono"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-background/40 border border-border-subtle text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all font-mono"
                   />
                 </div>
               </div>
@@ -263,13 +263,13 @@ const Login = () => {
                   <button
                     type="button"
                     onClick={() => toast.message("Password reset docking soon.")}
-                    className="text-[10px] font-mono text-muted-foreground/60 hover:text-primary transition-colors"
+                    className="text-[10px] font-mono text-muted-foreground hover:text-primary transition-colors"
                   >
                     reset?
                   </button>
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/60" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
                   <input
                     id="password"
                     type={showPassword ? "text" : "password"}
@@ -277,12 +277,12 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••••••"
-                    className="w-full pl-9 pr-9 py-2.5 rounded-lg bg-background/40 border border-border-subtle text-sm text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all font-mono"
+                    className="w-full pl-9 pr-9 py-2.5 rounded-lg bg-background/40 border border-border-subtle text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all font-mono"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-foreground transition-colors text-[10px] font-mono"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors text-[10px] font-mono"
                   >
                     {showPassword ? "hide" : "show"}
                   </button>
@@ -326,11 +326,11 @@ const Login = () => {
             {/* Status footer */}
             <div className="mt-4 pt-4 border-t border-border-subtle flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono text-muted-foreground/60">{`[~] $`}</span>
-                <span className="text-[10px] font-mono text-muted-foreground/60">{statusText}</span>
+                <span className="text-[10px] font-mono text-muted-foreground">{`[~] $`}</span>
+                <span className="text-[10px] font-mono text-muted-foreground">{statusText}</span>
                 <span className="inline-block w-1.5 h-4 bg-primary/80 animate-pulse" />
               </div>
-              <span className="text-[10px] font-mono text-muted-foreground/40">tls · 256</span>
+              <span className="text-[10px] font-mono text-muted-foreground">tls · 256</span>
             </div>
           </div>
         </div>
@@ -338,16 +338,16 @@ const Login = () => {
         {/* Bottom links */}
         <div className="mt-6 text-center space-y-3">
           <p className="text-[12px] font-mono text-muted-foreground">
-            <span className="text-muted-foreground/50">{`>`}</span> new here?{" "}
+            <span className="text-muted-foreground">{`>`}</span> new here?{" "}
             <Link to="/#hire" className="text-primary hover:text-foreground transition-colors">
               join --as builder
             </Link>
           </p>
           <Link
             to="/"
-            className="inline-flex text-[11px] font-mono text-muted-foreground/60 hover:text-foreground transition-colors"
+            className="inline-flex text-[11px] font-mono text-muted-foreground hover:text-foreground transition-colors"
           >
-            <span className="text-muted-foreground/40">←</span> cd ..
+            <span className="text-muted-foreground">←</span> cd ..
           </Link>
         </div>
       </div>
