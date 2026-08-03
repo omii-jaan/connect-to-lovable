@@ -252,7 +252,10 @@ const Navbar = () => {
         </div>
 
         {/* Mobile menu trigger */}
-        <button 
+        <button
+          type="button"
+          aria-label="Open navigation menu"
+          aria-expanded={open}
           className="md:hidden w-8 h-8 rounded-full bg-foreground/5 border border-border-subtle flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
           onClick={() => setOpen(!open)}
         >
@@ -286,6 +289,8 @@ const Navbar = () => {
             </div>
             <span className="text-[11px] font-mono text-muted-foreground ml-2.5">~/shipyard</span>
             <button
+              type="button"
+              aria-label="Close navigation menu"
               onClick={() => setOpen(false)}
               className="ml-auto p-1 text-muted-foreground hover:text-foreground transition-colors"
             >
