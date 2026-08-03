@@ -14,13 +14,16 @@ const LiveAnnouncer = () => {
   });
 
   useEffect(() => {
-    return subscribeToAnnouncements((message, politeness) => {
+    const unsubscribe = subscribeToAnnouncements((message, politeness) => {
       // Reset first so identical consecutive messages are still announced.
       setMessages((prev) => ({ ...prev, [politeness]: "" }));
       window.setTimeout(() => {
         setMessages((prev) => ({ ...prev, [politeness]: message }));
       }, 60);
     });
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   return (
