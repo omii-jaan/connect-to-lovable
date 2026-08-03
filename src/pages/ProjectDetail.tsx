@@ -89,10 +89,10 @@ const ProjectDetail = () => {
             <Link to="/projects" className="w-8 h-8 rounded-lg bg-muted border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
               <ArrowLeft className="w-4 h-4" />
             </Link>
-            <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground/60">
+            <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
               <Link to="/projects" className="hover:text-foreground transition-colors">projects</Link>
               <ChevronRight className="w-3 h-3" />
-              <span className="text-foreground/60 truncate max-w-[200px]">{project.title}</span>
+              <span className="text-foreground truncate max-w-[200px]">{project.title}</span>
             </div>
           </div>
 
@@ -113,10 +113,10 @@ const ProjectDetail = () => {
                           <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border border-accent/30 bg-accent/10 text-accent`}>
                             ● {project.status.toUpperCase()}
                           </span>
-                          <span className="text-[11px] font-mono text-muted-foreground/60">
+                          <span className="text-[11px] font-mono text-muted-foreground">
                             Posted {formatDistanceToNow(new Date(project.created_at), { addSuffix: true })}
                           </span>
-                          <span className="text-[11px] font-mono text-muted-foreground/60 flex items-center gap-1">
+                          <span className="text-[11px] font-mono text-muted-foreground flex items-center gap-1">
                             <Eye className="w-3 h-3" /> {project.views_count} views
                           </span>
                         </div>
@@ -124,17 +124,22 @@ const ProjectDetail = () => {
                     </div>
                     <div className="flex items-center gap-1.5 shrink-0">
                       <button
+                        type="button"
+                        aria-label={copied ? "Link copied to clipboard" : "Copy link to this project"}
                         onClick={handleShare}
-                        className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground/40 hover:text-foreground hover:bg-card/[0.04] bg-muted border border-border/50 transition-all"
+                        className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-card/[0.04] bg-muted border border-border/50 transition-all"
                       >
                         {copied ? <CheckCheck className="w-4 h-4 text-accent" /> : <Share2 className="w-4 h-4" />}
                       </button>
                       <button
+                        type="button"
+                        aria-label={saved ? "Remove from saved projects" : "Save this project"}
+                        aria-pressed={saved}
                         onClick={handleSave}
                         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
                           saved
                             ? "text-primary bg-primary/10 border border-primary/20"
-                            : "text-muted-foreground/40 hover:text-foreground hover:bg-card/[0.04] bg-muted border border-border/50"
+                            : "text-muted-foreground hover:text-foreground hover:bg-card/[0.04] bg-muted border border-border/50"
                         }`}
                       >
                         {saved ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
@@ -142,7 +147,7 @@ const ProjectDetail = () => {
                     </div>
                   </div>
 
-                  <p className="text-sm text-muted-foreground/90 leading-relaxed mb-6 relative z-10">{project.description}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-6 relative z-10">{project.description}</p>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 relative z-10">
                     {[
@@ -166,7 +171,7 @@ const ProjectDetail = () => {
                               stat.color === "accent" ? "text-accent" : stat.color === "secondary" ? "text-secondary" : "text-primary"
                             }`} />
                           </div>
-                          <span className="text-[9px] font-mono text-muted-foreground/60 uppercase tracking-wider">{stat.label}</span>
+                          <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider">{stat.label}</span>
                         </div>
                         <p className="text-sm font-bold text-foreground">{stat.value}</p>
                       </motion.div>
@@ -175,7 +180,7 @@ const ProjectDetail = () => {
 
                   <div className="space-y-4 relative z-10">
                     <div>
-                      <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-2">Required Skills</p>
+                      <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-2">Required Skills</p>
                       <div className="flex flex-wrap gap-1.5">
                         {project.required_skills.map((s) => (
                           <Badge key={s} variant="secondary" className="text-[10px] font-mono bg-background/80 border border-border/30 text-muted-foreground hover:border-primary/30 hover:text-primary transition-all cursor-default">
@@ -185,18 +190,18 @@ const ProjectDetail = () => {
                       </div>
                     </div>
                     <div>
-                      <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-2">Preferred Tech Stack</p>
+                      <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-2">Preferred Tech Stack</p>
                       <div className="flex flex-wrap gap-1.5">
                         {project.preferred_tech_stack.map((t) => (
-                          <Badge key={t} variant="outline" className="text-[10px] font-mono border-primary/30 bg-primary/[0.04] text-primary/90">
+                          <Badge key={t} variant="outline" className="text-[10px] font-mono border-primary/30 bg-primary/[0.04] text-primary">
                             {t}
                           </Badge>
                         ))}
                       </div>
                     </div>
                     <div>
-                      <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-2">Success Criteria</p>
-                      <div className="text-sm text-foreground/80 bg-background/80 rounded-xl border border-border/40 p-4 leading-relaxed">
+                      <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-2">Success Criteria</p>
+                      <div className="text-sm text-foreground bg-background/80 rounded-xl border border-border/40 p-4 leading-relaxed">
                         {project.success_criteria}
                       </div>
                     </div>
@@ -214,16 +219,16 @@ const ProjectDetail = () => {
                       </div>
                       <div>
                         <h2 className="text-sm font-semibold text-primary">AI Parsed Requirements</h2>
-                        <p className="text-[9px] font-mono text-primary/60">Automatically extracted from description</p>
+                        <p className="text-[9px] font-mono text-primary">Automatically extracted from description</p>
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4 relative z-10">
                       <div className="col-span-2">
-                        <p className="text-[9px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-1.5">Core Requirement</p>
+                        <p className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider mb-1.5">Core Requirement</p>
                         <p className="text-sm text-foreground bg-background/60 rounded-lg border border-border/30 px-3.5 py-2.5">{project.ai_parsed_requirements.core_requirement}</p>
                       </div>
                       <div>
-                        <p className="text-[9px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-1.5">Integrations</p>
+                        <p className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider mb-1.5">Integrations</p>
                         <div className="flex flex-wrap gap-1">
                           {project.ai_parsed_requirements.integrations.map((i) => (
                             <Badge key={i} variant="outline" className="text-[9px] font-mono border-border/40">{i}</Badge>
@@ -231,8 +236,8 @@ const ProjectDetail = () => {
                         </div>
                       </div>
                       <div>
-                        <p className="text-[9px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-1.5">Ideal Builder</p>
-                        <p className="text-sm text-foreground/90">{project.ai_parsed_requirements.ideal_builder_type}</p>
+                        <p className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider mb-1.5">Ideal Builder</p>
+                        <p className="text-sm text-foreground">{project.ai_parsed_requirements.ideal_builder_type}</p>
                       </div>
                     </div>
                   </Card>
@@ -250,7 +255,7 @@ const ProjectDetail = () => {
                           </div>
                           <div>
                             <h2 className="text-sm font-semibold text-foreground">AI Builder Matches</h2>
-                            <p className="text-[9px] font-mono text-muted-foreground/60">Top candidates ranked by relevance</p>
+                            <p className="text-[9px] font-mono text-muted-foreground">Top candidates ranked by relevance</p>
                           </div>
                         </div>
                         <Badge variant="secondary" className="text-[10px] font-mono">{matches.length} builders</Badge>
@@ -293,7 +298,7 @@ const ProjectDetail = () => {
                                         {match.builder?.full_name || "Unknown Builder"}
                                       </Link>
                                       {match.builder?.is_verified && <BadgeCheck className="w-3.5 h-3.5 text-primary shrink-0" />}
-                                      <span className="text-[10px] font-mono text-muted-foreground/50">@{match.builder?.username}</span>
+                                      <span className="text-[10px] font-mono text-muted-foreground">@{match.builder?.username}</span>
                                     </div>
                                     <div className="flex items-center gap-1.5 shrink-0">
                                       <Button
@@ -314,9 +319,9 @@ const ProjectDetail = () => {
                                     </div>
                                   </div>
 
-                                  <p className="text-[11px] text-muted-foreground/70 line-clamp-2 mb-2">{match.builder?.bio}</p>
+                                  <p className="text-[11px] text-muted-foreground line-clamp-2 mb-2">{match.builder?.bio}</p>
 
-                                  <div className="flex items-center gap-3 mb-2 text-[10px] font-mono text-muted-foreground/50">
+                                  <div className="flex items-center gap-3 mb-2 text-[10px] font-mono text-muted-foreground">
                                     <span className="flex items-center gap-1"><Briefcase className="w-3 h-3" />{match.builder?.ships_count} ships</span>
                                     <span className="flex items-center gap-1"><Zap className="w-3 h-3" />{match.builder?.vibe_score}% vibe</span>
                                     <span className="flex items-center gap-1"><Star />{match.builder?.stars_count} stars</span>
@@ -329,7 +334,7 @@ const ProjectDetail = () => {
                                         initial={{ opacity: 0, x: -5 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: 0.2 + ri * 0.05 }}
-                                        className="text-[10px] text-muted-foreground/80 flex items-start gap-1.5"
+                                        className="text-[10px] text-muted-foreground flex items-start gap-1.5"
                                       >
                                         <Check className="w-3 h-3 text-accent shrink-0 mt-0.5" />
                                         {reason}
@@ -339,7 +344,7 @@ const ProjectDetail = () => {
 
                                   <div className="flex flex-wrap gap-1">
                                     {match.skills_match.map((s) => (
-                                      <Badge key={s} variant="outline" className="text-[8px] font-mono border-accent/20 bg-accent/[0.03] text-accent/80 px-1.5 py-0">
+                                      <Badge key={s} variant="outline" className="text-[8px] font-mono border-accent/20 bg-accent/[0.03] text-accent px-1.5 py-0">
                                         {s}
                                       </Badge>
                                     ))}
@@ -354,7 +359,7 @@ const ProjectDetail = () => {
                       {matches.length > 3 && (
                         <button
                           onClick={() => setShowAllMatches(!showAllMatches)}
-                          className="w-full mt-3 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-[10px] font-mono text-muted-foreground/60 hover:text-foreground hover:bg-card/[0.02] transition-all border border-transparent hover:border-border/30"
+                          className="w-full mt-3 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-[10px] font-mono text-muted-foreground hover:text-foreground hover:bg-card/[0.02] transition-all border border-transparent hover:border-border/30"
                         >
                           {showAllMatches ? (
                             <><ChevronUp className="w-3 h-3" /> Show Less</>
@@ -384,9 +389,9 @@ const ProjectDetail = () => {
                       <Link to={`/builder/${project.creator?.username}`} className="text-sm font-semibold text-foreground hover:text-primary transition-colors truncate block">
                         {project.creator?.full_name || "Unknown"}
                       </Link>
-                      <p className="text-[10px] font-mono text-muted-foreground/60">Project Creator</p>
+                      <p className="text-[10px] font-mono text-muted-foreground">Project Creator</p>
                     </div>
-                    <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/30 ml-auto shrink-0" />
+                    <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground ml-auto shrink-0" />
                   </div>
 
                   <div className="space-y-3 mb-5">
@@ -408,25 +413,25 @@ const ProjectDetail = () => {
 
                   <div className="pt-3 border-t border-border/30 space-y-2.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono text-muted-foreground/60">Category</span>
+                      <span className="text-[10px] font-mono text-muted-foreground">Category</span>
                       <div className={`px-2 py-0.5 rounded-full text-[9px] font-mono bg-primary/[0.07] border border-cyan-500/20 text-primary`}>
                         {project.category}
                       </div>
                     </div>
                     <div className="flex items-center justify-between text-[10px] font-mono">
-                      <span className="text-muted-foreground/60">Status</span>
+                      <span className="text-muted-foreground">Status</span>
                       <span className="text-accent font-semibold capitalize">{project.status}</span>
                     </div>
                     <div className="flex items-center justify-between text-[10px] font-mono">
-                      <span className="text-muted-foreground/60">Visibility</span>
+                      <span className="text-muted-foreground">Visibility</span>
                       <span className="text-foreground capitalize">{project.visibility}</span>
                     </div>
                     <div className="flex items-center justify-between text-[10px] font-mono">
-                      <span className="text-muted-foreground/60">Created</span>
+                      <span className="text-muted-foreground">Created</span>
                       <span className="text-foreground">{formatDistanceToNow(new Date(project.created_at), { addSuffix: true })}</span>
                     </div>
                     <div className="flex items-center justify-between text-[10px] font-mono">
-                      <span className="text-muted-foreground/60">Interest</span>
+                      <span className="text-muted-foreground">Interest</span>
                       <span className="text-foreground flex items-center gap-1"><Sparkles className="w-3 h-3 text-primary" />{project.interest_count}</span>
                     </div>
                   </div>
@@ -443,7 +448,7 @@ const ProjectDetail = () => {
                       "Built-in escrow & milestone payments",
                       "Dispute resolution included",
                     ].map((tip, i) => (
-                      <li key={i} className="flex items-start gap-2 text-[10px] font-mono text-muted-foreground/70">
+                      <li key={i} className="flex items-start gap-2 text-[10px] font-mono text-muted-foreground">
                         <span className="w-1 h-1 rounded-full bg-primary/60 mt-1.5 shrink-0" />
                         {tip}
                       </li>
@@ -479,7 +484,7 @@ const ProjectDetail = () => {
             <div className="space-y-2">
               <p>Send an invitation to <strong className="text-foreground">{inviteDialog.builder?.full_name}</strong> for <strong className="text-foreground">{project.title}</strong>.</p>
               <div className="rounded-lg bg-muted border border-border/50 p-3 text-xs text-muted-foreground">
-                <p className="font-mono text-[10px] text-muted-foreground/60 mb-1">Match score: {inviteDialog.match_score}%</p>
+                <p className="font-mono text-[10px] text-muted-foreground mb-1">Match score: {inviteDialog.match_score}%</p>
                 <p className="text-muted-foreground">{inviteDialog.match_reasons[0]}</p>
               </div>
             </div>

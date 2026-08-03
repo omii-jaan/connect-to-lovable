@@ -172,24 +172,24 @@ const HowItWorks = () => {
             {hoveredIdx === 0 && (
               <div className="space-y-1 text-primary">
                 <p>➜ git clone git@github.com:builder/agent.git</p>
-                <p className="text-foreground/60">➜ Analyzing imports: [openai, langchain]</p>
-                <p className="text-foreground/60">➜ Shipped to: <span className="underline">shipyard.dock/agent-xyz</span></p>
+                <p className="text-foreground">➜ Analyzing imports: [openai, langchain]</p>
+                <p className="text-foreground">➜ Shipped to: <span className="underline">shipyard.dock/agent-xyz</span></p>
                 <p className="text-accent font-bold">✔ DOCKED SUCCESSFUL</p>
               </div>
             )}
             {hoveredIdx === 1 && (
               <div className="space-y-1 text-secondary">
                 <p>➜ founder_query: "Vector db chat assistant"</p>
-                <p className="text-foreground/60">➜ Scanning repository semantic maps...</p>
-                <p className="text-foreground/60">➜ Matched: <span className="underline">@arjun_builds (98% match)</span></p>
+                <p className="text-foreground">➜ Scanning repository semantic maps...</p>
+                <p className="text-foreground">➜ Matched: <span className="underline">@arjun_builds (98% match)</span></p>
                 <p className="text-accent font-bold">➜ Matching complete.</p>
               </div>
             )}
             {hoveredIdx === 2 && (
               <div className="space-y-1 text-accent">
                 <p>➜ escrow_agreement: "Create bot dashboard"</p>
-                <p className="text-foreground/60">➜ Escrow status: [funded, locked]</p>
-                <p className="text-foreground/60">➜ Contract key: 0x8a927d...8b99</p>
+                <p className="text-foreground">➜ Escrow status: [funded, locked]</p>
+                <p className="text-foreground">➜ Contract key: 0x8a927d...8b99</p>
                 <p className="text-foreground font-bold">➜ Ready to code.</p>
               </div>
             )}

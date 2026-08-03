@@ -81,6 +81,8 @@
 
     --secondary: var(--violet-400);
     --secondary-foreground: 220 25% 5%;
+    /* AA-safe violet for text/icons on dark surfaces */
+    --secondary-bright: 270 70% 82%;
 
     --muted: var(--neutral-800);
     --muted-foreground: var(--text-secondary);
@@ -183,6 +185,7 @@
 
     --secondary: var(--violet-500);
     --secondary-foreground: 210 30% 99%;
+    --secondary-bright: 274 52% 34%;
 
     --muted: 210 22% 93%;
     --muted-foreground: var(--text-secondary);

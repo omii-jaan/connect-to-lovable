@@ -250,7 +250,7 @@ const Dashboard = () => {
                     : "text-muted-foreground hover:text-foreground hover:bg-card/[0.04] border border-transparent"
                 }`}
               >
-                <item.icon className={`w-4 h-4 ${isActive ? `text-primary` : "text-muted-foreground/60"}`} />
+                <item.icon className={`w-4 h-4 ${isActive ? `text-primary` : "text-muted-foreground"}`} />
                 <span>{item.label}</span>
                 {isActive && <span className="ml-auto w-1 h-4 rounded-full bg-primary" />}
               </button>
@@ -271,8 +271,8 @@ const Dashboard = () => {
 
         {/* Bottom status */}
         <div className="px-4 py-2.5 border-t border-border/50 flex items-center justify-between">
-          <span className="text-[9px] font-mono text-muted-foreground/40">{`[bridge] $`}</span>
-          <span className="text-[9px] font-mono text-accent/60">{`● live`}</span>
+          <span className="text-[9px] font-mono text-muted-foreground">{`[bridge] $`}</span>
+          <span className="text-[9px] font-mono text-accent">{`● live`}</span>
         </div>
       </aside>
 
@@ -281,7 +281,7 @@ const Dashboard = () => {
         {/* ---- Top Bar ---- */}
         <header className="h-14 border-b border-border-subtle bg-card flex items-center justify-between px-4 md:px-6 shrink-0">
           <div className="flex items-center gap-3">
-            <span className="text-xs font-mono text-muted-foreground/60 hidden sm:block">{`[~] $`}</span>
+            <span className="text-xs font-mono text-muted-foreground hidden sm:block">{`[~] $`}</span>
             <span className="text-xs font-mono text-primary hidden sm:block">{`./${activeTab}`}</span>
             <span className="inline-block w-1.5 h-4 bg-primary/60 animate-pulse hidden sm:block" />
           </div>
@@ -352,7 +352,7 @@ const Dashboard = () => {
                           "text-secondary"
                         }`} />
                       </div>
-                      <span className="text-[9px] font-mono uppercase text-muted-foreground/50">Live</span>
+                      <span className="text-[9px] font-mono uppercase text-muted-foreground">Live</span>
                     </div>
                     <p className="font-display font-bold text-2xl text-foreground">{stat.value}</p>
                     <p className="text-[10px] font-mono text-muted-foreground mt-0.5">{stat.label}</p>
@@ -380,7 +380,7 @@ const Dashboard = () => {
                 <div className="lg:col-span-1 rounded-xl border border-border/50 bg-muted overflow-hidden">
                   <div className="px-4 py-3 border-b border-border/50 flex items-center justify-between">
                     <span className="text-xs font-mono text-foreground font-semibold">Activity</span>
-                    <span className="text-[9px] font-mono text-muted-foreground/50">tail -f</span>
+                    <span className="text-[9px] font-mono text-muted-foreground">tail -f</span>
                   </div>
                   <div className="divide-y divide-white/5">
                     {activityFeed.map((item, i) => (
@@ -400,9 +400,9 @@ const Dashboard = () => {
                               {item.event}
                             </p>
                             <p className="text-[11px] text-muted-foreground truncate">{item.detail}</p>
-                            <p className="text-[9px] font-mono text-muted-foreground/40 mt-0.5">{item.time}</p>
+                            <p className="text-[9px] font-mono text-muted-foreground mt-0.5">{item.time}</p>
                           </div>
-                          <ChevronRight className="w-3 h-3 text-muted-foreground/20 shrink-0 mt-1" />
+                          <ChevronRight className="w-3 h-3 text-muted-foreground shrink-0 mt-1" />
                         </div>
                       </div>
                     ))}
@@ -420,7 +420,7 @@ const Dashboard = () => {
 
                   {projects.length === 0 ? (
                     <div className="rounded-xl border border-border/50 bg-muted p-8 text-center">
-                      <FolderGit2 className="w-10 h-10 mx-auto text-muted-foreground/30 mb-3" />
+                      <FolderGit2 className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
                       <p className="text-sm font-semibold text-foreground mb-1">No ships docked yet</p>
                       <p className="text-xs text-muted-foreground mb-4">Connect your repo and launch your first ship.</p>
                       <Link
@@ -472,11 +472,11 @@ const Dashboard = () => {
                             )}
                           </div>
                           <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/50">
-                            <span className="text-[9px] font-mono text-muted-foreground/60">
+                            <span className="text-[9px] font-mono text-muted-foreground">
                               {format(new Date(project.created_at), "MMM d")}
                             </span>
                             {project.live_url && (
-                              <ExternalLink className="w-3 h-3 text-primary/60" />
+                              <ExternalLink className="w-3 h-3 text-primary" />
                             )}
                           </div>
                         </Link>
@@ -556,13 +556,13 @@ const Dashboard = () => {
               {/* Search + filters */}
               <div className="flex flex-col sm:flex-row gap-2">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/60" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
                   <input
                     type="text"
                     value={shipSearch}
                     onChange={(e) => setShipSearch(e.target.value)}
                     placeholder="Search ships..."
-                    className="w-full pl-9 pr-3 py-2 rounded-lg bg-muted border border-border text-xs text-foreground placeholder:text-muted-foreground/40 outline-none focus:border-primary/40 transition-all font-mono"
+                    className="w-full pl-9 pr-3 py-2 rounded-lg bg-muted border border-border text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-primary/40 transition-all font-mono"
                   />
                 </div>
                 <div className="flex gap-2">
@@ -636,11 +636,11 @@ const Dashboard = () => {
                         </div>
                         <div className="flex items-center justify-between pt-2 border-t border-border/50">
                           <div className="flex items-center gap-2">
-                            <span className="flex items-center gap-1 text-[9px] font-mono text-muted-foreground/60">
+                            <span className="flex items-center gap-1 text-[9px] font-mono text-muted-foreground">
                               <Star className="w-2.5 h-2.5" />
                               {project.views_count || 0}
                             </span>
-                            <span className="text-[9px] font-mono text-muted-foreground/40">
+                            <span className="text-[9px] font-mono text-muted-foreground">
                               {format(new Date(project.created_at), "MMM d")}
                             </span>
                           </div>
@@ -783,7 +783,7 @@ const Dashboard = () => {
 
               {filteredContracts.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 gap-3">
-                  <FileText className="w-10 h-10 text-muted-foreground/40" />
+                  <FileText className="w-10 h-10 text-muted-foreground" />
                   <p className="text-sm font-mono text-muted-foreground">{`> no ${contractFilter === "all" ? "" : contractFilter + " "}contracts found`}</p>
                 </div>
               ) : (
@@ -824,7 +824,7 @@ const Dashboard = () => {
                               {format(new Date(contract.created_at), "MMM d, yyyy")}
                             </span>
                             {contract.deadline && (
-                              <span className="text-[11px] font-mono text-muted-foreground/60 flex items-center gap-1">
+                              <span className="text-[11px] font-mono text-muted-foreground flex items-center gap-1">
                                 <Clock className="w-3 h-3" />
                                 {format(new Date(contract.deadline), "MMM d")}
                               </span>
@@ -837,7 +837,7 @@ const Dashboard = () => {
                             <span className="text-[11px] font-mono text-muted-foreground">
                               Milestones {contract.milestones.filter(m => m.status === "approved" || m.status === "paid").length}/{contract.milestones.length} completed
                             </span>
-                            <span className="text-[11px] font-mono text-muted-foreground/60">
+                            <span className="text-[11px] font-mono text-muted-foreground">
                               {Math.round((contract.milestones.filter(m => m.status === "approved" || m.status === "paid").length / contract.milestones.length) * 100)}%
                             </span>
                           </div>
@@ -1008,7 +1008,7 @@ const Dashboard = () => {
                           onChange={(e) => updateFormField("bio", e.target.value)}
                           placeholder="Tell builders and founders about yourself..."
                           rows={3}
-                          className="w-full bg-transparent border border-border focus:border-primary outline-none rounded-lg text-sm text-foreground/80 p-2 mb-4 resize-none"
+                          className="w-full bg-transparent border border-border focus:border-primary outline-none rounded-lg text-sm text-foreground p-2 mb-4 resize-none"
                         />
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary uppercase tracking-wider">
@@ -1031,7 +1031,7 @@ const Dashboard = () => {
                         <p className="text-sm font-mono text-muted-foreground mb-2">
                           @{profile?.username || user?.user_metadata?.user_name || "builder"}
                         </p>
-                        <p className="text-sm text-muted-foreground/80 mb-4 max-w-xl">
+                        <p className="text-sm text-muted-foreground mb-4 max-w-xl">
                           {profile?.bio || "No bio yet. Dock your first project to get started."}
                         </p>
                         <div className="flex flex-wrap items-center gap-2">
@@ -1044,7 +1044,7 @@ const Dashboard = () => {
                             </span>
                           ))}
                           {(profile?.stack?.length || 0) > 3 && (
-                            <span className="text-[10px] font-mono text-muted-foreground/60">
+                            <span className="text-[10px] font-mono text-muted-foreground">
                               +{profile!.stack.length - 3} more
                             </span>
                           )}
@@ -1096,7 +1096,7 @@ const Dashboard = () => {
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="font-display font-bold text-lg text-foreground">Tech Stack</h3>
                       {!isEditing && (
-                        <button onClick={startEditing} className="text-[10px] font-mono text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
+                        <button onClick={startEditing} className="text-[10px] font-mono text-primary hover:text-primary transition-colors flex items-center gap-1">
                           <Pencil className="w-3 h-3" /> Edit
                         </button>
                       )}
@@ -1105,7 +1105,7 @@ const Dashboard = () => {
                       <>
                         <div className="flex flex-wrap gap-2 mb-3">
                           {editForm.stack.map((tech) => (
-                            <span key={tech} className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-mono rounded-lg bg-muted/50 border border-border text-foreground/80">
+                            <span key={tech} className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-mono rounded-lg bg-muted/50 border border-border text-foreground">
                               {tech}
                               <button onClick={() => removeStackTag(tech)} className="hover:text-destructive transition-colors">
                                 <X className="w-3 h-3" />
@@ -1131,13 +1131,13 @@ const Dashboard = () => {
                       profile?.stack && profile.stack.length > 0 ? (
                         <div className="flex flex-wrap gap-2">
                           {profile.stack.map((tech) => (
-                            <span key={tech} className="px-3 py-1.5 text-xs font-mono rounded-lg bg-muted/50 border border-border text-foreground/80 hover:border-primary/30 hover:bg-primary/5 transition-colors">
+                            <span key={tech} className="px-3 py-1.5 text-xs font-mono rounded-lg bg-muted/50 border border-border text-foreground hover:border-primary/30 hover:bg-primary/5 transition-colors">
                               {tech}
                             </span>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-sm text-muted-foreground/60 font-mono">{`> stack.empty — add technologies you work with`}</p>
+                        <p className="text-sm text-muted-foreground font-mono">{`> stack.empty — add technologies you work with`}</p>
                       )
                     )}
                   </div>
@@ -1147,7 +1147,7 @@ const Dashboard = () => {
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="font-display font-bold text-lg text-foreground">Social Links</h3>
                       {!isEditing && (
-                        <button onClick={startEditing} className="text-[10px] font-mono text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
+                        <button onClick={startEditing} className="text-[10px] font-mono text-primary hover:text-primary transition-colors flex items-center gap-1">
                           <Pencil className="w-3 h-3" /> Edit
                         </button>
                       )}
@@ -1161,7 +1161,7 @@ const Dashboard = () => {
                                 {platform.toLowerCase() === "github" ? <Github className="w-3.5 h-3.5 text-muted-foreground" /> : <Globe className="w-3.5 h-3.5 text-muted-foreground" />}
                               </div>
                               <span className="text-xs font-mono text-muted-foreground capitalize w-20 shrink-0">{platform}</span>
-                              <span className="flex-1 text-[10px] font-mono text-foreground/60 truncate">{url}</span>
+                              <span className="flex-1 text-[10px] font-mono text-foreground truncate">{url}</span>
                               <button onClick={() => removeSocialLink(platform)} className="p-1 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
                                 <X className="w-3 h-3" />
                               </button>
@@ -1199,12 +1199,12 @@ const Dashboard = () => {
                                  <Globe className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />}
                               </div>
                               <span className="text-xs font-mono text-muted-foreground group-hover:text-foreground capitalize">{platform}</span>
-                              <span className="ml-auto text-[10px] text-muted-foreground/40 group-hover:text-primary transition-colors truncate max-w-[200px]">{url}</span>
+                              <span className="ml-auto text-[10px] text-muted-foreground group-hover:text-primary transition-colors truncate max-w-[200px]">{url}</span>
                             </a>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-sm text-muted-foreground/60 font-mono">{`> links.empty — connect your GitHub, Twitter, and more`}</p>
+                        <p className="text-sm text-muted-foreground font-mono">{`> links.empty — connect your GitHub, Twitter, and more`}</p>
                       )
                     )}
                   </div>
@@ -1216,26 +1216,26 @@ const Dashboard = () => {
                     <h3 className="font-display font-bold text-lg text-foreground mb-4">Identity</h3>
                     <div className="space-y-4">
                       <div>
-                        <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-1">Email</p>
-                        <p className="text-xs font-mono text-foreground/80 truncate">{user?.email || "—"}</p>
+                        <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">Email</p>
+                        <p className="text-xs font-mono text-foreground truncate">{user?.email || "—"}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-1">Member Since</p>
-                        <p className="text-xs font-mono text-foreground/80">
+                        <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">Member Since</p>
+                        <p className="text-xs font-mono text-foreground">
                           {profile?.created_at ? new Date(profile.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long" }) : "—"}
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-1">Account Type</p>
+                        <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">Account Type</p>
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary uppercase tracking-wider">
                           {profile?.role || userRole}
                         </span>
                       </div>
                       <div>
-                        <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-1">GitHub</p>
+                        <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">GitHub</p>
                         <div className="flex items-center gap-2">
                           <Github className="w-3.5 h-3.5 text-muted-foreground" />
-                          <span className="text-xs font-mono text-foreground/80">{profile?.github_username || "Not connected"}</span>
+                          <span className="text-xs font-mono text-foreground">{profile?.github_username || "Not connected"}</span>
                         </div>
                       </div>
                     </div>
@@ -1245,7 +1245,7 @@ const Dashboard = () => {
                   <div className="rounded-2xl border border-border/50 bg-card p-6">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="font-display font-bold text-lg text-foreground">Recent Ships</h3>
-                      <button onClick={() => setActiveTab("ships")} className="text-[10px] font-mono text-primary hover:text-primary/80 transition-colors">
+                      <button onClick={() => setActiveTab("ships")} className="text-[10px] font-mono text-primary hover:text-primary transition-colors">
                         View all
                       </button>
                     </div>
@@ -1260,12 +1260,12 @@ const Dashboard = () => {
                               <p className="text-xs font-semibold text-foreground truncate">{project.title}</p>
                               <p className="text-[10px] font-mono text-muted-foreground">{project.status}</p>
                             </div>
-                            <ExternalLink className="w-3 h-3 text-muted-foreground/40" />
+                            <ExternalLink className="w-3 h-3 text-muted-foreground" />
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-sm text-muted-foreground/60 font-mono">{`> projects.empty — dock your first ship`}</p>
+                      <p className="text-sm text-muted-foreground font-mono">{`> projects.empty — dock your first ship`}</p>
                     )}
                   </div>
                 </div>
@@ -1290,7 +1290,7 @@ const Dashboard = () => {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-mono text-primary/60">/marketplace</span>
+                    <span className="text-[10px] font-mono text-primary">/marketplace</span>
                     <span className="w-1 h-1 rounded-full bg-primary/60 animate-pulse" />
                   </div>
                   <h2 className="font-display font-bold text-xl text-foreground">Marketplace Projects</h2>
@@ -1321,21 +1321,21 @@ const Dashboard = () => {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-semibold text-foreground truncate group-hover:text-primary transition-colors">{project.title}</p>
-                            <p className="text-[9px] font-mono text-muted-foreground/60">
+                            <p className="text-[9px] font-mono text-muted-foreground">
                               ${project.budget_min.toLocaleString()} – ${project.budget_max.toLocaleString()} · {project.timeline_weeks}w · {project.category}
                             </p>
                           </div>
                           <div className="hidden sm:flex items-center gap-2">
-                            <div className="flex items-center gap-1 text-[9px] font-mono text-primary/60 bg-primary/[0.04] rounded-full px-2 py-0.5 border border-primary/10">
+                            <div className="flex items-center gap-1 text-[9px] font-mono text-primary bg-primary/[0.04] rounded-full px-2 py-0.5 border border-primary/10">
                               <Sparkles className="w-2.5 h-2.5" /> {project.interest_count}
                             </div>
-                            <ChevronRight className="w-3 h-3 text-muted-foreground/20 group-hover:text-primary/60 transition-colors" />
+                            <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors" />
                           </div>
                         </Link>
                       </motion.div>
                     ))}
                   </div>
-                  <Link to="/projects" className="block mt-3 text-center text-[10px] font-mono text-primary/80 hover:text-primary transition-colors py-1.5 rounded-lg hover:bg-card/[0.02]">
+                  <Link to="/projects" className="block mt-3 text-center text-[10px] font-mono text-primary hover:text-primary transition-colors py-1.5 rounded-lg hover:bg-card/[0.02]">
                     Browse all projects →
                   </Link>
                 </div>
@@ -1352,7 +1352,7 @@ const Dashboard = () => {
                       <InvitationCard key={inv.id} inv={inv} index={i} />
                     ))}
                     {MOCK_INVITATIONS.length === 0 && (
-                      <p className="text-xs text-muted-foreground/60 font-mono text-center py-6">{`> inbox.empty — no invitations yet`}</p>
+                      <p className="text-xs text-muted-foreground font-mono text-center py-6">{`> inbox.empty — no invitations yet`}</p>
                     )}
                   </div>
                 </div>
@@ -1363,7 +1363,7 @@ const Dashboard = () => {
                   <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-primary" /> Matching Preferences
                   </h3>
-                  <button className="text-[10px] font-mono text-primary hover:text-primary/80 transition-colors">Edit</button>
+                  <button className="text-[10px] font-mono text-primary hover:text-primary transition-colors">Edit</button>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {[
@@ -1373,7 +1373,7 @@ const Dashboard = () => {
                     { label: "Collaboration", value: "Solo or Team" },
                   ].map((pref) => (
                     <div key={pref.label} className="rounded-xl bg-background/80 border border-border/40 p-3.5 hover:border-border/60 transition-colors">
-                      <p className="text-[9px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-1">{pref.label}</p>
+                      <p className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider mb-1">{pref.label}</p>
                       <p className="text-xs font-semibold text-foreground">{pref.value}</p>
                     </div>
                   ))}
@@ -1392,7 +1392,7 @@ const Dashboard = () => {
                     { label: "Match Rate", value: "94%", change: "+2%", positive: true },
                   ].map((stat) => (
                     <div key={stat.label} className="rounded-xl bg-background/80 border border-border/40 p-3.5">
-                      <p className="text-[9px] font-mono text-muted-foreground/60">{stat.label}</p>
+                      <p className="text-[9px] font-mono text-muted-foreground">{stat.label}</p>
                       <div className="flex items-center gap-2 mt-1">
                         <p className="text-lg font-bold text-foreground">{stat.value}</p>
                         <span className={`text-[10px] font-mono ${stat.positive ? "text-accent" : "text-destructive"}`}>{stat.change}</span>
@@ -1480,7 +1480,7 @@ const Dashboard = () => {
                   <div className="flex items-center justify-between py-2 border-t border-border/50">
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-foreground">Sign out</span>
-                      <span className="text-[10px] font-mono text-muted-foreground/60">end current session</span>
+                      <span className="text-[10px] font-mono text-muted-foreground">end current session</span>
                     </div>
                     <button
                       onClick={() => signOut()}
@@ -1516,7 +1516,7 @@ const Dashboard = () => {
                           value={deleteConfirm}
                           onChange={(e) => setDeleteConfirm(e.target.value)}
                           placeholder="type CONFIRM..."
-                          className="flex-1 bg-transparent border border-border/40 rounded-lg px-3 py-1.5 text-xs font-mono text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-red-500/40"
+                          className="flex-1 bg-transparent border border-border/40 rounded-lg px-3 py-1.5 text-xs font-mono text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-red-500/40"
                         />
                         <button className="px-3 py-1.5 text-xs font-mono font-medium rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors disabled:opacity-40">
                           Delete
@@ -1582,11 +1582,11 @@ const InvitationCard = ({ inv, index }: { inv: Invitation; index: number }) => {
                 {responded === "accepted" ? "✓ Accepted" : responded === "declined" ? "✕ Declined" : "● Pending"}
               </div>
             </div>
-            <p className="text-[10px] text-muted-foreground/70 leading-relaxed line-clamp-2">
+            <p className="text-[10px] text-muted-foreground leading-relaxed line-clamp-2">
               "{inv.personalized_message}"
             </p>
             <div className="flex items-center gap-2 mt-1.5">
-              <span className="text-[9px] font-mono text-muted-foreground/50">
+              <span className="text-[9px] font-mono text-muted-foreground">
                 From {inv.creator?.full_name} · {formatDistanceToNow(new Date(inv.sent_at), { addSuffix: true })}
               </span>
             </div>
@@ -1607,7 +1607,7 @@ const InvitationCard = ({ inv, index }: { inv: Invitation; index: number }) => {
                 >
                   <XIcon className="w-3 h-3" /> Decline
                 </button>
-                <Link to={`/projects/${inv.project_id}`} className="ml-auto text-[9px] font-mono text-primary/60 hover:text-primary transition-colors">
+                <Link to={`/projects/${inv.project_id}`} className="ml-auto text-[9px] font-mono text-primary hover:text-primary transition-colors">
                   Details →
                 </Link>
               </div>

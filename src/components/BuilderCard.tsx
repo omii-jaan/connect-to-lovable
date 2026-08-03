@@ -19,19 +19,19 @@ const badgeStyles = {
   cyan: {
     badge: "bg-primary/10 text-primary border-primary/20",
     glow: "group-hover:shadow-[0_0_30px_rgba(183,100,50,0.15)] group-hover:border-primary/40",
-    stamp: "text-primary/5",
+    stamp: "text-primary",
     spotlight: "hsla(183, 100%, 50%, 0.08)",
   },
   purple: {
-    badge: "bg-secondary/10 text-secondary border-secondary/20",
+    badge: "bg-secondary/10 text-secondary-bright border-secondary/20",
     glow: "group-hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] group-hover:border-secondary/40",
-    stamp: "text-secondary/5",
+    stamp: "text-secondary-bright",
     spotlight: "hsla(183, 100%, 50%, 0.08)",
   },
   green: {
     badge: "bg-accent/10 text-accent border-accent/20",
     glow: "group-hover:shadow-[0_0_30px_rgba(142,76,55,0.15)] group-hover:border-accent/40",
-    stamp: "text-accent/5",
+    stamp: "text-accent",
     spotlight: "hsla(183, 100%, 50%, 0.08)",
   },
 };
@@ -90,7 +90,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
               </Link>
               <ShieldCheck className="w-3.5 h-3.5 text-primary" />
             </div>
-            <Link to={`/builder/${builder.handle.replace("@", "")}`} className="text-muted-foreground text-xs mt-1 hover:text-primary/80 transition-colors block">
+            <Link to={`/builder/${builder.handle.replace("@", "")}`} className="text-muted-foreground text-xs mt-1 hover:text-primary transition-colors block">
               {builder.handle}
             </Link>
           </div>
@@ -111,7 +111,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
         {builder.stack.map((tech) => (
           <span 
             key={tech} 
-            className="px-2.5 py-0.5 text-[10px] rounded-md bg-foreground/5 border border-border-subtle text-foreground/80 font-mono transition-colors group-hover:bg-foreground/10 group-hover:border-border-subtle"
+            className="px-2.5 py-0.5 text-[10px] rounded-md bg-foreground/5 border border-border-subtle text-foreground font-mono transition-colors group-hover:bg-foreground/10 group-hover:border-border-subtle"
           >
             {tech}
           </span>
@@ -123,9 +123,9 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <span className="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider">Telemetry</span>
-            <span className="text-[8px] font-mono text-accent/60">{`● ${lastActive}`}</span>
+            <span className="text-[8px] font-mono text-accent">{`● ${lastActive}`}</span>
           </div>
-          <span className="text-[9px] font-mono text-primary/70">{`> live`}</span>
+          <span className="text-[9px] font-mono text-primary">{`> live`}</span>
         </div>
         <div className="flex gap-1 items-end h-6">
           {commitActivity.map((count, i) => {
@@ -155,7 +155,7 @@ const BuilderCard = ({ builder }: { builder: Builder }) => {
             {builder.stars}
           </span>
           <span className="flex items-center gap-1.5">
-            <Code2 className="w-3.5 h-3.5 text-secondary" />
+            <Code2 className="w-3.5 h-3.5 text-secondary-bright" />
             {builder.projects} shipped
           </span>
         </div>

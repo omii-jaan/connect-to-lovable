@@ -93,14 +93,14 @@ const Projects = () => {
     <div className="min-h-screen bg-background">
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none h-96" />
-        <div className="max-w-7xl mx-auto px-4 py-8 relative">
+        <main id="main" className="max-w-7xl mx-auto px-4 py-8 relative">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-mono text-primary/60">/marketplace</span>
+                <span className="text-xs font-mono text-primary">/marketplace</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-primary/60 animate-pulse" />
               </div>
-              <h1 className="font-display font-bold text-4xl text-foreground">
+              <h1 id="main-heading" className="font-display font-bold text-4xl text-foreground">
                 Discover <span className="gradient-text-cyan">Projects</span>
               </h1>
               <p className="text-sm font-mono text-muted-foreground mt-1">
@@ -127,8 +127,9 @@ const Projects = () => {
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               <div className="flex items-center h-9 px-3 rounded-lg bg-muted/50 border border-border/50 text-xs font-mono text-muted-foreground">
-                <CircleDollarSign className="w-3.5 h-3.5 mr-1.5 text-muted-foreground/60" />
+                <CircleDollarSign className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
                 <select
+                  aria-label="Filter by budget"
                   value={budgetRange.label}
                   onChange={(e) => setBudgetRange(BUDGET_RANGES.find((b) => b.label === e.target.value) || BUDGET_RANGES[0])}
                   className="bg-transparent border-none outline-none text-xs font-mono text-muted-foreground cursor-pointer py-1"
@@ -139,8 +140,9 @@ const Projects = () => {
                 </select>
               </div>
               <div className="flex items-center h-9 px-3 rounded-lg bg-muted/50 border border-border/50 text-xs font-mono text-muted-foreground">
-                <Clock className="w-3.5 h-3.5 mr-1.5 text-muted-foreground/60" />
+                <Clock className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
                 <select
+                  aria-label="Filter by timeline"
                   value={timelineMax.label}
                   onChange={(e) => setTimelineMax(TIMELINE_OPTIONS.find((t) => t.label === e.target.value) || TIMELINE_OPTIONS[0])}
                   className="bg-transparent border-none outline-none text-xs font-mono text-muted-foreground cursor-pointer py-1"
@@ -151,8 +153,9 @@ const Projects = () => {
                 </select>
               </div>
               <div className="flex items-center h-9 px-3 rounded-lg bg-muted/50 border border-border/50 text-xs font-mono text-muted-foreground">
-                <ArrowUpDown className="w-3.5 h-3.5 mr-1.5 text-muted-foreground/60" />
+                <ArrowUpDown className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
                 <select
+                  aria-label="Sort projects"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                   className="bg-transparent border-none outline-none text-xs font-mono text-muted-foreground cursor-pointer py-1"
@@ -164,20 +167,26 @@ const Projects = () => {
               </div>
               <div className="flex items-center gap-1 border-l border-border/30 pl-2 ml-1">
                 <button
+                  type="button"
+                  aria-label="Grid view"
+                  aria-pressed={view === "grid"}
                   onClick={() => setView("grid")}
-                  className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${view === "grid" ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground"}`}
+                  className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${view === "grid" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-muted-foreground"}`}
                 >
                   <LayoutGrid className="w-3.5 h-3.5" />
                 </button>
                 <button
+                  type="button"
+                  aria-label="List view"
+                  aria-pressed={view === "list"}
                   onClick={() => setView("list")}
-                  className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${view === "list" ? "bg-primary/10 text-primary" : "text-muted-foreground/40 hover:text-muted-foreground"}`}
+                  className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${view === "list" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-muted-foreground"}`}
                 >
                   <ListIcon className="w-3.5 h-3.5" />
                 </button>
               </div>
               {hasFilters && (
-                <button onClick={clearFilters} className="flex items-center gap-1 h-7 px-2 rounded text-[10px] font-mono text-destructive hover:bg-destructive/10 transition-colors">
+                <button type="button" onClick={clearFilters} aria-label="Clear all filters" className="flex items-center gap-1 h-7 px-2 rounded text-[10px] font-mono text-destructive hover:bg-destructive/10 transition-colors">
                   <X className="w-3 h-3" /> Clear
                 </button>
               )}
@@ -186,6 +195,8 @@ const Projects = () => {
 
           <div className="flex items-center gap-2 flex-wrap mb-6">
             <button
+              type="button"
+              aria-expanded={showFilters}
               onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-mono border transition-all ${
                 showFilters ? "bg-primary/10 border-primary/30 text-primary" : "bg-muted/50 border-border/50 text-muted-foreground hover:border-primary/20"
@@ -203,6 +214,8 @@ const Projects = () => {
               return (
                 <button
                   key={cat}
+                  type="button"
+                  aria-pressed={active}
                   onClick={() => toggleCategory(cat)}
                   className={`px-3 py-1.5 rounded-full text-[10px] font-mono border transition-all ${
                     active
@@ -217,6 +230,7 @@ const Projects = () => {
             })}
           </div>
 
+          <h2 className="sr-only">Open projects</h2>
           <AnimatePresence>
             {view === "grid" ? (
               <motion.div
@@ -256,11 +270,11 @@ const Projects = () => {
             </motion.div>
           )}
 
-          <div className="mt-12 pt-8 border-t border-border/30 flex items-center justify-between text-[10px] font-mono text-muted-foreground/40">
+          <div className="mt-12 pt-8 border-t border-border/30 flex items-center justify-between text-[10px] font-mono text-muted-foreground">
             <span>Showing {filtered.length} of {MOCK_HIRE_PROJECTS.filter(p => p.status === "open").length} open projects</span>
             <span>Updated in real-time</span>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
@@ -290,7 +304,7 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
                   {project.title}
                 </h3>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-[10px] font-mono text-muted-foreground/60">
+                  <span className="text-[10px] font-mono text-muted-foreground">
                     {formatDistanceToNow(new Date(project.created_at), { addSuffix: true })}
                   </span>
                   <span className={`inline-block w-1.5 h-1.5 rounded-full ${style?.dot || "bg-primary"} opacity-60`} />
@@ -301,18 +315,21 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
               </div>
             </div>
             <button
+              type="button"
+              aria-label={saved ? `Remove ${project.title} from saved projects` : `Save ${project.title}`}
+              aria-pressed={saved}
               onClick={(e) => { e.preventDefault(); onToggleSave(); }}
               className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 ${
                 saved
                   ? "text-primary bg-primary/10 border border-primary/20"
-                  : "text-muted-foreground/30 hover:text-muted-foreground hover:bg-card/[0.04] border border-transparent"
+                  : "text-muted-foreground hover:text-muted-foreground hover:bg-card/[0.04] border border-transparent"
               }`}
             >
               {saved ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
             </button>
           </div>
 
-          <p className="text-xs text-muted-foreground/80 leading-relaxed line-clamp-2 mb-4 flex-1 relative z-10">
+          <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 mb-4 flex-1 relative z-10">
             {project.description}
           </p>
 
@@ -323,7 +340,7 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
               </Badge>
             ))}
             {project.required_skills.length > 3 && (
-              <span className="text-[9px] font-mono text-muted-foreground/40 bg-muted/50 px-2 py-0.5 rounded-full border border-border/20">
+              <span className="text-[9px] font-mono text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-full border border-border/20">
                 +{project.required_skills.length - 3}
               </span>
             )}
@@ -338,14 +355,14 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
               </div>
               <div className="w-px h-4 bg-border/40" />
               <div className="flex items-center gap-1">
-                <Clock className="w-3 h-3 text-muted-foreground/60" />
+                <Clock className="w-3 h-3 text-muted-foreground" />
                 <span className="text-[10px] font-mono text-muted-foreground">{project.timeline_weeks}w</span>
               </div>
             </div>
           </div>
 
           <div className="flex items-center justify-between mt-3 relative z-10">
-            <div className="flex items-center gap-3 text-[10px] font-mono text-muted-foreground/50">
+            <div className="flex items-center gap-3 text-[10px] font-mono text-muted-foreground">
               <span className="flex items-center gap-1"><Eye className="w-3 h-3" />{project.views_count}</span>
               <span className="flex items-center gap-1"><Sparkles className="w-3 h-3" />{project.interest_count}</span>
             </div>
@@ -400,7 +417,7 @@ const ProjectListItem = ({ project, index, saved, onToggleSave }: { project: Hir
               <h3 className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">
                 {project.title}
               </h3>
-              <p className="text-[11px] text-muted-foreground/70 truncate mt-0.5">{project.description}</p>
+              <p className="text-[11px] text-muted-foreground truncate mt-0.5">{project.description}</p>
             </div>
 
             <div className="hidden md:flex items-center gap-2 flex-wrap">
@@ -418,14 +435,17 @@ const ProjectListItem = ({ project, index, saved, onToggleSave }: { project: Hir
                 {project.category}
               </div>
               <button
+                type="button"
+                aria-label={saved ? `Remove ${project.title} from saved projects` : `Save ${project.title}`}
+                aria-pressed={saved}
                 onClick={(e) => { e.preventDefault(); onToggleSave(); }}
                 className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${
-                  saved ? "text-primary" : "text-muted-foreground/30 hover:text-muted-foreground"
+                  saved ? "text-primary" : "text-muted-foreground hover:text-muted-foreground"
                 }`}
               >
                 {saved ? <BookmarkCheck className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
               </button>
-              <ChevronRight className="w-4 h-4 text-muted-foreground/20 group-hover:text-primary/60 transition-colors" />
+              <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
             </div>
           </div>
         </div>

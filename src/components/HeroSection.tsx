@@ -244,7 +244,7 @@ const HeroSection = () => {
                 <div className="flex items-start gap-1.5 mb-3">
                   <Terminal className="w-3.5 h-3.5 text-primary mt-0.5 shrink-0" />
                   <div>
-                    <span className="text-[9px] text-foreground/40 block font-semibold uppercase tracking-wider mb-0.5 font-sans">Prompt:</span>
+                    <span className="text-[9px] text-foreground block font-semibold uppercase tracking-wider mb-0.5 font-sans">Prompt:</span>
                     {state === "running" && visibleLogs.length === 0 ? (
                       <span className="border-r-2 border-primary animate-pulse text-primary">{promptText}</span>
                     ) : (
@@ -257,8 +257,8 @@ const HeroSection = () => {
                 <div ref={logContainerRef} className="flex-1 space-y-1 max-h-[160px] overflow-y-auto">
                   {visibleLogs.map((log, i) => (
                     <div key={i} className="flex gap-2 items-start">
-                      <span className="text-foreground/20 shrink-0 w-4 text-right select-none">{i + 1}</span>
-                      <span className={log?.includes?.("Vite") || log?.includes?.("http://localhost") ? "text-accent font-bold" : "text-foreground/70"}>
+                      <span className="text-foreground shrink-0 w-4 text-right select-none">{i + 1}</span>
+                      <span className={log?.includes?.("Vite") || log?.includes?.("http://localhost") ? "text-accent font-bold" : "text-foreground"}>
                         {log}
                       </span>
                     </div>
@@ -285,7 +285,7 @@ const HeroSection = () => {
                     onChange={(e) => setCustomPrompt(e.target.value)}
                     placeholder="Type any build prompt..."
                     disabled={state === "running"}
-                    className="flex-1 bg-transparent border-none outline-none text-xs text-foreground placeholder:text-muted-foreground/40 font-mono disabled:opacity-50"
+                    className="flex-1 bg-transparent border-none outline-none text-xs text-foreground placeholder:text-muted-foreground font-mono disabled:opacity-50"
                   />
                   <button
                     type="submit"

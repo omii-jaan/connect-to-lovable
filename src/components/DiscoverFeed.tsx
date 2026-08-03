@@ -86,7 +86,7 @@ const DiscoverFeed = () => {
         {/* Title Block */}
         <BlurFade delay={0.1} direction="up">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <p className="text-secondary text-sm font-semibold uppercase tracking-widest mb-3">AI Matching Core</p>
+            <p className="text-secondary-bright text-sm font-semibold uppercase tracking-widest mb-3">AI Matching Core</p>
             <h2 className="font-display font-bold text-h1 text-foreground mb-4">
               Meet the Match Engine
             </h2>
@@ -105,7 +105,7 @@ const DiscoverFeed = () => {
             <div>
               <div className="flex items-center gap-2 mb-6">
                 <Cpu className="w-5 h-5 text-primary" />
-                <span className="text-xs font-bold text-foreground/80 uppercase tracking-wider font-mono">Semantic Queries</span>
+                <span className="text-xs font-bold text-foreground uppercase tracking-wider font-mono">Semantic Queries</span>
               </div>
 
               <h3 className="font-display font-bold text-xl text-foreground mb-4">
@@ -124,6 +124,8 @@ const DiscoverFeed = () => {
                 ].map((role) => (
                   <button
                     key={role.id}
+                    type="button"
+                    aria-pressed={selectedRole === role.id}
                     onClick={() => startMatching(role.id)}
                     className={`w-full text-left p-4 rounded-2xl border transition-all duration-300 ${
                       selectedRole === role.id
@@ -135,7 +137,7 @@ const DiscoverFeed = () => {
                       <span className="text-xs font-bold text-foreground">{role.label}</span>
                       <span className="text-[10px] text-muted-foreground font-mono">{role.count}</span>
                     </div>
-                    <p className="text-[10px] font-mono text-primary/75">{role.prompt}</p>
+                    <p className="text-[10px] font-mono text-primary">{role.prompt}</p>
                   </button>
                 ))}
               </div>
@@ -231,7 +233,7 @@ const DiscoverFeed = () => {
                   <div className="space-y-4 mb-6">
                     <div>
                       <p className="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider mb-1">Developer Specialty</p>
-                      <p className="text-sm font-semibold text-foreground/90">{matchedBuilder.specialty}</p>
+                      <p className="text-sm font-semibold text-foreground">{matchedBuilder.specialty}</p>
                     </div>
 
                     <div>
@@ -243,7 +245,7 @@ const DiscoverFeed = () => {
                       <p className="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider mb-1.5">Stack Match</p>
                       <div className="flex flex-wrap gap-1">
                         {matchedBuilder.skills.map((skill) => (
-                          <span key={skill} className="px-2 py-0.5 text-[9px] font-mono rounded bg-foreground/5 border border-border-subtle text-foreground/80">
+                          <span key={skill} className="px-2 py-0.5 text-[9px] font-mono rounded bg-foreground/5 border border-border-subtle text-foreground">
                             {skill}
                           </span>
                         ))}
@@ -256,7 +258,7 @@ const DiscoverFeed = () => {
                 <div className="pt-4 border-t border-border-subtle flex items-center justify-between">
                   <div className="flex gap-4 text-xs font-mono text-muted-foreground">
                     <span className="flex items-center gap-1.5"><Star className="w-3.5 h-3.5 text-primary" /> {matchedBuilder.stars}</span>
-                    <span className="flex items-center gap-1.5"><Code2 className="w-3.5 h-3.5 text-secondary" /> {matchedBuilder.projects} shipped</span>
+                    <span className="flex items-center gap-1.5"><Code2 className="w-3.5 h-3.5 text-secondary-bright" /> {matchedBuilder.projects} shipped</span>
                   </div>
                   <Link to="/login" className="px-4 py-2 rounded-full bg-foreground/5 hover:bg-foreground/10 border border-border-subtle text-foreground font-bold text-xs transition-all active:scale-95 inline-block">
                     Open Contract

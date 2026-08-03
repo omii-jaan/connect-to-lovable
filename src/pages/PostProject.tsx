@@ -83,10 +83,10 @@ const PostProject = () => {
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none h-48" />
 
-        <div className="max-w-4xl mx-auto px-4 py-8 relative">
+        <main id="main" className="max-w-4xl mx-auto px-4 py-8 relative">
           <div className="flex items-center gap-3 mb-8">
-            <Link to="/projects" className="w-8 h-8 rounded-lg bg-muted border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
-              <ArrowLeft className="w-4 h-4" />
+            <Link to="/projects" aria-label="Back to projects" className="w-8 h-8 rounded-lg bg-muted border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+              <ArrowLeft className="w-4 h-4" aria-hidden="true" />
             </Link>
             <div>
               <h1 className="font-display font-bold text-2xl text-foreground">Post a Project</h1>
@@ -98,17 +98,20 @@ const PostProject = () => {
             {STEPS.map((label, i) => (
               <div key={label} className="flex items-center flex-1">
                 <button
+                  type="button"
+                  aria-current={i === step ? "step" : undefined}
+                  aria-disabled={i > step}
                   onClick={() => i <= step && setStep(i)}
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-mono transition-all ${
                     i === step ? "bg-primary/10 text-primary border border-primary/20" :
-                    i < step ? "text-accent/60" :
-                    "text-muted-foreground/30 cursor-default"
+                    i < step ? "text-accent" :
+                    "text-muted-foreground cursor-default"
                   }`}
                 >
                   <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold ${
                     i === step ? "bg-primary text-primary-foreground" :
                     i < step ? "bg-accent/20 text-accent" :
-                    "bg-muted text-muted-foreground/40"
+                    "bg-muted text-muted-foreground"
                   }`}>
                     {i < step ? <Check className="w-3 h-3" /> : i + 1}
                   </span>
@@ -146,7 +149,7 @@ const PostProject = () => {
                             <button
                               onClick={handleAiParse}
                               disabled={parsing}
-                              className="ml-2 inline-flex items-center gap-1 text-[10px] text-primary hover:text-primary/80 transition-colors font-mono"
+                              className="ml-2 inline-flex items-center gap-1 text-[10px] text-primary hover:text-primary transition-colors font-mono"
                             >
                               {parsing ? (
                                 <><Loader2 className="w-3 h-3 animate-spin" /> Parsing...</>
@@ -161,7 +164,7 @@ const PostProject = () => {
                             onChange={(e) => setDescription(e.target.value)}
                             className="min-h-[180px] bg-background/80 border-border/50 focus:border-primary/40 transition-colors"
                           />
-                          <p className="text-[9px] font-mono text-muted-foreground/40 mt-1.5 text-right">{description.length} chars</p>
+                          <p className="text-[9px] font-mono text-muted-foreground mt-1.5 text-right">{description.length} chars</p>
                         </div>
                       </div>
                     </Card>
@@ -189,7 +192,7 @@ const PostProject = () => {
                         </div>
                         <div>
                           <label className="text-xs font-mono text-muted-foreground mb-1.5 block">Category <span className="text-destructive">*</span></label>
-                          <select value={category} onChange={(e) => setCategory(e.target.value)}
+                          <select aria-label="Project category" value={category} onChange={(e) => setCategory(e.target.value)}
                             className="flex h-10 w-full rounded-md border border-border/50 bg-background/80 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                             <option value="">Select category</option>
                             {CATEGORIES.map((c) => (<option key={c} value={c}>{c}</option>))}
@@ -239,16 +242,16 @@ const PostProject = () => {
                             <Input placeholder="e.g. Python" value={skillInput} onChange={(e) => setSkillInput(e.target.value)}
                               onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addSkill())}
                               className="bg-background/80 border-border/50" />
-                            <Button variant="outline" size="icon" onClick={addSkill} className="shrink-0"><Plus className="w-4 h-4" /></Button>
+                            <Button variant="outline" size="icon" onClick={addSkill} aria-label="Add skill" className="shrink-0 min-h-11 min-w-11"><Plus className="w-4 h-4" aria-hidden="true" /></Button>
                           </div>
                           <div className="flex flex-wrap gap-1.5">
                             {skills.map((s) => (
                               <Badge key={s} variant="secondary" className="flex items-center gap-1 text-[10px] font-mono bg-background/80 border border-border/30">
                                 {s}
-                                <button onClick={() => removeSkill(s)} className="hover:text-destructive transition-colors"><X className="w-3 h-3" /></button>
+                                <button type="button" onClick={() => removeSkill(s)} aria-label={`Remove skill ${s}`} className="hover:text-destructive transition-colors"><X className="w-3 h-3" aria-hidden="true" /></button>
                               </Badge>
                             ))}
-                            {skills.length === 0 && <span className="text-[10px] font-mono text-muted-foreground/40">Add skills to improve matching</span>}
+                            {skills.length === 0 && <span className="text-[10px] font-mono text-muted-foreground">Add skills to improve matching</span>}
                           </div>
                         </div>
                         <div>
@@ -257,13 +260,13 @@ const PostProject = () => {
                             <Input placeholder="e.g. FastAPI" value={techInput} onChange={(e) => setTechInput(e.target.value)}
                               onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTech())}
                               className="bg-background/80 border-border/50" />
-                            <Button variant="outline" size="icon" onClick={addTech} className="shrink-0"><Plus className="w-4 h-4" /></Button>
+                            <Button variant="outline" size="icon" onClick={addTech} aria-label="Add technology" className="shrink-0 min-h-11 min-w-11"><Plus className="w-4 h-4" aria-hidden="true" /></Button>
                           </div>
                           <div className="flex flex-wrap gap-1.5">
                             {techStack.map((t) => (
-                              <Badge key={t} variant="outline" className="flex items-center gap-1 text-[10px] font-mono border-primary/30 bg-primary/[0.04] text-primary/90">
+                              <Badge key={t} variant="outline" className="flex items-center gap-1 text-[10px] font-mono border-primary/30 bg-primary/[0.04] text-primary">
                                 {t}
-                                <button onClick={() => removeTech(t)} className="hover:text-destructive transition-colors"><X className="w-3 h-3" /></button>
+                                <button type="button" onClick={() => removeTech(t)} aria-label={`Remove technology ${t}`} className="hover:text-destructive transition-colors"><X className="w-3 h-3" aria-hidden="true" /></button>
                               </Badge>
                             ))}
                           </div>
@@ -289,7 +292,7 @@ const PostProject = () => {
                           <Eye className="w-4 h-4" />
                           <div className="text-left">
                             <p className="text-sm font-medium">Public</p>
-                            <p className="text-[9px] font-mono text-muted-foreground/60">Visible to all builders</p>
+                            <p className="text-[9px] font-mono text-muted-foreground">Visible to all builders</p>
                           </div>
                         </button>
                         <button onClick={() => setVisibility("private")}
@@ -299,7 +302,7 @@ const PostProject = () => {
                           <EyeOff className="w-4 h-4" />
                           <div className="text-left">
                             <p className="text-sm font-medium">Private</p>
-                            <p className="text-[9px] font-mono text-muted-foreground/60">Invite-only</p>
+                            <p className="text-[9px] font-mono text-muted-foreground">Invite-only</p>
                           </div>
                         </button>
                       </div>
@@ -324,8 +327,8 @@ const PostProject = () => {
                           { label: "Visibility", value: visibility },
                         ].map((item) => (
                           <div key={item.label} className="flex items-center justify-between py-1.5 border-b border-border/20 last:border-0">
-                            <span className="text-[10px] font-mono text-muted-foreground/60">{item.label}</span>
-                            <span className="text-xs text-foreground/80 text-right max-w-[60%] truncate">{item.value || "—"}</span>
+                            <span className="text-[10px] font-mono text-muted-foreground">{item.label}</span>
+                            <span className="text-xs text-foreground text-right max-w-[60%] truncate">{item.value || "—"}</span>
                           </div>
                         ))}
                       </div>
@@ -339,16 +342,16 @@ const PostProject = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-3 text-xs">
                           <div className="col-span-2">
-                            <p className="text-[9px] font-mono text-muted-foreground/60">Core</p>
-                            <p className="text-foreground/90 mt-0.5">{parsed.core_requirement}</p>
+                            <p className="text-[9px] font-mono text-muted-foreground">Core</p>
+                            <p className="text-foreground mt-0.5">{parsed.core_requirement}</p>
                           </div>
                           <div>
-                            <p className="text-[9px] font-mono text-muted-foreground/60">Integrations</p>
-                            <p className="text-foreground/90 mt-0.5">{parsed.integrations.join(", ")}</p>
+                            <p className="text-[9px] font-mono text-muted-foreground">Integrations</p>
+                            <p className="text-foreground mt-0.5">{parsed.integrations.join(", ")}</p>
                           </div>
                           <div>
-                            <p className="text-[9px] font-mono text-muted-foreground/60">Ideal Builder</p>
-                            <p className="text-foreground/90 mt-0.5">{parsed.ideal_builder_type}</p>
+                            <p className="text-[9px] font-mono text-muted-foreground">Ideal Builder</p>
+                            <p className="text-foreground mt-0.5">{parsed.ideal_builder_type}</p>
                           </div>
                         </div>
                       </Card>
@@ -394,19 +397,19 @@ const PostProject = () => {
                     {title ? (
                       <motion.div key="content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
                         <h3 className="font-display font-bold text-lg text-foreground">{title}</h3>
-                        <div className="flex items-center gap-2 text-[10px] font-mono text-muted-foreground/60 flex-wrap">
+                        <div className="flex items-center gap-2 text-[10px] font-mono text-muted-foreground flex-wrap">
                           {budgetMin && budgetMax && <span className="flex items-center gap-1"><CircleDollarSign className="w-3 h-3 text-accent" /> ${parseInt(budgetMin).toLocaleString()} – ${parseInt(budgetMax).toLocaleString()}</span>}
                           {timelineWeeks && <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {timelineWeeks} weeks</span>}
                           {category && <span className="flex items-center gap-1"><Target className="w-3 h-3" /> {category}</span>}
                         </div>
-                        <p className="text-xs text-muted-foreground/80 leading-relaxed line-clamp-4">{description || "No description yet"}</p>
+                        <p className="text-xs text-muted-foreground leading-relaxed line-clamp-4">{description || "No description yet"}</p>
                         {skills.length > 0 && (
                           <div className="flex flex-wrap gap-1">
                             {skills.slice(0, 4).map((s) => <Badge key={s} variant="secondary" className="text-[9px] font-mono">{s}</Badge>)}
-                            {skills.length > 4 && <span className="text-[9px] font-mono text-muted-foreground/40">+{skills.length - 4}</span>}
+                            {skills.length > 4 && <span className="text-[9px] font-mono text-muted-foreground">+{skills.length - 4}</span>}
                           </div>
                         )}
-                        <div className="flex items-center justify-between pt-3 border-t border-border/30 text-[9px] font-mono text-muted-foreground/40">
+                        <div className="flex items-center justify-between pt-3 border-t border-border/30 text-[9px] font-mono text-muted-foreground">
                           <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> 0 views</span>
                           <span>{visibility === "public" ? "Public" : "Private"}</span>
                         </div>
@@ -414,9 +417,9 @@ const PostProject = () => {
                     ) : (
                       <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-10 text-center">
                         <div className="w-10 h-10 rounded-xl bg-muted border border-border/30 flex items-center justify-center mx-auto mb-3">
-                          <EyeOff className="w-4 h-4 text-muted-foreground/40" />
+                          <EyeOff className="w-4 h-4 text-muted-foreground" />
                         </div>
-                        <p className="text-xs text-muted-foreground/60">Fill in the form to see a live preview</p>
+                        <p className="text-xs text-muted-foreground">Fill in the form to see a live preview</p>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -431,7 +434,7 @@ const PostProject = () => {
                       { icon: Target, text: "Clear success criteria = smooth delivery" },
                       { icon: BarChart3, text: "Tag skills to improve AI matching" },
                     ].map((tip, i) => (
-                      <li key={i} className="flex items-start gap-2 text-[10px] font-mono text-muted-foreground/70">
+                      <li key={i} className="flex items-start gap-2 text-[10px] font-mono text-muted-foreground">
                         <tip.icon className="w-3 h-3 text-primary shrink-0 mt-0.5" />
                         {tip.text}
                       </li>
@@ -441,7 +444,7 @@ const PostProject = () => {
               </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );

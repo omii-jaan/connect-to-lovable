@@ -22,7 +22,7 @@ export interface Project {
 
 const categoryStyles = {
   cyan: "bg-primary/10 text-primary border-primary/20",
-  purple: "bg-secondary/10 text-secondary border-secondary/20",
+  purple: "bg-secondary/10 text-secondary-bright border-secondary/20",
   green: "bg-accent/10 text-accent border-accent/20",
   orange: "bg-accent/[0.08] text-accent border-accent/20",
 };
@@ -93,11 +93,20 @@ const ProjectCard = ({ project }: { project: Project }) => {
 
         <div className="flex items-center justify-between pt-4 border-t border-border">
           <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Eye className="w-3.5 h-3.5" /> {project.views.toLocaleString()} views
+            <Eye className="w-3.5 h-3.5" aria-hidden="true" /> {project.views.toLocaleString()} views
           </span>
-          <span onClick={(e) => e.stopPropagation()} className="flex items-center gap-1 text-xs text-primary hover:underline cursor-pointer" onMouseDown={() => setOpen(true)}>
-            View Details <ExternalLink className="w-3 h-3" />
-          </span>
+          <button
+            type="button"
+            aria-haspopup="dialog"
+            aria-label={`View details for ${project.title} by ${project.builder}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpen(true);
+            }}
+            className="flex min-h-11 items-center gap-1 rounded-md px-1 text-xs text-primary hover:underline"
+          >
+            View Details <ExternalLink className="w-3 h-3" aria-hidden="true" />
+          </button>
         </div>
       </div>
 
@@ -119,8 +128,13 @@ const ProjectCard = ({ project }: { project: Project }) => {
                   </div>
                 </div>
               </div>
-              <button onClick={() => setOpen(false)} className="w-7 h-7 rounded-lg bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors">
-                <X className="w-3.5 h-3.5 text-muted-foreground" />
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label={`Close ${project.title} details`}
+                className="w-9 h-9 rounded-lg bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+              >
+                <X className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
 
@@ -138,10 +152,10 @@ const ProjectCard = ({ project }: { project: Project }) => {
             <p className="text-sm text-muted-foreground leading-relaxed mb-4">{project.description}</p>
 
             <div className="mb-4">
-              <p className="text-[10px] font-mono text-muted-foreground/60 uppercase tracking-wider mb-2">Stack</p>
+              <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-2">Stack</p>
               <div className="flex flex-wrap gap-1.5">
                 {project.stack.map((tech) => (
-                  <span key={tech} className="px-2.5 py-1 text-[11px] rounded-md bg-muted text-foreground/80 font-mono">
+                  <span key={tech} className="px-2.5 py-1 text-[11px] rounded-md bg-muted text-foreground font-mono">
                     {tech}
                   </span>
                 ))}

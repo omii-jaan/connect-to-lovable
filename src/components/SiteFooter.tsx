@@ -49,9 +49,9 @@ const SiteFooter = () => {
         {/* Top: brand + newsletter */}
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-5">
-            <Link to="/" className="inline-flex items-center gap-2">
+            <Link to="/" aria-label="Shipyard home" className="inline-flex items-center gap-2 rounded-md">
               <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center shadow-elev-sm">
-                <Zap className="w-4 h-4 text-primary-foreground" />
+                <Zap className="w-4 h-4 text-primary-foreground" aria-hidden="true" />
               </div>
               <span className="font-display font-bold text-xl gradient-text-cyan">Shipyard</span>
             </Link>
@@ -68,20 +68,21 @@ const SiteFooter = () => {
                 Email address
               </label>
               <div className="relative flex-1">
-                <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Mail aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="footer-email"
                   type="email"
                   required
                   placeholder="you@studio.com"
-                  className="h-10 pl-9 bg-card border-border-subtle"
+                  aria-describedby="footer-email-hint"
+                  className="h-11 pl-9 bg-card border-border-subtle placeholder:text-muted-foreground"
                 />
               </div>
-              <Button type="submit" size="sm" className="h-10 bg-gradient-primary text-primary-foreground">
+              <Button type="submit" size="sm" className="h-11 bg-gradient-primary text-primary-foreground">
                 Subscribe
               </Button>
             </form>
-            <p className="mt-2 text-xs text-muted-foreground">
+            <p id="footer-email-hint" className="mt-2 text-xs text-muted-foreground">
               Weekly ship log. No noise, unsubscribe anytime.
             </p>
           </div>
@@ -93,21 +94,21 @@ const SiteFooter = () => {
                 <h3 className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                   {col.title}
                 </h3>
-                <ul className="mt-4 space-y-3">
+                <ul role="list" className="mt-2 space-y-1">
                   {col.links.map((link) => (
                     <li key={link.label}>
                       {link.external ? (
                         <a
                           href={link.to}
-                          className="group inline-flex items-center gap-1 text-sm text-foreground/80 transition-colors hover:text-primary"
+                          className="group inline-flex min-h-11 items-center gap-1 rounded-sm text-sm text-foreground transition-colors hover:text-primary hover:underline"
                         >
                           {link.label}
-                          <ArrowUpRight className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                          <ArrowUpRight aria-hidden="true" className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
                         </a>
                       ) : (
                         <Link
                           to={link.to}
-                          className="text-sm text-foreground/80 transition-colors hover:text-primary"
+                          className="inline-flex min-h-11 items-center rounded-sm text-sm text-foreground transition-colors hover:text-primary hover:underline"
                         >
                           {link.label}
                         </Link>
@@ -128,22 +129,22 @@ const SiteFooter = () => {
           <div className="flex flex-col items-center gap-3 text-xs text-muted-foreground md:flex-row md:gap-5">
             <p>© {new Date().getFullYear()} Shipyard. All rights reserved.</p>
             <div className="flex items-center gap-5">
-              <Link to="/#privacy" className="transition-colors hover:text-primary">Privacy</Link>
-              <Link to="/#terms" className="transition-colors hover:text-primary">Terms</Link>
-              <Link to="/#security" className="transition-colors hover:text-primary">Security</Link>
+              <Link to="/#privacy" className="inline-flex min-h-11 items-center rounded-sm transition-colors hover:text-primary hover:underline">Privacy</Link>
+              <Link to="/#terms" className="inline-flex min-h-11 items-center rounded-sm transition-colors hover:text-primary hover:underline">Terms</Link>
+              <Link to="/#security" className="inline-flex min-h-11 items-center rounded-sm transition-colors hover:text-primary hover:underline">Security</Link>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-card px-3 py-1 font-mono text-[11px] text-muted-foreground">
-              <span className="relative flex h-1.5 w-1.5">
+            <span role="status" className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-card px-3 py-1 font-mono text-[11px] text-muted-foreground">
+              <span aria-hidden="true" className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full rounded-full bg-accent opacity-70 animate-breathing" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
               </span>
               All systems operational
             </span>
 
-            <ul className="flex items-center gap-1">
+            <ul role="list" aria-label="Shipyard on social platforms" className="flex items-center gap-1">
               {socials.map((s) => (
                 <li key={s.label}>
                   <a
@@ -151,9 +152,9 @@ const SiteFooter = () => {
                     target="_blank"
                     rel="noreferrer"
                     aria-label={s.label}
-                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-border-subtle bg-card text-muted-foreground transition-all hover:border-primary/30 hover:text-primary hover:-translate-y-0.5"
+                    className="flex h-11 w-11 items-center justify-center rounded-lg border border-border-subtle bg-card text-muted-foreground transition-all hover:border-primary/30 hover:text-primary hover:-translate-y-0.5"
                   >
-                    <s.icon className="h-4 w-4" />
+                    <s.icon className="h-4 w-4" aria-hidden="true" />
                   </a>
                 </li>
               ))}

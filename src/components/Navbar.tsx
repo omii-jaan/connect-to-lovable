@@ -111,15 +111,19 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-2">
           {/* Command Palette Trigger */}
           <button
+            type="button"
+            aria-label="Search Shipyard (Command K)"
             onClick={() => setCmdOpen(true)}
             className="w-8 h-8 rounded-full bg-foreground/5 border border-border-subtle flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-200"
             title="Search (⌘K)"
           >
-            <Search className="w-3.5 h-3.5" />
+            <Search className="w-3.5 h-3.5" aria-hidden="true" />
           </button>
 
           {/* Theme Toggle */}
           <button
+            type="button"
+            aria-label={`Change theme, currently ${theme}`}
             onClick={cycleTheme}
             className="w-8 h-8 rounded-full bg-foreground/5 border border-border-subtle flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-200"
             title={`Theme: ${theme}`}
@@ -130,11 +134,14 @@ const Navbar = () => {
           {/* Notifications */}
           <div className="relative">
             <button
+              type="button"
+              aria-label="Notifications, 3 unread"
+              aria-expanded={notifOpen}
               onClick={() => setNotifOpen(!notifOpen)}
               className="relative w-8 h-8 rounded-full bg-foreground/5 border border-border-subtle flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-200"
             >
-              <Bell className="w-3.5 h-3.5" />
-              <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-primary text-[7px] font-bold text-primary-foreground flex items-center justify-center">3</span>
+              <Bell className="w-3.5 h-3.5" aria-hidden="true" />
+              <span aria-hidden="true" className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-primary text-[7px] font-bold text-primary-foreground flex items-center justify-center">3</span>
             </button>
 
             {/* Notifications Dropdown */}
@@ -147,7 +154,7 @@ const Navbar = () => {
                   {[
                     { icon: User, text: "New builder matched: Arjun Mehta (98% vibe)", time: "2m ago", color: "text-primary" },
                     { icon: FolderGit2, text: "AI Dashboard Integration milestone approved", time: "1h ago", color: "text-accent" },
-                    { icon: Star, text: "Project starred: Multi-Agent Pipeline", time: "3h ago", color: "text-secondary" },
+                    { icon: Star, text: "Project starred: Multi-Agent Pipeline", time: "3h ago", color: "text-secondary-bright" },
                   ].map((n, i) => (
                     <div key={i} className="flex items-start gap-3 px-4 py-3 hover:bg-foreground/5 transition-colors cursor-pointer">
                       <div className={`w-7 h-7 rounded-lg bg-foreground/5 border border-border-subtle flex items-center justify-center shrink-0 ${n.color}`}>
@@ -161,7 +168,7 @@ const Navbar = () => {
                   ))}
                 </div>
                 <div className="border-t border-border-subtle px-4 py-2">
-                  <button className="text-[10px] font-mono text-primary hover:text-primary/80 transition-colors">View all notifications</button>
+                  <button type="button" className="text-[10px] font-mono text-primary hover:text-primary transition-colors">View all notifications</button>
                 </div>
               </div>
             )}
@@ -174,6 +181,10 @@ const Navbar = () => {
           ) : user ? (
             <div className="relative">
               <button
+                type="button"
+                aria-label="Account menu"
+                aria-haspopup="menu"
+                aria-expanded={userMenuOpen}
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-foreground/5 border border-border-subtle hover:bg-foreground/10 transition-all"
               >
@@ -215,7 +226,7 @@ const Navbar = () => {
                     to="/dashboard"
                     onClick={() => setUserMenuOpen(false)}
                     className="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-primary/10">
-                    <FolderGit2 className="w-4 h-4 text-secondary" />
+                    <FolderGit2 className="w-4 h-4 text-secondary-bright" />
                     My Ships
                   </Link>
                   <Link
@@ -252,7 +263,10 @@ const Navbar = () => {
         </div>
 
         {/* Mobile menu trigger */}
-        <button 
+        <button
+          type="button"
+          aria-label="Open navigation menu"
+          aria-expanded={open}
           className="md:hidden w-8 h-8 rounded-full bg-foreground/5 border border-border-subtle flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
           onClick={() => setOpen(!open)}
         >
@@ -286,6 +300,8 @@ const Navbar = () => {
             </div>
             <span className="text-[11px] font-mono text-muted-foreground ml-2.5">~/shipyard</span>
             <button
+              type="button"
+              aria-label="Close navigation menu"
               onClick={() => setOpen(false)}
               className="ml-auto p-1 text-muted-foreground hover:text-foreground transition-colors"
             >
@@ -316,7 +332,7 @@ const Navbar = () => {
 
           {/* Terminal navigation items */}
           <div className="flex flex-col py-3">
-            <div className="px-4 py-1.5 text-[10px] font-mono text-muted-foreground/50"># navigation</div>
+            <div className="px-4 py-1.5 text-[10px] font-mono text-muted-foreground"># navigation</div>
             <button
               onClick={() => { setOpen(false); document.getElementById("builders")?.scrollIntoView({ behavior: "smooth" }); }}
               className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-primary/5 transition-colors group"
@@ -344,7 +360,7 @@ const Navbar = () => {
 
             <div className="h-px bg-foreground/5 my-2 mx-4" />
 
-            <div className="px-4 py-1.5 text-[10px] font-mono text-muted-foreground/50"># user</div>
+            <div className="px-4 py-1.5 text-[10px] font-mono text-muted-foreground"># user</div>
             {user ? (
               <>
                 <Link
@@ -360,9 +376,9 @@ const Navbar = () => {
                   onClick={handleSignOut}
                   className="flex items-center gap-3 px-4 py-2.5 text-sm text-destructive hover:bg-destructive/5 transition-colors group"
                 >
-                  <span className="text-destructive/60 font-mono text-xs">{`>`}</span>
+                  <span className="text-destructive font-mono text-xs">{`>`}</span>
                   <span className="flex-1">signout --force</span>
-                  <ChevronRight className="w-3 h-3 text-destructive/40 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <ChevronRight className="w-3 h-3 text-destructive opacity-0 group-hover:opacity-100 transition-opacity" />
                 </button>
               </>
             ) : (
@@ -383,7 +399,7 @@ const Navbar = () => {
                 >
                   <span className="text-primary font-mono text-xs">{`>`}</span>
                   <span className="flex-1 text-primary">join --as builder</span>
-                  <ChevronRight className="w-3 h-3 text-primary/40 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <ChevronRight className="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
                 </Link>
               </>
             )}
@@ -391,8 +407,8 @@ const Navbar = () => {
 
           {/* Bottom status bar */}
           <div className="absolute bottom-0 left-0 right-0 px-4 py-2.5 border-t border-border-subtle bg-[#111622] flex items-center justify-between">
-            <span className="text-[10px] font-mono text-muted-foreground/50">{`[~] $`}</span>
-            <span className="text-[10px] font-mono text-muted-foreground/50">
+            <span className="text-[10px] font-mono text-muted-foreground">{`[~] $`}</span>
+            <span className="text-[10px] font-mono text-muted-foreground">
               {theme} mode
             </span>
           </div>
@@ -410,7 +426,7 @@ const Navbar = () => {
                 autoFocus
                 type="text"
                 placeholder="Search builders, projects, commands..."
-                className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground/50 outline-none border-none"
+                className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none border-none"
               />
               <kbd className="px-1.5 py-0.5 text-[10px] rounded bg-foreground/10 text-muted-foreground font-mono">ESC</kbd>
             </div>
@@ -421,7 +437,7 @@ const Navbar = () => {
                 <span>Dashboard</span>
               </button>
               <button onClick={() => { setCmdOpen(false); navigate("/dashboard"); }} className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-foreground hover:bg-primary/10 transition-colors">
-                <User className="w-4 h-4 text-secondary" />
+                <User className="w-4 h-4 text-secondary-bright" />
                 <span>Profile</span>
               </button>
               <button onClick={() => { setCmdOpen(false); navigate("/dashboard"); }} className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-foreground hover:bg-primary/10 transition-colors">
