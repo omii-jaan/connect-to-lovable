@@ -108,7 +108,7 @@ const CTASection = () => {
                 </ul>
               </div>
 
-              <a href="/#discover" className="group w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full border border-border-strong bg-surface-elevated text-foreground font-semibold text-xs transition-all duration-micro ease-standard hover:bg-muted">
+              <a href="/#discover" className="group w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg border border-border-strong bg-surface-elevated text-foreground font-semibold text-xs transition-all duration-micro ease-standard hover:bg-muted">
                 Search Shipped Projects
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </a>

@@ -70,7 +70,7 @@ const Navbar = () => {
         {/* Logo and Live Indicator */}
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center glow-cyan">
+            <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center shadow-elev-sm">
               <Zap className="w-4 h-4 text-primary-foreground" />
             </div>
             <span className="font-display font-bold text-xl tracking-wider gradient-text-cyan">SHIPYARD</span>
@@ -260,7 +260,7 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/login"
-                className="px-5 py-2.5 rounded-full bg-gradient-primary text-primary-foreground text-sm font-bold glow-cyan hover:opacity-95 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200">
+                className="px-5 py-2.5 rounded-lg bg-gradient-primary text-primary-foreground text-sm font-semibold shadow-elev-sm hover:shadow-glow-cyan-sm active:scale-[0.98] transition-all duration-micro ease-standard">
                 Join as Builder
               </Link>
             </>
