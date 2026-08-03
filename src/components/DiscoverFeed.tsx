@@ -146,7 +146,7 @@ const DiscoverFeed = () => {
             </div>
 
             <div className="mt-8 pt-4 border-t border-border-subtle">
-              <Link to="/login" className="w-full py-3.5 rounded-full bg-gradient-primary text-primary-foreground font-bold text-xs glow-cyan transition-all hover:scale-[1.02] flex items-center justify-center gap-2">
+              <Link to="/login" className="w-full py-3.5 rounded-lg bg-gradient-primary text-primary-foreground font-semibold text-xs shadow-elev-md transition-all duration-micro ease-standard hover:shadow-glow-cyan flex items-center justify-center gap-2">
                 Launch Custom Match Request
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
@@ -174,7 +174,7 @@ const DiscoverFeed = () => {
                   </linearGradient>
                 </defs>
               </svg>
-              <div className="absolute w-8 h-8 rounded-full bg-card border border-border-subtle flex items-center justify-center glow-cyan">
+              <div className="absolute w-8 h-8 rounded-full bg-card border border-border-subtle flex items-center justify-center shadow-elev-sm">
                 <Activity className={`w-3.5 h-3.5 text-primary ${matchingState === "scanning" ? "animate-pulse" : ""}`} />
               </div>
             </div>

@@ -65,7 +65,7 @@ const CTASection = () => {
                 </ul>
               </div>
 
-              <Link to="/login" className="group w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-primary text-primary-foreground font-bold text-xs glow-cyan transition-all hover:brightness-110">
+              <Link to="/login" className="group w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-gradient-primary text-primary-foreground font-semibold text-xs shadow-elev-md transition-all duration-micro ease-standard hover:shadow-glow-cyan">
                 Join the Yard as Builder
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </Link>

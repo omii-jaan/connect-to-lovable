@@ -179,10 +179,10 @@ const HeroSection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto mb-12">
-              <a href="/projects" className="group flex items-center justify-center gap-2.5 px-10 py-4 rounded-sm bg-gradient-primary text-primary-foreground text-base font-semibold shadow-glow-cyan hover:shadow-glow-cyan-lg hover:-translate-y-0.5 transition-all duration-micro ease-standard">
+              <a href="/projects" className="group flex items-center justify-center gap-2.5 px-10 py-4 rounded-lg bg-gradient-primary text-primary-foreground text-base font-semibold shadow-elev-md hover:shadow-glow-cyan hover:-translate-y-0.5 transition-all duration-micro ease-standard">
                 Browse Projects →
               </a>
-              <a href="/#discover" className="flex items-center justify-center gap-2 px-10 py-4 rounded-sm border border-border bg-surface-elevated text-foreground font-semibold text-base hover:border-primary/20 hover:shadow-glow-cyan-sm hover:-translate-y-0.5 transition-all duration-micro ease-standard">
+              <a href="/#discover" className="flex items-center justify-center gap-2 px-10 py-4 rounded-lg border border-border bg-surface-elevated text-foreground font-semibold text-base hover:border-primary/20 hover:shadow-glow-cyan-sm hover:-translate-y-0.5 transition-all duration-micro ease-standard">
                 Hire Vibe Builders
               </a>
 
@@ -204,7 +204,7 @@ const HeroSection = () => {
 
           {/* Right Column: Interactive Terminal */}
           <div className="lg:col-span-6 w-full flex flex-col" ref={tiltRef} {...tiltHandlers}>
-            <div style={tiltStyle} className="relative w-full rounded-xl border border-border bg-gradient-card shadow-elev-lg glow-cyan-lg overflow-hidden">
+            <div style={tiltStyle} className="relative w-full rounded-xl border border-border bg-gradient-card shadow-elev-lg overflow-hidden">
 
               
               {/* Terminal Header */}
