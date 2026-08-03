@@ -230,6 +230,7 @@ const Projects = () => {
             })}
           </div>
 
+          <h2 className="sr-only">Open projects</h2>
           <AnimatePresence>
             {view === "grid" ? (
               <motion.div

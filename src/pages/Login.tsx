@@ -114,7 +114,7 @@ const Login = () => {
       <div className="absolute top-1/3 -left-12 w-56 h-56 bg-primary/15 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-1/4 -right-12 w-72 h-72 bg-secondary/15 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="relative z-10 w-full max-w-md">
+      <main id="main" className="relative z-10 w-full max-w-md">
         {/* Brand */}
         <div className="flex flex-col items-center mb-8">
           <Link to="/" className="flex items-center gap-2.5 group mb-5">
@@ -350,7 +350,7 @@ const Login = () => {
             <span className="text-muted-foreground">←</span> cd ..
           </Link>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

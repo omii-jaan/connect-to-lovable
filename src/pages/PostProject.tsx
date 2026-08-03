@@ -83,10 +83,10 @@ const PostProject = () => {
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none h-48" />
 
-        <div className="max-w-4xl mx-auto px-4 py-8 relative">
+        <main id="main" className="max-w-4xl mx-auto px-4 py-8 relative">
           <div className="flex items-center gap-3 mb-8">
-            <Link to="/projects" className="w-8 h-8 rounded-lg bg-muted border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
-              <ArrowLeft className="w-4 h-4" />
+            <Link to="/projects" aria-label="Back to projects" className="w-8 h-8 rounded-lg bg-muted border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+              <ArrowLeft className="w-4 h-4" aria-hidden="true" />
             </Link>
             <div>
               <h1 className="font-display font-bold text-2xl text-foreground">Post a Project</h1>
@@ -444,7 +444,7 @@ const PostProject = () => {
               </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
