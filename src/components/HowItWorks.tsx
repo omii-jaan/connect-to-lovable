@@ -115,13 +115,17 @@ const HowItWorks = () => {
                 )}
 
                 {/* Card Container */}
-                <div 
-                  className={`relative rounded-3xl p-8 bg-gradient-to-br from-card/90 to-card/30 border transition-all duration-300 ${
+                <button
+                  type="button"
+                  aria-pressed={isHovered}
+                  onClick={() => setHoveredIdx(i)}
+                  className={`w-full text-left relative rounded-3xl p-8 bg-gradient-to-br from-card/90 to-card/30 border transition-all duration-300 ${
                     isHovered 
                       ? `${colors.glow} bg-card/60 -translate-y-1.5`
                       : "border-border-subtle bg-card/30"
                   }`}
                 >
+
                   {/* Step & Icon */}
                   <div className="flex items-center justify-between mb-6">
                     <div className={`w-14 h-14 rounded-2xl border flex items-center justify-center shrink-0 transition-transform ${isHovered ? "scale-110" : ""} ${colors.icon}`}>
