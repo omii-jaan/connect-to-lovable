@@ -111,15 +111,19 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-2">
           {/* Command Palette Trigger */}
           <button
+            type="button"
+            aria-label="Search Shipyard (Command K)"
             onClick={() => setCmdOpen(true)}
             className="w-8 h-8 rounded-full bg-foreground/5 border border-border-subtle flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-200"
             title="Search (⌘K)"
           >
-            <Search className="w-3.5 h-3.5" />
+            <Search className="w-3.5 h-3.5" aria-hidden="true" />
           </button>
 
           {/* Theme Toggle */}
           <button
+            type="button"
+            aria-label={`Change theme, currently ${theme}`}
             onClick={cycleTheme}
             className="w-8 h-8 rounded-full bg-foreground/5 border border-border-subtle flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-200"
             title={`Theme: ${theme}`}
@@ -130,11 +134,14 @@ const Navbar = () => {
           {/* Notifications */}
           <div className="relative">
             <button
+              type="button"
+              aria-label="Notifications, 3 unread"
+              aria-expanded={notifOpen}
               onClick={() => setNotifOpen(!notifOpen)}
               className="relative w-8 h-8 rounded-full bg-foreground/5 border border-border-subtle flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-200"
             >
-              <Bell className="w-3.5 h-3.5" />
-              <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-primary text-[7px] font-bold text-primary-foreground flex items-center justify-center">3</span>
+              <Bell className="w-3.5 h-3.5" aria-hidden="true" />
+              <span aria-hidden="true" className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-primary text-[7px] font-bold text-primary-foreground flex items-center justify-center">3</span>
             </button>
 
             {/* Notifications Dropdown */}
