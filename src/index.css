@@ -131,13 +131,13 @@
     --shadow-focus: 0 0 0 2px hsl(var(--surface)), 0 0 0 4px hsl(var(--brand-400) / 0.3);
 
     /* Glows — light effects, spec intensities */
-    --glow-cyan: 0 0 30px hsl(var(--brand-400) / 0.4);
-    --glow-cyan-sm: 0 0 15px hsl(var(--brand-400) / 0.3);
-    --glow-cyan-lg: 0 0 80px hsl(var(--brand-400) / 0.2);
-    --glow-cyan-xl: 0 0 120px hsl(var(--brand-400) / 0.15);
-    --glow-purple: 0 0 30px hsl(var(--violet-400) / 0.4);
-    --glow-purple-sm: 0 0 15px hsl(var(--violet-400) / 0.3);
-    --glow-green: 0 0 30px hsl(var(--green-400) / 0.4);
+    --glow-cyan: 0 0 24px hsl(var(--brand-400) / 0.14);
+    --glow-cyan-sm: 0 0 12px hsl(var(--brand-400) / 0.10);
+    --glow-cyan-lg: 0 0 64px hsl(var(--brand-400) / 0.09);
+    --glow-cyan-xl: 0 0 110px hsl(var(--brand-400) / 0.07);
+    --glow-purple: 0 0 24px hsl(var(--violet-400) / 0.12);
+    --glow-purple-sm: 0 0 12px hsl(var(--violet-400) / 0.09);
+    --glow-green: 0 0 24px hsl(var(--green-400) / 0.12);
 
     --gradient-primary: linear-gradient(135deg, hsl(var(--brand-400)) 0%, hsl(200 100% 60%) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(var(--violet-400)) 0%, hsl(292 70% 54%) 100%);
