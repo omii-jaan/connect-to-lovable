@@ -183,12 +183,14 @@ export default {
       },
       backgroundImage: {
         "gradient-primary": "var(--gradient-primary)",
-
         "gradient-secondary": "var(--gradient-secondary)",
         "gradient-card": "var(--gradient-card)",
         "gradient-shine": "var(--gradient-shine)",
         "gradient-hero": "var(--gradient-hero)",
+        "gradient-mesh": "var(--gradient-mesh)",
+        "gradient-cta": "var(--gradient-cta)",
       },
+
 
       keyframes: {
         "accordion-down": {
