@@ -149,12 +149,13 @@ const HeroSection = () => {
           
           {/* Left Column */}
           <div className="lg:col-span-6 flex flex-col items-start text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border-subtle bg-surface-elevated/60 text-muted-foreground text-[10px] font-semibold uppercase tracking-[0.18em] mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/10 text-primary text-xs font-semibold uppercase tracking-[0.1em] mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-breathing" />
               The Next Gen Port for Vibe Coding
             </div>
 
-            <h1 className="font-display font-bold text-5xl sm:text-6xl lg:text-7xl leading-[1.02] tracking-[-0.035em] text-foreground mb-6 flex flex-wrap items-baseline gap-x-3">
+            <h1 className="font-display font-bold text-hero text-foreground mb-6 flex flex-wrap items-baseline gap-x-3">
+
               Build.
               <WordRotate
                 words={["Dock.", "Deploy.", "Launch.", "Ship."]}
