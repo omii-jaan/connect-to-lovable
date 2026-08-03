@@ -152,7 +152,7 @@ const HowItWorks = () => {
                       {step.flowLabel}
                     </span>
                   </div>
-                </div>
+                </button>
               </div>
             );
           })}
