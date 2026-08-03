@@ -46,7 +46,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={() => setOpen(true)}
-        className={`relative card-shine rounded-2xl p-5 group cursor-pointer transition-all duration-300 hover:-translate-y-1 overflow-hidden ${project.featured ? "border-primary/25 glow-cyan" : ""}`}
+        className={`relative card-shine flex h-full flex-col rounded-2xl p-5 group cursor-pointer transition-all duration-300 hover:-translate-y-1 overflow-hidden ${project.featured ? "border-primary/30" : ""}`}
         style={{ "--glow-x": "-9999px", "--glow-y": "-9999px" } as React.CSSProperties}
       >
         <div
@@ -90,7 +90,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
           ))}
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-border">
+        <div className="mt-auto flex items-center justify-between pt-4 border-t border-border">
           <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Eye className="w-3.5 h-3.5" aria-hidden="true" /> {project.views.toLocaleString()} views
           </span>

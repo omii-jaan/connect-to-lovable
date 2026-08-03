@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ProjectCard, { Project } from "./ProjectCard";
 import { BlurFade } from "@/components/magicui/blur-fade";
+import SectionEyebrow from "@/components/SectionEyebrow";
 
 const projects: Project[] = [
   {
@@ -91,17 +92,17 @@ const projects: Project[] = [
 
 const FeaturedProjects = () => {
   return (
-    <section id="projects" className="py-24 px-6 relative">
+    <section id="projects" className="py-16 md:py-24 px-6 relative">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_50%,hsl(270_60%_62%_/_0.05),transparent)]" />
       <div className="container max-w-6xl mx-auto relative z-10">
         {/* Header */}
         <BlurFade delay={0.1} direction="up">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
             <div>
-              <p className="text-secondary-bright text-sm font-semibold uppercase tracking-widest mb-2">Live Builds</p>
+              <SectionEyebrow>Live builds</SectionEyebrow>
               <h2 className="font-display font-bold text-h1 text-foreground">
                 Products that ship. <br />
-                <span className="text-muted-foreground">Not side-projects.</span>
+                <span className="text-content-tertiary">Not side-projects.</span>
               </h2>
             </div>
             <Link to="/projects" className="text-sm font-medium text-muted-foreground hover:text-secondary-bright transition-colors flex items-center gap-1 self-start md:self-auto">
@@ -112,7 +113,7 @@ const FeaturedProjects = () => {
 
         {/* Grid */}
         <BlurFade delay={0.2} direction="up">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
             {projects.map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}

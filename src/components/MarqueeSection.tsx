@@ -17,7 +17,7 @@ const tools = [
 
 const MarqueeSection = () => {
   return (
-    <section className="py-20 px-6 relative overflow-hidden">
+    <section className="py-16 md:py-20 px-6 relative overflow-hidden">
       <div className="container max-w-6xl mx-auto">
         <BlurFade delay={0.1} direction="up">
           <div className="text-center mb-10">

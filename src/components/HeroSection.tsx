@@ -83,7 +83,7 @@ const HeroSection = () => {
     }
   }, [visibleLogs]);
 
-  const runSimulation = useCallback((prompt: string) => {
+  const runSimulation = useCallback((prompt: string, { silent = false }: { silent?: boolean } = {}) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (intervalRef.current) clearInterval(intervalRef.current);
     setPromptText(prompt);
@@ -94,14 +94,14 @@ const HeroSection = () => {
     let idx = 0;
     const simMs = Math.max(600, logs.length * 280);
 
-    toast({ title: "Simulation started", description: `Building: ${prompt.slice(0, 60)}${prompt.length > 60 ? "..." : ""}`, duration: 3000 });
+    if (!silent) toast({ title: "Simulation started", description: `Building: ${prompt.slice(0, 60)}${prompt.length > 60 ? "..." : ""}`, duration: 3000 });
 
     timeoutRef.current = setTimeout(() => {
       intervalRef.current = setInterval(() => {
         if (!logs || idx >= logs.length) {
           if (intervalRef.current) clearInterval(intervalRef.current);
           setState("done");
-          toast({ title: "Build complete", description: "Project scaffold generated successfully", duration: 4000 });
+          if (!silent) toast({ title: "Build complete", description: "Project scaffold generated successfully", duration: 4000 });
           return;
         }
         const line = logs[idx];
@@ -114,7 +114,7 @@ const HeroSection = () => {
   }, []);
 
   useEffect(() => {
-    runSimulation(PRESETS[0].prompt);
+    runSimulation(PRESETS[0].prompt, { silent: true });
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -130,7 +130,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 pb-16 px-6 bg-canvas-dots">
+    <section className="relative flex min-h-[min(100svh,900px)] items-center justify-center overflow-hidden px-6 pb-16 pt-28 bg-canvas-dots">
       <div
         className="absolute inset-0 bg-cover bg-center opacity-[0.03]"
         style={{ backgroundImage: `url(${heroBg})` }}
