@@ -3,7 +3,7 @@ import { test } from "@playwright/test";
 import fs from "fs";
 test("dump", async ({ page }) => {
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await page.evaluate(() => window.localStorage.setItem("shipyard-theme", "light"));
+  await page.evaluate(() => window.localStorage.setItem("shipyard-theme", "dark"));
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.waitForTimeout(1500);
   const r = await new AxeBuilder({ page }).withRules(["color-contrast"]).analyze();
