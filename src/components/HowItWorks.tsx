@@ -54,7 +54,9 @@ const colorMap = {
 };
 
 const HowItWorks = () => {
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(0);
+  // Always holds one active step — hovering (or focusing) another switches it,
+  // leaving the cards keeps the last one held instead of emptying the panel.
+  const [hoveredIdx, setHoveredIdx] = useState<number>(0);
 
   return (
     <section id="hire" className="py-28 px-6 relative">
@@ -87,8 +89,9 @@ const HowItWorks = () => {
                 key={step.step} 
                 className="relative"
                 onMouseEnter={() => setHoveredIdx(i)}
-                onMouseLeave={() => setHoveredIdx(null)}
+                onFocusCapture={() => setHoveredIdx(i)}
               >
+
                 {/* Connecting SVG wires on desktop */}
                 {i < steps.length - 1 && (
                   <div className="hidden md:block absolute top-[44px] left-[75%] right-[-15%] h-6 z-0 overflow-hidden">
@@ -112,13 +115,17 @@ const HowItWorks = () => {
                 )}
 
                 {/* Card Container */}
-                <div 
-                  className={`relative rounded-3xl p-8 bg-gradient-to-br from-card/90 to-card/30 border transition-all duration-300 ${
+                <button
+                  type="button"
+                  aria-pressed={isHovered}
+                  onClick={() => setHoveredIdx(i)}
+                  className={`w-full text-left relative rounded-3xl p-8 bg-gradient-to-br from-card/90 to-card/30 border transition-all duration-300 ${
                     isHovered 
                       ? `${colors.glow} bg-card/60 -translate-y-1.5`
                       : "border-border-subtle bg-card/30"
                   }`}
                 >
+
                   {/* Step & Icon */}
                   <div className="flex items-center justify-between mb-6">
                     <div className={`w-14 h-14 rounded-2xl border flex items-center justify-center shrink-0 transition-transform ${isHovered ? "scale-110" : ""} ${colors.icon}`}>
@@ -145,7 +152,7 @@ const HowItWorks = () => {
                       {step.flowLabel}
                     </span>
                   </div>
-                </div>
+                </button>
               </div>
             );
           })}
