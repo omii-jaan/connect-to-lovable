@@ -202,7 +202,7 @@ const HeroSection = () => {
 
           {/* Right Column: Interactive Terminal */}
           <div className="lg:col-span-6 w-full flex flex-col" ref={tiltRef} {...tiltHandlers}>
-            <div style={tiltStyle} className="relative w-full rounded-2xl border border-border bg-card shadow-elev-lg overflow-hidden">
+            <div style={tiltStyle} className="relative w-full rounded-xl border border-border bg-gradient-card shadow-elev-lg glow-cyan-lg overflow-hidden">
 
               
               {/* Terminal Header */}
