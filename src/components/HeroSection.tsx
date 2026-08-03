@@ -178,12 +178,13 @@ const HeroSection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto mb-12">
-              <a href="/projects" className="group flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-gradient-primary text-primary-foreground text-sm font-bold shadow-elev-md hover:brightness-110 transition-all duration-micro ease-standard">
+              <a href="/projects" className="group flex items-center justify-center gap-2.5 px-10 py-4 rounded-sm bg-gradient-primary text-primary-foreground text-base font-semibold shadow-glow-cyan hover:shadow-glow-cyan-lg hover:-translate-y-0.5 transition-all duration-micro ease-standard">
                 Browse Projects →
               </a>
-              <a href="/#discover" className="flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-border-strong bg-surface text-foreground font-semibold text-sm shadow-elev-sm hover:bg-muted transition-all duration-micro ease-standard">
+              <a href="/#discover" className="flex items-center justify-center gap-2 px-10 py-4 rounded-sm border border-border bg-surface-elevated text-foreground font-semibold text-base hover:border-primary/20 hover:shadow-glow-cyan-sm hover:-translate-y-0.5 transition-all duration-micro ease-standard">
                 Hire Vibe Builders
               </a>
+
 
             </div>
 
