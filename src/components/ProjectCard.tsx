@@ -42,19 +42,9 @@ const ProjectCard = ({ project }: { project: Project }) => {
     <>
       <div
         ref={ref}
-        role="button"
-        tabIndex={0}
-        aria-haspopup="dialog"
-        aria-label={`View details for ${project.title} by ${project.builder}`}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={() => setOpen(true)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            setOpen(true);
-          }
-        }}
         className={`relative card-shine rounded-2xl p-5 group cursor-pointer transition-all duration-300 hover:-translate-y-1 overflow-hidden ${project.featured ? "border-primary/25 glow-cyan" : ""}`}
         style={{ "--glow-x": "-9999px", "--glow-y": "-9999px" } as React.CSSProperties}
       >
@@ -105,9 +95,18 @@ const ProjectCard = ({ project }: { project: Project }) => {
           <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Eye className="w-3.5 h-3.5" aria-hidden="true" /> {project.views.toLocaleString()} views
           </span>
-          <span aria-hidden="true" className="flex items-center gap-1 text-xs text-primary group-hover:underline">
-            View Details <ExternalLink className="w-3 h-3" />
-          </span>
+          <button
+            type="button"
+            aria-haspopup="dialog"
+            aria-label={`View details for ${project.title} by ${project.builder}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpen(true);
+            }}
+            className="flex min-h-11 items-center gap-1 rounded-md px-1 text-xs text-primary hover:underline"
+          >
+            View Details <ExternalLink className="w-3 h-3" aria-hidden="true" />
+          </button>
         </div>
       </div>
 
