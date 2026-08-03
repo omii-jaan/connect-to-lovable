@@ -335,10 +335,9 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
 
           <div className="flex items-center gap-1.5 mb-4 flex-wrap relative z-10">
             {project.required_skills.slice(0, 3).map((skill) => (
-              <Badge key={skill} variant="secondary" className="text-[9px] font-mono bg-muted/80 border border-border/30 text-muted-foreground">
-                {skill}
-              </Badge>
+              <TechBadge key={skill} name={skill} size="xs" />
             ))}
+
             {project.required_skills.length > 3 && (
               <span className="text-[9px] font-mono text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-full border border-border/20">
                 +{project.required_skills.length - 3}
