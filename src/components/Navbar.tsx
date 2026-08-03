@@ -168,7 +168,7 @@ const Navbar = () => {
                   ))}
                 </div>
                 <div className="border-t border-border-subtle px-4 py-2">
-                  <button className="text-[10px] font-mono text-primary hover:text-primary/80 transition-colors">View all notifications</button>
+                  <button type="button" className="text-[10px] font-mono text-primary hover:text-primary/80 transition-colors">View all notifications</button>
                 </div>
               </div>
             )}

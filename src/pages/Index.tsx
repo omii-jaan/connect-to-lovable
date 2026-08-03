@@ -13,8 +13,15 @@ import SiteFooter from "@/components/SiteFooter";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:border focus:border-border focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:text-foreground"
+      >
+        Skip to main content
+      </a>
       <Navbar />
-      <main>
+      <main id="main">
+
         <ErrorBoundary><HeroSection /></ErrorBoundary>
         <ErrorBoundary><LiveActivityStrip /></ErrorBoundary>
         <MarqueeSection />
