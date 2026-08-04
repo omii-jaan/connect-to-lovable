@@ -16,7 +16,8 @@ Status legend: ✅ done · 🔧 in progress · ⏳ pending
 ## Layer 1 chunks (BUILD_PLAN.md)
 - ✅ **Chunk 1 — Auth + Onboarding**: Firebase Auth (email/password, Google, GitHub), /sign-up, /login, 4-step /onboarding, profiles document = auth uid, handles collection, protected routes.
 - ✅ **Chunk 2 — Public Builder Profile** (`/@:handle`): header (avatar 96, badges Verified/Top5%/Available, bio 3-line, meta icons, 4-col tabular stats, Follow toggle + toast, Message, More dropdown, socials), sticky tabs (Overview/Projects/Skills/Activity/Reviews), Overview with mock content, other tabs = empty states, routes `/@:handle`, `/@me`, `/builder/:username` compat.
-- ⏳ **Chunk 3 — Projects data model + Profile Projects tab** [DATA]: Firestore collections `projects`, `projectLikes`, `projectBookmarks` + security rules; real Projects tab grid on profile; seed 2 sample projects.
+- ✅ **Chunk 3 — Projects data model + Profile Projects tab** [DATA]: Firestore provisioned + security rules deployed (projects, projectLikes, projectBookmarks, handles, profiles, follows — public read, owner write); `src/lib/firebase.ts` + `src/lib/projects.ts` helpers; 3 seeded sample projects; real Projects tab grid (16:9 thumb, category, title, 2-line clamp, max 5 stack badges, like button, GitHub/Demo links); empty state "No projects yet — Ship your first one" + Create button on own profile.
+- ⏳ **Chunk 4 — Project creation flow (modal) + public project detail page** [UI][DB]
 - ⏳ Chunk 4 — Project creation modal + public project detail page.
 - ⏳ Chunk 5 — Home feed (For You / Trending, composer, live likes/follows).
 - ⏳ Chunk 6 — Comments on projects.
