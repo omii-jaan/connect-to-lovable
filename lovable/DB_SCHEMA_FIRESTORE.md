@@ -11,7 +11,7 @@ Use this instead of `DB_SCHEMA.md` when your AI Studio app runs on the **native 
 ## COLLECTIONS — Layer 1
 
 ### `profiles` (doc id = uid)
-`handle` (unique — enforce by storing `handles/{handle}` doc), `displayName`, `avatarUrl`, `bio`, `role` ('builder'|'creator'|'both'), `location`, `website`, `joinedAt`, `skills[]`, `modelsUsed[]`, `experienceLevel`, `availability` ('available'|'busy'|'not_available'), `reputationScore`, `followersCount`, `followingCount`, `viewsCount`, `searchKey` (lowercased handle + displayName, for prefix search)
+`handle` (unique — enforce by storing `handles/{handle}` doc), `displayName`, `avatarUrl`, `bio`, `role` ('builder'|'creator'|'both'), `location`, `website`, `joinedAt`, `skills[]`, `modelsUsed[]`, `experienceLevel`, `availability` ('available'|'busy'|'not_available'), `reputationScore`, `followersCount`, `followingCount`, `viewsCount`, `searchKey` (lowercased handle + displayName, for prefix search), `notificationPrefs` ({inApp: {like|comment|follow|milestone: bool}, email: {digest|messages|updates: bool}})
 
 ### `handles` (helper collection for uniqueness)
 `handle` (doc id) → `{ uid, createdAt }` — write via transaction with profiles create/rename.
@@ -39,6 +39,12 @@ Use this instead of `DB_SCHEMA.md` when your AI Studio app runs on the **native 
 
 ### `waitlist`
 `email`, `source`, `createdAt` (no auth — allow create rule)
+
+### `conversations` (id = auto, one per pair)
+`memberUids` [2], `lastMessage`, `lastMessageAt`, `unreadBy` ({uid: count}), `createdAt` — read/write: auth uid in memberUids.
+
+### `messages` (id = auto)
+`conversationId`, `senderUid`, `content`, `readBy` [], `createdAt` — write: auth uid == senderUid; read: member of conversation.
 
 ## COLLECTIONS — Layer 2 (Marketplace)
 
