@@ -25,6 +25,9 @@ Use this instead of `DB_SCHEMA.md` when your AI Studio app runs on the **native 
 ### `projectComments`
 `projectId`, `uid`, `parentId` (null = top-level, else reply — 1 level), `content`, `createdAt`, `editedAt` — write increments project.commentsCount; delete decrements.
 
+### `commentLikes` (id = `${commentId}_${uid}`)
+`commentId`, `uid`, `createdAt` — write deletes doc (toggle); transactional increment/decrement on a `likesCount` field stored on the comment doc.
+
 ### `projectBookmarks`
 `uid`, `projectId`, `createdAt`
 
