@@ -11,7 +11,7 @@ Use this instead of `DB_SCHEMA.md` when your AI Studio app runs on the **native 
 ## COLLECTIONS — Layer 1
 
 ### `profiles` (doc id = uid)
-`handle` (unique — enforce by storing `handles/{handle}` doc), `displayName`, `avatarUrl`, `bio`, `role` ('builder'|'creator'|'both'), `location`, `website`, `joinedAt`, `skills[]`, `modelsUsed[]`, `experienceLevel`, `availability` ('available'|'busy'|'not_available'), `reputationScore`, `followersCount`, `followingCount`
+`handle` (unique — enforce by storing `handles/{handle}` doc), `displayName`, `avatarUrl`, `bio`, `role` ('builder'|'creator'|'both'), `location`, `website`, `joinedAt`, `skills[]`, `modelsUsed[]`, `experienceLevel`, `availability` ('available'|'busy'|'not_available'), `reputationScore`, `followersCount`, `followingCount`, `viewsCount`, `searchKey` (lowercased handle + displayName, for prefix search)
 
 ### `handles` (helper collection for uniqueness)
 `handle` (doc id) → `{ uid, createdAt }` — write via transaction with profiles create/rename.
