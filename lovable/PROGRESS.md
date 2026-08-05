@@ -1,6 +1,6 @@
 # PROGRESS — Shipyards Build Tracker
 
-Status legend: ✅ done · 🔧 in progress · ⏳ pending
+Status legend: ✅ done · ⏳ pending · 🔧 in progress
 
 ## Decisions (locked)
 - Platform: **Google AI Studio** (Build mode), React + TypeScript + Tailwind, Vite.
@@ -11,24 +11,40 @@ Status legend: ✅ done · 🔧 in progress · ⏳ pending
 ## Setup (done)
 - ✅ KNOWLEDGE.md + WORKSPACE.md pasted into AI Studio Chat → System instructions.
 - ✅ START_PROMPT foundation built in Build mode (shell, tokens, placeholder pages), live preview verified.
-- ⏳ AGENTS.md — NOT yet pushed anywhere (see note below).
+- ✅ AGENTS.md (Firestore track) + full `lovable/` package pushed to GitHub.
 
-## Layer 1 chunks (BUILD_PLAN.md)
-- ✅ **Chunk 1 — Auth + Onboarding**: Firebase Auth (email/password, Google, GitHub), /sign-up, /login, 4-step /onboarding, profiles document = auth uid, handles collection, protected routes.
-- ✅ **Chunk 2 — Public Builder Profile** (`/@:handle`): header (avatar 96, badges Verified/Top5%/Available, bio 3-line, meta icons, 4-col tabular stats, Follow toggle + toast, Message, More dropdown, socials), sticky tabs (Overview/Projects/Skills/Activity/Reviews), Overview with mock content, other tabs = empty states, routes `/@:handle`, `/@me`, `/builder/:username` compat.
-- ✅ **Chunk 3 — Projects data model + Profile Projects tab** [DATA]: Firestore provisioned + security rules deployed (projects, projectLikes, projectBookmarks, handles, profiles, follows — public read, owner write); `src/lib/firebase.ts` + `src/lib/projects.ts` helpers; 3 seeded sample projects; real Projects tab grid (16:9 thumb, category, title, 2-line clamp, max 5 stack badges, like button, GitHub/Demo links); empty state "No projects yet — Ship your first one" + Create button on own profile.
-- ✅ **Chunk 4 — Project creation flow (modal) + public project detail page** [UI][DB]: `ProjectCreateModal.tsx` (9 sections: title 100ch counter, category grid, markdown-hint description, media 10 max + thumbnail star, stack tags + model chips, metrics rows, validated links, difficulty/time/cost, visibility + Draft/Publish gate); `/project/:slug` detail (dark-overlay hero, transactional like w/ likesCount, bookmark, share/copy, views, 65/35 layout, markdown render, metrics grid, sidebar builder card + stats); profile cards linked + Create button opens modal.
-- ✅ **Chunk 5 — Home feed (For You / Trending)** [UI][DB]: 65/35 layout; Home header + tabs; composer (auth) → ProjectCreateModal, signup CTA (guest); feed cards (avatar 40, kebab Follow/Bookmark/Copy, title → /project/:slug, line-clamp-3, media grids 1/2/3+, stack+model badges, mono metrics, live heart, share dropdown, bookmark); right rail (profile mini card Top 15% bar, Trending #1-5, Builders to Follow w/ transactional follows); onSnapshot on projects + follows; security rules for counter-only updates.
-- ✅ **Chunk 6 — Comments on projects** [DB][UI]: `projectComments` + `commentLikes` rules deployed (owner-only delete, public read); `src/lib/comments.ts` (onSnapshot, optimistic cache, latest-first, comment likes, atomic commentsCount); `ProjectDiscussion.tsx` (composer Ctrl+Enter, 1-level replies, 32px avatars, author badge, relative time, heart likes, owner-only delete, 3 view states); deep counts in detail meta bar, sidebar, feed cards → `/project/:slug#comments`.
-- ✅ **Chunk 7 — Leaderboards** [UI]: h1 + subtitle, tabs (All Time/This Week/This Month/Categories), category chips filter, sticky table (flat gold/silver/bronze rank badges, 32px avatars — 48px + tinted bg top 3, mono reputation accent for top 10, metric pills, trend arrows), reputation formula (projects x10 + followers x2 + likes x1 + skillTests x50 + jobs x100 + engagement x5), 50/page pagination, skeleton + empty state with clear-filters CTA, Navbar + mobile menu + ⌘K integration.
-- ✅ **Chunk 8 — Explore + global search** [UI]: 240px sidebar (category checkboxes, stack pills, models multiselect, difficulty, sort: Most Liked/Newest/Most Viewed/Most Commented), active chips + count + Clear All + mobile drawer, Grid/List toggle, optimistic hearts, 3 view states, global search in ⌘K palette (builders by name/handle, projects by title/category/slug, prefix queries on searchKey, keyboard nav).
-- ✅ **Chunk 9 — Builder analytics (own profile)** [UI]: /analytics header + 7/30/90d pills, 4 stat cards (Total Views incl. profile viewsCount, Likes Received + comments tally, Followers, Invitation Rate 0% w/ Layer 2 coming-soon badge), Recharts area chart (subtle accent fill — chart-idiom exception to no-gradients) + horizontal engagement bar, performance table (thumb, title, category, views, likes, comments, est. CTR, row nav → /project/:slug), 3 view states, responsive + tabular.
-- ✅ **Chunk 10 — Settings + Notifications + profile edit** [UI][DB]: /settings (200px sidebar → mobile pills; Profile: all fields, 400ms debounced handle check vs handles collection, atomic batch rename; Account: email/UID/tier; Notifications prefs persisted to profiles.notificationPrefs; Security: updatePassword + validation, mock 2FA, sessions list; Billing: Layer 2 placeholder); /notifications feed (type icons, relative time, actor avatars, unread dots, optimistic read + deep links, mark-all-read batch, All/Unread tabs); TopBar bell (onSnapshot unread count, animated badge, dropdown preview); triggers inserted on like/comment/follow.
-- ✅ **Chunk 11 — /messages inbox** [UI][DB]: `src/lib/messages.ts` (findOrCreateConversation, onSnapshot threads + lists, unreadBy updates, createNotification on new message); /messages split view (conversation sidebar: avatar/name/handle/relative time/preview/unread badges + search filter; thread: header w/ role badge + profile link, sender/receiver bubbles, autoscroll, attachment URL input, emoji row, Enter send); mobile back-toggle stack; skeleton/empty/welcome-thread states; profile Message button (auth + self checks → find-or-create → /messages?conversation=ID); Navbar dropdown + route.
-- ✅ **Chunk 12 — Landing page (marketing)** [UI]: public LANDING page at / (no auth required, standalone nav, hero with "Now in Public Beta" badge, white-to-grey subtle gradient h1 text, subheadline, CTAs → /sign-up and /@demo, trusted-by caption mono text, infinite social proof ticker marquee with pause on hover + reduced motion fallback, 2-col Problem section with before/after diagram using design tokens & lucide icons, 5-layer Features 3-col grid, vertical timeline How It Works, accent-subtle CTA band storing to waitlist collection with toast notifications, 4-col footer + bottom bar). Demo profile handle `@demo` seeded.
-- ⏳ The Pile: seed data, guest sanity pass, security rules review, notifications polish, QA pass, Layer 1 shippable checkpoint.
+## Layer 1 — chunks (all ✅)
+1. ✅ Auth + Onboarding — Firebase Auth (email/password, Google, GitHub), /sign-up, /login, 4-step /onboarding, profiles = auth uid, handles collection, protected routes.
+2. ✅ Public Builder Profile (/@:handle) — header, badges, stats, Follow/Message/More, sticky tabs, Overview mock, routes /@:handle, /@me, /builder/:username.
+3. ✅ Projects data model — Firestore + rules (public read, owner write), firebase.ts/projects.ts helpers, seeded samples, real Projects tab grid, empty state + Create button.
+4. ✅ Project creation modal + /project/:slug detail — 9-section modal, transactional like, bookmark, share, 65/35 layout, markdown render, sidebar builder card.
+5. ✅ Home feed — 65/35, For You/Trending, composer → modal, feed cards w/ live hearts, right rail (profile mini card, trending, builders to follow), onSnapshot.
+6. ✅ Comments — projectComments + commentLikes rules, comments.ts (onSnapshot, optimistic, latest-first), ProjectDiscussion (1-level replies, likes, owner delete, 3 states), deep counts.
+7. ✅ Leaderboards — tabs + categories, sticky table, flat medals, reputation formula, 50/page, skeleton + empty states, ⌘K integration.
+8. ✅ Explore + global search — 240px filter sidebar, chips + count + Clear All, mobile drawer, Grid/List, ⌘K palette search (searchKey prefix queries).
+9. ✅ Analytics — 7/30/90d pills, 4 stat cards (invitation rate = Layer 2 badge), Recharts area + bar, performance table, 3 states.
+10. ✅ Settings + Notifications — 5 tabs, handle rename batch, prefs persisted, Security (password/2FA mock/sessions), bell w/ unread + mark-all-read, triggers wired.
+11. ✅ Messages — conversations/messages, find-or-create, split view, unreadBy, mobile back-toggle, profile Message button.
+12. ✅ Landing — nav, hero (gradient exception), marquee, problem, 5 layers, timeline, waitlist band, footer; demo profile.
+13. ✅ Landing polish — real app-preview sandbox (interactive tabs), NumberTicker, staggered motion, OG/Twitter cards, og-image.png, canonical.
+
+## Layer 1 — the Pile
+- ✅ 13. Seed data — 8 builders + 12 projects, varied categories, 90-day spread, searchKey, guarded seeding.
+- ✅ 14. Guest sanity pass — auth-aware CTAs w/ redirect state, protected routes redirect w/ return.
+- ✅ Cleanup pass — "Vibe Score"→"Reputation", Layer 2 remnants removed, /projects/:id → /project/:slug, MOCK_CONTRACTS removed.
+- ✅ 15. Security rules review — full audit vs DB_SCHEMA_FIRESTORE.md, deployed, lint w/ firebase rules plugin 0 errors.
+- ✅ 16. Notifications polish — no self-notifications, deterministic dedupe ids, live badge, click-to-read.
+- ✅ 18. Responsive + a11y QA sweep — mobile nav strip, overflow tables, touch targets, Escape/focus, ARIA, reduced-motion; build + lint clean.
+- ⏳ **17. Analytics detail / Top Builders recompute — deferred** (needs server function; schedule for Layer 2).
+- ⏳ **19. Layer 1 shippable checkpoint** — final guest + authenticated test (incl. WCAG AA contrast + console-errors check), tag version, Git-sync.
 
 ## Open items
-- **AGENTS.md** (repo root, local copy at `F:\1a - LovShipyardStack\AGENTS.md`): created but never pushed. Needs a Firestore-track update before pushing (still says "Supabase").
-- `.env` with Supabase keys was committed in the old repo — reference repo only, but flag it.
-- Update KNOWLEDGE.md/AGENTS.md if routes or schema change.
+- ✅ reputationScore removed from non-owner writable counters; firestore.rules deployed to new project (light-coral-nds98).
+- ✅ Supabase fully removed (supabase.ts + all imports; waitlist/api on Firebase).
+- ✅ Account migration: new Google account, project imported from GitHub repo, new Firebase provisioned (light-coral-nds98), rules deployed, smoke test passed.
+- ⏳ Gate/remove the test user switcher before production.
+- ⏳ Re-run contrast (WCAG AA) + console-errors verification at the checkpoint.
+
+## Next up
+- **Pile 19 — Layer 1 shippable checkpoint** (final guest + authenticated test, tag version, Git-sync).
+- **Layer 2 — Project Marketplace** planning (build plan + schema already drafted in DB_SCHEMA_FIRESTORE.md).
