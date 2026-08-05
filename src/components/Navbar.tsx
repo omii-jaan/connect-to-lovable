@@ -1,9 +1,16 @@
-import { Zap, X, Menu, LogOut, User, FolderGit2, LayoutDashboard, Sun, Moon, Monitor, Bell, Search, ChevronRight, Star } from "lucide-react";
+import { Zap, X, Menu, LogOut, User, FolderGit2, LayoutDashboard, Sun, Moon, Monitor, Bell, Search, ChevronRight, Star, MessageSquare } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import MotionToggle from "@/components/MotionToggle";
+import {
+  subscribeToNotifications,
+  markNotificationAsRead,
+  markAllNotificationsAsRead,
+  NotificationItem
+} from "@/lib/notifications";
+import { formatDistanceToNow } from "date-fns";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -11,25 +18,25 @@ const Navbar = () => {
   const [notifOpen, setNotifOpen] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
+
+  const { user, signOut, loading, switchTestUser, activeTestKey } = useAuth();
+  const { theme, setTheme } = useTheme();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const sections = ["builders", "projects", "hire", "discover"];
-    const observers: IntersectionObserver[] = [];
-    sections.forEach((id) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const observer = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
-        { rootMargin: "-40% 0px -55% 0px" }
-      );
-      observer.observe(el);
-      observers.push(observer);
+    if (!user?.id) {
+      setNotifications([]);
+      setUnreadCount(0);
+      return;
+    }
+    const unsubscribe = subscribeToNotifications(user.id, (list, unread) => {
+      setNotifications(list);
+      setUnreadCount(unread);
     });
-    return () => observers.forEach((o) => o.disconnect());
-  }, []);
-  const { user, signOut, loading } = useAuth();
-  const { theme, setTheme, resolvedTheme } = useTheme();
-  const navigate = useNavigate();
+    return () => unsubscribe();
+  }, [user?.id]);
 
   const userName = user?.user_metadata?.full_name?.split(" ")[0] || user?.user_metadata?.user_name || "Builder";
   const userRole = user?.user_metadata?.role || "Builder";
@@ -58,6 +65,8 @@ const Navbar = () => {
       if (e.key === "Escape") {
         setCmdOpen(false);
         setNotifOpen(false);
+        setUserMenuOpen(false);
+        setOpen(false);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -140,40 +149,87 @@ const Navbar = () => {
           <div className="relative">
             <button
               type="button"
-              aria-label="Notifications, 3 unread"
+              aria-label={`Notifications, ${unreadCount} unread`}
               aria-expanded={notifOpen}
               onClick={() => setNotifOpen(!notifOpen)}
               className="relative w-8 h-8 rounded-full bg-foreground/5 border border-border-subtle flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-200"
             >
               <Bell className="w-3.5 h-3.5" aria-hidden="true" />
-              <span aria-hidden="true" className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-primary text-[7px] font-bold text-primary-foreground flex items-center justify-center">3</span>
+              {unreadCount > 0 && (
+                <span aria-hidden="true" className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-primary text-[7px] font-bold text-primary-foreground flex items-center justify-center animate-in zoom-in-50 duration-200">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
             </button>
 
             {/* Notifications Dropdown */}
             {notifOpen && (
-              <div className="absolute right-0 mt-2 w-72 rounded-2xl border border-border-subtle bg-popover shadow-elev-lg py-3 animate-in fade-in zoom-in-95 duration-150 z-50">
-                <div className="px-4 pb-2 border-b border-border-subtle">
-                  <p className="text-xs font-bold text-foreground">Notifications</p>
+              <div className="absolute right-0 mt-2 w-80 rounded-2xl border border-border-subtle bg-popover shadow-elev-lg py-3 animate-in fade-in zoom-in-95 duration-150 z-50">
+                <div className="px-4 pb-2 border-b border-border-subtle flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs font-bold text-foreground">Notifications</p>
+                    {unreadCount > 0 && (
+                      <span className="px-1.5 py-0.5 rounded-full bg-primary/10 text-primary text-[9px] font-mono font-bold">
+                        {unreadCount} unread
+                      </span>
+                    )}
+                  </div>
+                  {unreadCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => markAllNotificationsAsRead(user?.id || "")}
+                      className="text-[10px] font-mono text-primary hover:underline"
+                    >
+                      Mark all read
+                    </button>
+                  )}
                 </div>
-                <div className="max-h-80 overflow-y-auto">
-                  {[
-                    { icon: User, text: "New builder matched: Arjun Mehta (98% vibe)", time: "2m ago", color: "text-primary" },
-                    { icon: FolderGit2, text: "AI Dashboard Integration milestone approved", time: "1h ago", color: "text-accent" },
-                    { icon: Star, text: "Project starred: Multi-Agent Pipeline", time: "3h ago", color: "text-secondary-bright" },
-                  ].map((n, i) => (
-                    <div key={i} className="flex items-start gap-3 px-4 py-3 hover:bg-foreground/5 transition-colors cursor-pointer">
-                      <div className={`w-7 h-7 rounded-lg bg-foreground/5 border border-border-subtle flex items-center justify-center shrink-0 ${n.color}`}>
-                        <n.icon className="w-3.5 h-3.5" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-xs text-foreground leading-relaxed">{n.text}</p>
-                        <p className="text-[10px] font-mono text-muted-foreground mt-0.5">{n.time}</p>
-                      </div>
+
+                <div className="max-h-80 overflow-y-auto divide-y divide-border/20">
+                  {notifications.length === 0 ? (
+                    <div className="px-4 py-8 text-center text-xs text-muted-foreground font-mono">
+                      No notifications yet
                     </div>
-                  ))}
-                </div>
-                <div className="border-t border-border-subtle px-4 py-2">
-                  <button type="button" className="text-[10px] font-mono text-primary hover:text-primary transition-colors">View all notifications</button>
+                  ) : (
+                    notifications.map((n) => {
+                      const IconComponent =
+                        n.type === "like" ? Star :
+                        n.type === "comment" ? MessageSquare :
+                        n.type === "follow" ? User :
+                        FolderGit2;
+                      return (
+                        <div
+                          key={n.id}
+                          onClick={async () => {
+                            await markNotificationAsRead(n.id);
+                            setNotifOpen(false);
+                            if (n.link) navigate(n.link);
+                          }}
+                          className={`flex items-start gap-3 px-4 py-3 hover:bg-foreground/5 transition-colors cursor-pointer ${
+                            !n.read ? "bg-primary/[0.04]" : ""
+                          }`}
+                        >
+                          <div className="w-7 h-7 rounded-lg bg-foreground/5 border border-border-subtle flex items-center justify-center shrink-0 text-primary overflow-hidden">
+                            {n.actorAvatar ? (
+                              <img src={n.actorAvatar} alt="" className="w-7 h-7 rounded-lg object-cover" />
+                            ) : (
+                              <IconComponent className="w-3.5 h-3.5" />
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center justify-between">
+                              <p className="text-xs font-semibold text-foreground truncate">{n.title}</p>
+                              {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 ml-1" />}
+                            </div>
+                            {n.text && <p className="text-[11px] text-muted-foreground line-clamp-1 mt-0.5">{n.text}</p>}
+                            <p className="text-[9px] font-mono text-muted-foreground/70 mt-1">
+                              {n.createdAt?.toDate ? formatDistanceToNow(n.createdAt.toDate(), { addSuffix: true }) : "Just now"}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
                 </div>
               </div>
             )}
@@ -215,11 +271,37 @@ const Navbar = () => {
               </button>
 
               {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-52 rounded-2xl border border-border-subtle bg-popover shadow-elev-lg py-2 animate-in fade-in zoom-in-95 duration-150 z-50">
+                <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-border-subtle bg-popover shadow-elev-lg py-2 animate-in fade-in zoom-in-95 duration-150 z-50">
                   <div className="px-4 pb-2 border-b border-border-subtle mb-1">
                     <p className="text-sm font-semibold text-foreground">{userName}</p>
                     <p className="text-[10px] font-mono text-primary">{`> ${userRole.toLowerCase()} --online`}</p>
                   </div>
+
+                  {/* Switch Test Account Bar */}
+                  <div className="px-3 py-2 bg-muted/40 rounded-xl mx-2 my-1.5 border border-border/30">
+                    <p className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider mb-1">Test Notification Switcher</p>
+                    <div className="grid grid-cols-2 gap-1 font-mono text-[10px]">
+                      <button
+                        type="button"
+                        onClick={() => switchTestUser("user_a")}
+                        className={`px-2 py-1 rounded transition-all ${
+                          activeTestKey === "user_a" ? "bg-primary text-primary-foreground font-bold shadow-sm" : "bg-card border border-border hover:bg-muted text-foreground"
+                        }`}
+                      >
+                        User A (Alex)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => switchTestUser("user_b")}
+                        className={`px-2 py-1 rounded transition-all ${
+                          activeTestKey === "user_b" ? "bg-primary text-primary-foreground font-bold shadow-sm" : "bg-card border border-border hover:bg-muted text-foreground"
+                        }`}
+                      >
+                        User B (Priya)
+                      </button>
+                    </div>
+                  </div>
+
                   <Link
                     to="/dashboard"
                     onClick={() => setUserMenuOpen(false)}

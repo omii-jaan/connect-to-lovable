@@ -22,18 +22,17 @@ const NAV_ITEMS = [
   { id: "overview", label: "Overview", icon: LayoutDashboard, color: "primary" },
   { id: "ships", label: "Ships", icon: FolderGit2, color: "primary" },
   { id: "projects", label: "Projects", icon: Briefcase, color: "primary" },
-  { id: "contracts", label: "Contracts", icon: FileText, color: "accent" },
   { id: "profile", label: "Profile", icon: User, color: "secondary" },
   { id: "settings", label: "Settings", icon: Settings, color: "muted" },
 ];
 
-const Dashboard = () => {
+const Dashboard = ({ defaultTab = "overview" }: { defaultTab?: string }) => {
   const { user, signOut, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState(defaultTab);
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [newStackTag, setNewStackTag] = useState("");
@@ -46,21 +45,9 @@ const Dashboard = () => {
     stack: string[];
     social_links: Record<string, string>;
   }>({ full_name: "", username: "", bio: "", stack: [], social_links: {} });
-  const [contracts, setContracts] = useState<Contract[]>([]);
-  const [contractFilter, setContractFilter] = useState("all");
-  const [expandedContract, setExpandedContract] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
   const [notifPrefs, setNotifPrefs] = useState({ email: true, inApp: true, marketing: false });
   const [deleteConfirm, setDeleteConfirm] = useState("");
-
-  const MOCK_CONTRACTS: Contract[] = [
-    { id: "c1", project_id: null, builder_id: "b1", founder_id: "f1", title: "AI Dashboard Integration", description: "Build a real-time AI analytics dashboard with live telemetry and LangChain-powered insights.", status: "active", amount_usd: 12000, currency: "USD", payment_status: "escrowed", escrow_transaction_id: null, milestones: [{ id: "m1", title: "API Design & Architecture", description: "Design REST API endpoints for data ingestion", amount_usd: 3000, status: "approved", due_date: "2026-01-15", completed_at: "2026-01-10" }, { id: "m2", title: "Backend Implementation", description: "Build LangChain agents and data pipelines", amount_usd: 4000, status: "approved", due_date: "2026-02-01", completed_at: "2026-01-28" }, { id: "m3", title: "Frontend Dashboard", description: "React dashboard with real-time charts", amount_usd: 3000, status: "in_progress", due_date: "2026-02-20", completed_at: null }, { id: "m4", title: "Deployment & Testing", description: "CI/CD pipeline setup and QA", amount_usd: 2000, status: "pending", due_date: "2026-03-01", completed_at: null }], started_at: "2026-01-05", completed_at: null, deadline: "2026-03-01", created_at: "2025-12-20", updated_at: "2026-01-28" },
-    { id: "c2", project_id: null, builder_id: "b2", founder_id: "f1", title: "API Rate Limiter Module", description: "Implement distributed rate limiting with Redis and FastAPI middleware.", status: "pending", amount_usd: 8000, currency: "USD", payment_status: "unpaid", escrow_transaction_id: null, milestones: [{ id: "m5", title: "Rate Limit Algorithm", description: "Design sliding window algorithm", amount_usd: 2500, status: "pending", due_date: "2026-02-10", completed_at: null }, { id: "m6", title: "Redis Integration", description: "Connect to Redis cluster and implement storage", amount_usd: 3000, status: "pending", due_date: "2026-02-25", completed_at: null }, { id: "m7", title: "Middleware & Testing", description: "FastAPI middleware with load tests", amount_usd: 2500, status: "pending", due_date: "2026-03-10", completed_at: null }], started_at: null, completed_at: null, deadline: "2026-03-15", created_at: "2026-01-28", updated_at: "2026-01-28" },
-    { id: "c3", project_id: null, builder_id: "b1", founder_id: "f2", title: "Multi-Agent Orchestrator", description: "Build an orchestration layer for coordinating multiple AI agents in a pipeline.", status: "completed", amount_usd: 15000, currency: "USD", payment_status: "released", escrow_transaction_id: "0x8a92...7b99", milestones: [{ id: "m8", title: "Agent Communication Protocol", description: "Design message passing between agents", amount_usd: 4000, status: "paid", due_date: "2025-11-15", completed_at: "2025-11-10" }, { id: "m9", title: "Task Queue System", description: "Implement priority-based task scheduling", amount_usd: 5000, status: "paid", due_date: "2025-12-01", completed_at: "2025-11-28" }, { id: "m10", title: "Monitoring Dashboard", description: "Real-time agent telemetry dashboard", amount_usd: 6000, status: "paid", due_date: "2025-12-20", completed_at: "2025-12-15" }], started_at: "2025-10-20", completed_at: "2025-12-18", deadline: "2025-12-25", created_at: "2025-10-15", updated_at: "2025-12-18" },
-    { id: "c4", project_id: null, builder_id: "b3", founder_id: "f1", title: "Vector Database Migration", description: "Migrate from Pinecone to Qdrant with zero downtime.", status: "disputed", amount_usd: 6000, currency: "USD", payment_status: "refunded", escrow_transaction_id: null, milestones: [{ id: "m11", title: "Data Export", description: "Export vectors from Pinecone", amount_usd: 2000, status: "approved", due_date: "2026-01-10", completed_at: "2026-01-08" }, { id: "m12", title: "Qdrant Setup", description: "Deploy and configure Qdrant cluster", amount_usd: 2000, status: "submitted", due_date: "2026-01-25", completed_at: "2026-01-22" }, { id: "m13", title: "Migration Script", description: "Write and test migration scripts", amount_usd: 2000, status: "pending", due_date: "2026-02-05", completed_at: null }], started_at: "2026-01-05", completed_at: null, deadline: "2026-02-10", created_at: "2025-12-28", updated_at: "2026-01-25" },
-  ];
-
-  const filteredContracts = contractFilter === "all" ? contracts : contracts.filter((c) => c.status === contractFilter);
 
   const startEditing = () => {
     setEditForm({
@@ -140,7 +127,7 @@ const Dashboard = () => {
   const [stats, setStats] = useState({
     shipsCount: 0,
     activeContracts: 0,
-    vibeScore: 0,
+    reputation: 0,
     earnings: 0,
   });
 
@@ -172,20 +159,11 @@ const Dashboard = () => {
         setStats({
           shipsCount: projectsData?.length || 0,
           activeContracts: 0,
-          vibeScore: profileData?.vibe_score || 0,
+          reputation: profileData?.reputation || 0,
           earnings: 0,
         });
       } catch (error) {
         console.error("Failed to load dashboard:", error);
-      }
-
-      try {
-        const contractsData = await contractApi.getAll({ builder_id: user.id });
-        setContracts(contractsData || []);
-        setStats((s) => ({ ...s, activeContracts: (contractsData || []).filter((c: Contract) => c.status === "active").length, earnings: (contractsData || []).reduce((sum: number, c: Contract) => sum + (c.amount_usd || 0), 0) }));
-      } catch {
-        setContracts(MOCK_CONTRACTS);
-        setStats((s) => ({ ...s, activeContracts: MOCK_CONTRACTS.filter((c) => c.status === "active").length, earnings: MOCK_CONTRACTS.reduce((sum, c) => sum + (c.amount_usd || 0), 0) }));
       } finally {
         setLoading(false);
       }
@@ -282,31 +260,61 @@ const Dashboard = () => {
         <header className="h-14 border-b border-border-subtle bg-card flex items-center justify-between px-4 md:px-6 shrink-0">
           <div className="flex items-center gap-3">
             <span className="text-xs font-mono text-muted-foreground hidden sm:block">{`[~] $`}</span>
-            <span className="text-xs font-mono text-primary hidden sm:block">{`./${activeTab}`}</span>
+            <span className="text-xs font-mono text-primary">{`./${activeTab}`}</span>
             <span className="inline-block w-1.5 h-4 bg-primary/60 animate-pulse hidden sm:block" />
           </div>
 
           <div className="flex items-center gap-2">
-            <button className="w-7 h-7 rounded-lg bg-muted/50 border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
-              <Search className="w-3.5 h-3.5" />
+            <button
+              type="button"
+              aria-label="Search dashboard"
+              className="w-9 h-9 rounded-lg bg-muted/50 border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Search className="w-4 h-4" />
             </button>
-            <button className="relative w-7 h-7 rounded-lg bg-muted/50 border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
-              <Bell className="w-3.5 h-3.5" />
-              <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-primary text-[6px] font-bold text-primary-foreground flex items-center justify-center">3</span>
+            <button
+              type="button"
+              aria-label="Notifications"
+              className="relative w-9 h-9 rounded-lg bg-muted/50 border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Bell className="w-4 h-4" />
+              <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-primary text-[7px] font-bold text-primary-foreground flex items-center justify-center">3</span>
             </button>
             <div className="w-px h-5 bg-foreground/10 mx-1" />
             <div className="flex items-center gap-2 pl-1">
-              <div className="w-7 h-7 rounded-full bg-gradient-primary flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center">
                 {user.user_metadata?.avatar_url ? (
-                  <img src={user.user_metadata.avatar_url} alt={userName} className="w-7 h-7 rounded-full" />
+                  <img src={user.user_metadata.avatar_url} alt={userName} className="w-8 h-8 rounded-full" />
                 ) : (
-                  <User className="w-3 h-3 text-primary-foreground" />
+                  <User className="w-3.5 h-3.5 text-primary-foreground" />
                 )}
               </div>
               <span className="text-xs font-semibold text-foreground hidden sm:block">{userName}</span>
             </div>
           </div>
         </header>
+
+        {/* Mobile Navigation Bar */}
+        <div className="lg:hidden flex items-center gap-1.5 px-4 py-2 bg-muted/80 border-b border-border-subtle overflow-x-auto no-scrollbar shrink-0">
+          {NAV_ITEMS.map((item) => {
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setActiveTab(item.id)}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all min-h-[36px] ${
+                  isActive
+                    ? "bg-primary/15 text-primary border border-primary/30 font-semibold"
+                    : "text-muted-foreground hover:text-foreground bg-card/40 border border-transparent"
+                }`}
+              >
+                <item.icon className="w-3.5 h-3.5" />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
 
         {/* ---- Content ---- */}
         <main className="flex-1 overflow-y-auto px-4 md:px-6 py-6">
@@ -336,7 +344,7 @@ const Dashboard = () => {
                 {[
                   { label: "Ships Docked", value: stats.shipsCount, icon: FolderGit2, color: "primary", sparkline: [2, 3, 1, 4, 3, 5, stats.shipsCount] },
                   { label: "Active Contracts", value: stats.activeContracts, icon: FileText, color: "accent", sparkline: [0, 1, 0, 2, 1, 1, stats.activeContracts] },
-                  { label: "Vibe Score", value: `${stats.vibeScore}%`, icon: Zap, color: "secondary", sparkline: [70, 75, 72, 80, 78, 85, stats.vibeScore] },
+                  { label: "Reputation", value: `${stats.reputation}%`, icon: Zap, color: "secondary", sparkline: [70, 75, 72, 80, 78, 85, stats.reputation] },
                   { label: "Earnings", value: `$${stats.earnings.toLocaleString()}`, icon: LayoutDashboard, color: "primary", sparkline: [0, 400, 200, 800, 600, 1200, stats.earnings] },
                 ].map((stat, i) => (
                     <div key={i} className="rounded-xl border border-border/50 bg-muted p-4 hover:border-primary/20 transition-colors">
@@ -657,7 +665,9 @@ const Dashboard = () => {
                                   try {
                                     await projectApi.delete(project.id);
                                     setProjects((prev) => prev.filter((p) => p.id !== project.id));
-                                  } catch {}
+                                  } catch (err) {
+                                    console.error(err);
+                                  }
                                   setDeleting(null);
                                 }
                               }}
@@ -734,7 +744,9 @@ const Dashboard = () => {
                                       try {
                                         await projectApi.delete(project.id);
                                         setProjects((prev) => prev.filter((p) => p.id !== project.id));
-                                      } catch {}
+                                      } catch (err) {
+                                        console.error(err);
+                                      }
                                       setDeleting(null);
                                     }
                                   }}
@@ -749,217 +761,6 @@ const Dashboard = () => {
                         ))}
                     </tbody>
                   </table>
-                </div>
-              )}
-            </div>
-          )}
-          {activeTab === "contracts" && (
-            <div className="max-w-6xl mx-auto space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-semibold text-foreground">Contracts</h2>
-                  <p className="text-sm text-muted-foreground font-mono">{contracts.length} total · {contracts.filter(c => c.status === "active").length} active</p>
-                </div>
-              </div>
-
-              <div className="flex gap-2 flex-wrap">
-                {["all", "active", "pending", "completed", "disputed"].map((f) => (
-                  <button
-                    key={f}
-                    onClick={() => setContractFilter(f)}
-                    className={`px-3 py-1.5 text-xs font-mono rounded-lg border transition-colors ${
-                      contractFilter === f
-                        ? "bg-primary/[0.07] border-primary/25 text-primary"
-                        : "bg-transparent border-border/40 text-muted-foreground hover:border-border"
-                    }`}
-                  >
-                    {f === "all" ? "all" : f}
-                    <span className="ml-1.5 opacity-60">
-                      ({f === "all" ? contracts.length : contracts.filter(c => c.status === f).length})
-                    </span>
-                  </button>
-                ))}
-              </div>
-
-              {filteredContracts.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-16 gap-3">
-                  <FileText className="w-10 h-10 text-muted-foreground" />
-                  <p className="text-sm font-mono text-muted-foreground">{`> no ${contractFilter === "all" ? "" : contractFilter + " "}contracts found`}</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {filteredContracts.map((contract) => (
-                    <div key={contract.id} className="bg-card border border-border rounded-xl overflow-hidden">
-                      <div className="p-5">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1.5">
-                              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-mono font-medium ${
-                                contract.status === "active" ? "bg-primary/[0.07] text-primary border border-cyan-500/20" :
-                                contract.status === "pending" ? "bg-amber-500/10 text-accent border border-amber-500/20" :
-                                contract.status === "completed" ? "bg-green-500/10 text-green-400 border border-green-500/20" :
-                                contract.status === "disputed" ? "bg-red-500/10 text-red-400 border border-red-500/20" :
-                                "bg-muted text-muted-foreground border border-border"
-                              }`}>
-                                <span className={`w-1.5 h-1.5 rounded-full ${
-                                  contract.status === "active" ? "bg-cyan-400" :
-                                  contract.status === "pending" ? "bg-amber-400" :
-                                  contract.status === "completed" ? "bg-green-400" :
-                                  contract.status === "disputed" ? "bg-red-400" :
-                                  "bg-muted-foreground"
-                                }`} />
-                                {contract.status}
-                              </span>
-                              <span className="text-sm font-mono text-muted-foreground">
-                                {contract.amount_usd !== null ? `$${contract.amount_usd.toLocaleString()}` : "—"}
-                              </span>
-                            </div>
-                            <h3 className="text-base font-medium text-foreground truncate">{contract.title}</h3>
-                            {contract.description && (
-                              <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{contract.description}</p>
-                            )}
-                          </div>
-                          <div className="flex flex-col items-end gap-1 shrink-0">
-                            <span className="text-[11px] font-mono text-muted-foreground">
-                              {format(new Date(contract.created_at), "MMM d, yyyy")}
-                            </span>
-                            {contract.deadline && (
-                              <span className="text-[11px] font-mono text-muted-foreground flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
-                                {format(new Date(contract.deadline), "MMM d")}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className="mt-4">
-                          <div className="flex items-center justify-between mb-1.5">
-                            <span className="text-[11px] font-mono text-muted-foreground">
-                              Milestones {contract.milestones.filter(m => m.status === "approved" || m.status === "paid").length}/{contract.milestones.length} completed
-                            </span>
-                            <span className="text-[11px] font-mono text-muted-foreground">
-                              {Math.round((contract.milestones.filter(m => m.status === "approved" || m.status === "paid").length / contract.milestones.length) * 100)}%
-                            </span>
-                          </div>
-                          <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                            <div
-                              className="h-full rounded-full transition-all duration-500"
-                              style={{
-                                width: `${(contract.milestones.filter(m => m.status === "approved" || m.status === "paid").length / contract.milestones.length) * 100}%`,
-                                background: contract.status === "disputed"
-                                  ? "linear-gradient(90deg, #f87171, #ef4444)"
-                                  : contract.status === "completed"
-                                  ? "linear-gradient(90deg, #22d3a7, #10b981)"
-                                  : "linear-gradient(90deg, #22d3ee, #06b6d4)"
-                              }}
-                            />
-                          </div>
-                        </div>
-
-                        <div className="mt-3 flex flex-wrap gap-1.5">
-                          {contract.milestones.slice(0, expandedContract === contract.id ? undefined : 2).map((ms) => (
-                            <span
-                              key={ms.id}
-                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-mono ${
-                                ms.status === "paid" || ms.status === "approved" ? "bg-green-500/8 text-green-400 border border-green-500/15" :
-                                ms.status === "in_progress" ? "bg-cyan-500/8 text-primary border border-cyan-500/15" :
-                                ms.status === "submitted" ? "bg-amber-500/8 text-accent border border-amber-500/15" :
-                                "bg-muted/50 text-muted-foreground border border-border/40"
-                              }`}
-                            >
-                              {ms.status === "paid" || ms.status === "approved" ? <Check className="w-3 h-3" /> :
-                               ms.status === "submitted" ? <ArrowUpCircle className="w-3 h-3" /> :
-                               ms.status === "in_progress" ? <Loader2 className="w-3 h-3" /> :
-                               <Clock className="w-3 h-3" />}
-                              {ms.title}
-                            </span>
-                          ))}
-                          {contract.milestones.length > 2 && expandedContract !== contract.id && (
-                            <button
-                              onClick={() => setExpandedContract(contract.id)}
-                              className="text-[11px] font-mono text-muted-foreground hover:text-foreground transition-colors px-2"
-                            >
-                              +{contract.milestones.length - 2} more
-                            </button>
-                          )}
-                          {expandedContract === contract.id && (
-                            <button
-                              onClick={() => setExpandedContract(null)}
-                              className="text-[11px] font-mono text-muted-foreground hover:text-foreground transition-colors px-2"
-                            >
-                              show less
-                            </button>
-                          )}
-                        </div>
-
-                        <div className="mt-4 pt-3 border-t border-border/50 flex items-center gap-2">
-                          {contract.status === "pending" && (
-                            <>
-                              <button
-                                onClick={() => toast({ title: "Contract accepted", description: `${contract.title} is now active`, duration: 4000 })}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium rounded-lg bg-primary/[0.07] text-primary border border-cyan-500/20 hover:bg-cyan-500/20 transition-colors"
-                              >
-                                <Check className="w-3.5 h-3.5" />
-                                Accept
-                              </button>
-                              <button
-                                onClick={() => toast({ title: "Contract declined", description: `${contract.title} has been declined`, duration: 4000 })}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono rounded-lg text-muted-foreground hover:text-foreground border border-border/40 hover:border-border transition-colors"
-                              >
-                                <X className="w-3.5 h-3.5" />
-                                Decline
-                              </button>
-                            </>
-                          )}
-                          {contract.status === "active" && (
-                            <>
-                              <button
-                                onClick={() => toast({ title: "Work submitted", description: `Milestone delivered for review on ${contract.title}`, duration: 4000 })}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium rounded-lg bg-primary/[0.07] text-primary border border-cyan-500/20 hover:bg-cyan-500/20 transition-colors"
-                              >
-                                <ArrowUpCircle className="w-3.5 h-3.5" />
-                                Submit Work
-                              </button>
-                              <button
-                                onClick={() => toast({ title: "Message sent", description: `Your message regarding ${contract.title} has been delivered`, duration: 4000 })}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono rounded-lg text-muted-foreground hover:text-foreground border border-border/40 hover:border-border transition-colors"
-                              >
-                                <MessageCircle className="w-3.5 h-3.5" />
-                                Message
-                              </button>
-                            </>
-                          )}
-                          {contract.status === "completed" && (
-                            <div className="flex items-center gap-2 text-xs text-green-400/70 font-mono">
-                              <Check className="w-3.5 h-3.5" />
-                              Completed {contract.completed_at ? format(new Date(contract.completed_at), "MMM d, yyyy") : ""}
-                              {contract.payment_status === "released" && (
-                                <span className="flex items-center gap-1 ml-2 text-muted-foreground">
-                                  <CircleDollarSign className="w-3.5 h-3.5" />
-                                  Payment released
-                                </span>
-                              )}
-                            </div>
-                          )}
-                          {contract.status === "disputed" && (
-                            <div className="flex items-center gap-2 text-xs text-red-400/70 font-mono">
-                              <AlertTriangle className="w-3.5 h-3.5" />
-                              Dispute active — awaiting resolution
-                              <button className="ml-2 text-muted-foreground hover:text-foreground underline underline-offset-2">
-                                View details
-                              </button>
-                            </div>
-                          )}
-                          <div className="ml-auto">
-                            <button className="inline-flex items-center gap-1 text-xs font-mono text-muted-foreground hover:text-foreground transition-colors">
-                              <ExternalLink className="w-3.5 h-3.5" />
-                              Details
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
                 </div>
               )}
             </div>
@@ -1066,7 +867,7 @@ const Dashboard = () => {
                 {[
                   { label: "Ships Docked", value: profile?.ships_count || 0, icon: FolderGit2, color: "primary" },
                   { label: "GitHub Stars", value: profile?.stars_count || 0, icon: Star, color: "accent" },
-                  { label: "Vibe Score", value: `${profile?.vibe_score || 0}%`, icon: Zap, color: "secondary" },
+                  { label: "Reputation", value: `${profile?.reputation || 0}%`, icon: Zap, color: "secondary" },
                   { label: "Active Contracts", value: stats.activeContracts, icon: FileText, color: "primary" },
                 ].map((stat, i) => (
                   <div key={i} className="rounded-xl border border-border/50 bg-card p-4">
@@ -1315,7 +1116,7 @@ const Dashboard = () => {
                   <div className="space-y-1.5">
                     {MOCK_HIRE_PROJECTS.filter(p => p.status === "open").slice(0, 5).map((project, i) => (
                       <motion.div key={project.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}>
-                        <Link to={`/projects/${project.id}`} className="group flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-card/[0.04] hover:border hover:border-border/50 transition-all border border-transparent">
+                        <Link to={`/project/${project.slug || project.id}`} className="group flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-card/[0.04] hover:border hover:border-border/50 transition-all border border-transparent">
                           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20 flex items-center justify-center shrink-0">
                             <Briefcase className="w-4 h-4 text-primary" />
                           </div>
@@ -1607,7 +1408,7 @@ const InvitationCard = ({ inv, index }: { inv: Invitation; index: number }) => {
                 >
                   <XIcon className="w-3 h-3" /> Decline
                 </button>
-                <Link to={`/projects/${inv.project_id}`} className="ml-auto text-[9px] font-mono text-primary hover:text-primary transition-colors">
+                <Link to={`/project/${inv.project_id}`} className="ml-auto text-[9px] font-mono text-primary hover:text-primary transition-colors">
                   Details →
                 </Link>
               </div>

@@ -11,7 +11,7 @@ export interface Profile {
   github_access_token: string | null;
   ships_count: number;
   stars_count: number;
-  vibe_score: number;
+  reputation: number;
   role: 'builder' | 'founder' | 'admin';
   is_verified: boolean;
   created_at: string;

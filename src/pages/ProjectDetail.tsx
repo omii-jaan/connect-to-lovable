@@ -1,39 +1,127 @@
-import { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "motion/react";
+import { useState } from "react";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
+import { motion } from "motion/react";
+import { useAuth } from "@/context/AuthContext";
 import {
-  ArrowLeft, Zap, Eye, Clock, Bookmark, BookmarkCheck, Sparkles, Send,
-  ChevronDown, ChevronUp, User, Check, X as XIcon, Loader2,
-  CircleDollarSign, BarChart3, Target, Share2, AlertTriangle, BadgeCheck,
-  Globe, Mail, Briefcase, ChevronRight, Flame, ArrowUpRight, Copy, CheckCheck
+  ArrowLeft, Eye, Clock, Bookmark, BookmarkCheck, Send,
+  CircleDollarSign, BarChart3, Target, Share2, AlertTriangle,
+  Mail, Briefcase, ChevronRight, ArrowUpRight, CheckCheck
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { notify as toast } from "@/lib/notify";
-import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { MOCK_HIRE_PROJECTS, MOCK_MATCHES } from "@/lib/marketplace-data";
+import { sendNotification } from "@/lib/notifications";
+import { MOCK_HIRE_PROJECTS } from "@/lib/marketplace-data";
 import { formatDistanceToNow } from "date-fns";
-import type { HireProject, BuilderMatch } from "@/types";
 
 const ProjectDetail = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id, slug } = useParams<{ id?: string; slug?: string }>();
+  const projectParam = slug || id;
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
   const [saved, setSaved] = useState(false);
-  const [interested, setInterested] = useState(false);
-  const [invitingId, setInvitingId] = useState<string | null>(null);
-  const [showAllMatches, setShowAllMatches] = useState(false);
-  const [interestDialog, setInterestDialog] = useState(false);
-  const [inviteDialog, setInviteDialog] = useState<BuilderMatch | null>(null);
   const [copied, setCopied] = useState(false);
-  const [invitedSet, setInvitedSet] = useState<Set<string>>(new Set());
+  const [commentText, setCommentText] = useState("");
+  const [comments, setComments] = useState<Array<{ id: string; author: string; avatar: string; text: string; time: string }>>([
+    {
+      id: "c1",
+      author: "Demo Builder",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=demobuilder&backgroundColor=00f2ff",
+      text: "Great scope! We built a similar vector pipeline with Qdrant recently.",
+      time: "1 day ago",
+    },
+    {
+      id: "c2",
+      author: "Priya Sharma",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=priya&backgroundColor=c0aede",
+      text: "Is the budget flexible if we deliver ahead of schedule?",
+      time: "2 days ago",
+    },
+  ]);
 
-  const project = MOCK_HIRE_PROJECTS.find((p) => p.id === id);
-  const matches = id ? MOCK_MATCHES[id] || [] : [];
+  const project = MOCK_HIRE_PROJECTS.find(
+    (p) => p.id === projectParam || p.title.toLowerCase().replace(/\s+/g, "-") === projectParam
+  );
+
+  const handleGuestAuthPrompt = (actionName: string) => {
+    toast.error(`Sign in to ${actionName}`, {
+      action: {
+        label: "Sign In",
+        onClick: () => navigate("/login", { state: { from: location } }),
+      },
+    });
+  };
 
   const handleSave = () => {
-    setSaved(!saved);
-    toast(saved ? "Removed from saved" : "Project saved!", { duration: 2000 });
+    if (!user) {
+      handleGuestAuthPrompt("bookmark projects");
+      return;
+    }
+    const nextSaved = !saved;
+    setSaved(nextSaved);
+    toast(nextSaved ? "Project saved!" : "Removed from saved", { duration: 2000 });
+
+    if (nextSaved && project) {
+      const recipientUid = project.creator?.username === "priya_ships" ? "user_b" : (project.creator?.id || "user_b");
+      sendNotification({
+        recipientUid,
+        actorUid: user.id,
+        actorName: user.user_metadata?.full_name || "Alex Rivera",
+        actorAvatar: user.user_metadata?.avatar_url || "",
+        type: "like",
+        targetId: project.id,
+        title: `${user.user_metadata?.full_name || "A builder"} saved "${project.title}"`,
+        text: "Project saved/liked",
+        link: `/project/${project.slug || project.id}`,
+      });
+    }
+  };
+
+  const handleMessageCreator = () => {
+    if (!user) {
+      handleGuestAuthPrompt("message the project creator");
+      return;
+    }
+    navigate(`/messages?user=${project?.creator?.username || "creator"}`);
+  };
+
+  const handleAddComment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!commentText.trim()) return;
+    if (!user) {
+      handleGuestAuthPrompt("post comments");
+      return;
+    }
+    const commentContent = commentText.trim();
+    setComments((prev) => [
+      ...prev,
+      {
+        id: "c_" + Date.now(),
+        author: user.user_metadata?.full_name || "You",
+        avatar: user.user_metadata?.avatar_url || "https://api.dicebear.com/7.x/avataaars/svg?seed=user",
+        text: commentContent,
+        time: "Just now",
+      },
+    ]);
+    setCommentText("");
+    toast.success("Comment posted!");
+
+    if (project) {
+      const recipientUid = project.creator?.username === "priya_ships" ? "user_b" : (project.creator?.id || "user_b");
+      sendNotification({
+        recipientUid,
+        actorUid: user.id,
+        actorName: user.user_metadata?.full_name || "Alex Rivera",
+        actorAvatar: user.user_metadata?.avatar_url || "",
+        type: "comment",
+        targetId: project.id,
+        title: `${user.user_metadata?.full_name || "A builder"} commented on "${project.title}"`,
+        text: commentContent,
+        link: `/project/${project.slug || project.id}`,
+      });
+    }
   };
 
   const handleShare = async () => {
@@ -45,21 +133,6 @@ const ProjectDetail = () => {
     } catch {
       toast("Could not copy link");
     }
-  };
-
-  const handleInterestConfirm = () => {
-    setInterested(true);
-    setInterestDialog(false);
-    toast.success("Interest expressed! The project creator will review your profile.");
-  };
-
-  const handleInvite = async (match: BuilderMatch) => {
-    setInvitingId(match.id);
-    await new Promise((r) => setTimeout(r, 800));
-    setInvitedSet((prev) => new Set(prev).add(match.id));
-    setInvitingId(null);
-    setInviteDialog(null);
-    toast.success(`Invitation sent to ${match.builder?.full_name || "builder"}!`);
   };
 
   if (!project) {
@@ -76,8 +149,6 @@ const ProjectDetail = () => {
       </div>
     );
   }
-
-  const topMatches = showAllMatches ? matches : matches.slice(0, 3);
 
   return (
     <div className="min-h-screen bg-background">
@@ -209,169 +280,44 @@ const ProjectDetail = () => {
                 </Card>
               </motion.div>
 
-              {project.ai_parsed_requirements && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-                  <Card className="border-primary/30 bg-gradient-to-br from-primary/[0.04] to-primary/[0.01] p-6 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-primary/[0.06] to-transparent pointer-events-none rounded-full" />
-                    <div className="flex items-center gap-2.5 mb-5 relative z-10">
-                      <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-                        <Sparkles className="w-4 h-4 text-primary" />
-                      </div>
-                      <div>
-                        <h2 className="text-sm font-semibold text-primary">AI Parsed Requirements</h2>
-                        <p className="text-[9px] font-mono text-primary">Automatically extracted from description</p>
-                      </div>
+              {/* Comments Section */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+                <Card className="border-border-subtle bg-card shadow-elev-sm p-6 space-y-4">
+                  <h3 className="text-sm font-semibold text-foreground flex items-center justify-between">
+                    <span>Discussion & Comments ({comments.length})</span>
+                    {!user && <span className="text-[10px] font-mono text-muted-foreground">Sign in to join discussion</span>}
+                  </h3>
+
+                  <form onSubmit={handleAddComment} className="space-y-2">
+                    <textarea
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                      placeholder={user ? "Ask a question or leave feedback..." : "Sign in to leave a comment..."}
+                      className="w-full h-20 p-3 rounded-lg bg-muted/40 border border-border/50 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-primary/40 font-mono"
+                    />
+                    <div className="flex justify-end">
+                      <Button type="submit" size="sm" className="text-xs font-mono gap-1">
+                        <Send className="w-3 h-3" /> Post Comment
+                      </Button>
                     </div>
-                    <div className="grid grid-cols-2 gap-4 relative z-10">
-                      <div className="col-span-2">
-                        <p className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider mb-1.5">Core Requirement</p>
-                        <p className="text-sm text-foreground bg-background/60 rounded-lg border border-border/30 px-3.5 py-2.5">{project.ai_parsed_requirements.core_requirement}</p>
-                      </div>
-                      <div>
-                        <p className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider mb-1.5">Integrations</p>
-                        <div className="flex flex-wrap gap-1">
-                          {project.ai_parsed_requirements.integrations.map((i) => (
-                            <Badge key={i} variant="outline" className="text-[9px] font-mono border-border/40">{i}</Badge>
-                          ))}
+                  </form>
+
+                  <div className="space-y-3 pt-2 border-t border-border/40">
+                    {comments.map((c) => (
+                      <div key={c.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/20 border border-border/30">
+                        <img src={c.avatar} alt="" className="w-7 h-7 rounded-full border border-border" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs font-bold text-foreground">{c.author}</span>
+                            <span className="text-[10px] font-mono text-muted-foreground">{c.time}</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{c.text}</p>
                         </div>
                       </div>
-                      <div>
-                        <p className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider mb-1.5">Ideal Builder</p>
-                        <p className="text-sm text-foreground">{project.ai_parsed_requirements.ideal_builder_type}</p>
-                      </div>
-                    </div>
-                  </Card>
-                </motion.div>
-              )}
-
-              <AnimatePresence>
-                {matches.length > 0 && (
-                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                    <Card className="border-border-subtle bg-card shadow-elev-sm p-6">
-                      <div className="flex items-center justify-between mb-5">
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-                            <Sparkles className="w-4 h-4 text-primary" />
-                          </div>
-                          <div>
-                            <h2 className="text-sm font-semibold text-foreground">AI Builder Matches</h2>
-                            <p className="text-[9px] font-mono text-muted-foreground">Top candidates ranked by relevance</p>
-                          </div>
-                        </div>
-                        <Badge variant="secondary" className="text-[10px] font-mono">{matches.length} builders</Badge>
-                      </div>
-
-                      <div className="space-y-3">
-                        {topMatches.map((match, i) => (
-                          <motion.div
-                            key={match.id}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.08, duration: 0.3 }}
-                            layout
-                          >
-                            <div className="group relative rounded-xl border border-border/40 bg-background/80 hover:border-primary/20 hover:shadow-[0_0_20px_-8px] hover:shadow-primary/10 transition-all duration-200 p-4">
-                              <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.01] to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none rounded-xl" />
-
-                              <div className="flex items-start gap-4 relative z-10">
-                                <div className="relative shrink-0">
-                                  <div className="w-11 h-11 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20 flex items-center justify-center">
-                                    {match.builder?.avatar_url ? (
-                                      <img src={match.builder.avatar_url} alt="" className="w-11 h-11 rounded-full" />
-                                    ) : (
-                                      <User className="w-5 h-5 text-primary" />
-                                    )}
-                                  </div>
-                                  <div className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold border-2 border-background ${
-                                    match.match_score >= 90 ? "bg-accent text-accent-foreground" :
-                                    match.match_score >= 80 ? "bg-primary text-primary-foreground" :
-                                    "bg-muted text-muted-foreground"
-                                  }`}>
-                                    {match.match_score}%
-                                  </div>
-                                </div>
-
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center justify-between gap-2 mb-1">
-                                    <div className="flex items-center gap-2 min-w-0">
-                                      <Link to={`/builder/${match.builder?.username}`} className="text-sm font-semibold text-foreground hover:text-primary transition-colors truncate">
-                                        {match.builder?.full_name || "Unknown Builder"}
-                                      </Link>
-                                      {match.builder?.is_verified && <BadgeCheck className="w-3.5 h-3.5 text-primary shrink-0" />}
-                                      <span className="text-[10px] font-mono text-muted-foreground">@{match.builder?.username}</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5 shrink-0">
-                                      <Button
-                                        size="sm"
-                                        variant={invitedSet.has(match.id) ? "secondary" : "default"}
-                                        disabled={invitedSet.has(match.id) || invitingId === match.id}
-                                        onClick={() => setInviteDialog(match)}
-                                        className="text-[10px] h-7 px-3"
-                                      >
-                                        {invitingId === match.id ? (
-                                          <Loader2 className="w-3 h-3 animate-spin" />
-                                        ) : invitedSet.has(match.id) ? (
-                                          <><Check className="w-3 h-3 mr-1" /> Invited</>
-                                        ) : (
-                                          "Invite"
-                                        )}
-                                      </Button>
-                                    </div>
-                                  </div>
-
-                                  <p className="text-[11px] text-muted-foreground line-clamp-2 mb-2">{match.builder?.bio}</p>
-
-                                  <div className="flex items-center gap-3 mb-2 text-[10px] font-mono text-muted-foreground">
-                                    <span className="flex items-center gap-1"><Briefcase className="w-3 h-3" />{match.builder?.ships_count} ships</span>
-                                    <span className="flex items-center gap-1"><Zap className="w-3 h-3" />{match.builder?.vibe_score}% vibe</span>
-                                    <span className="flex items-center gap-1"><Star />{match.builder?.stars_count} stars</span>
-                                  </div>
-
-                                  <div className="space-y-1 mb-2">
-                                    {match.match_reasons.map((reason, ri) => (
-                                      <motion.p
-                                        key={ri}
-                                        initial={{ opacity: 0, x: -5 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.2 + ri * 0.05 }}
-                                        className="text-[10px] text-muted-foreground flex items-start gap-1.5"
-                                      >
-                                        <Check className="w-3 h-3 text-accent shrink-0 mt-0.5" />
-                                        {reason}
-                                      </motion.p>
-                                    ))}
-                                  </div>
-
-                                  <div className="flex flex-wrap gap-1">
-                                    {match.skills_match.map((s) => (
-                                      <Badge key={s} variant="outline" className="text-[8px] font-mono border-accent/20 bg-accent/[0.03] text-accent px-1.5 py-0">
-                                        {s}
-                                      </Badge>
-                                    ))}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-
-                      {matches.length > 3 && (
-                        <button
-                          onClick={() => setShowAllMatches(!showAllMatches)}
-                          className="w-full mt-3 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-[10px] font-mono text-muted-foreground hover:text-foreground hover:bg-card/[0.02] transition-all border border-transparent hover:border-border/30"
-                        >
-                          {showAllMatches ? (
-                            <><ChevronUp className="w-3 h-3" /> Show Less</>
-                          ) : (
-                            <><ChevronDown className="w-3 h-3" /> View All {matches.length} Matches</>
-                          )}
-                        </button>
-                      )}
-                    </Card>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                    ))}
+                  </div>
+                </Card>
+              </motion.div>
             </div>
 
             <div className="space-y-4">
@@ -382,7 +328,7 @@ const ProjectDetail = () => {
                       {project.creator?.avatar_url ? (
                         <img src={project.creator.avatar_url} alt="" className="w-10 h-10 rounded-full" />
                       ) : (
-                        <User className="w-5 h-5 text-primary" />
+                        <Briefcase className="w-5 h-5 text-primary" />
                       )}
                     </div>
                     <div className="min-w-0">
@@ -396,17 +342,10 @@ const ProjectDetail = () => {
 
                   <div className="space-y-3 mb-5">
                     <Button
-                      className="w-full bg-gradient-primary text-primary-foreground font-bold text-xs glow-cyan hover:brightness-110 transition-all h-9"
-                      onClick={interested ? undefined : () => setInterestDialog(true)}
-                      variant={interested ? "secondary" : "default"}
+                      variant="outline"
+                      className="w-full text-xs h-9"
+                      onClick={handleMessageCreator}
                     >
-                      {interested ? (
-                        <><Check className="w-3.5 h-3.5" /> Interest Expressed</>
-                      ) : (
-                        <><Sparkles className="w-3.5 h-3.5" /> Express Interest</>
-                      )}
-                    </Button>
-                    <Button variant="outline" className="w-full text-xs h-9" disabled>
                       <Mail className="w-3.5 h-3.5" /> Message Creator
                     </Button>
                   </div>
@@ -414,7 +353,7 @@ const ProjectDetail = () => {
                   <div className="pt-3 border-t border-border/30 space-y-2.5">
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-mono text-muted-foreground">Category</span>
-                      <div className={`px-2 py-0.5 rounded-full text-[9px] font-mono bg-primary/[0.07] border border-cyan-500/20 text-primary`}>
+                      <div className="px-2 py-0.5 rounded-full text-[9px] font-mono bg-primary/[0.07] border border-cyan-500/20 text-primary">
                         {project.category}
                       </div>
                     </div>
@@ -430,78 +369,15 @@ const ProjectDetail = () => {
                       <span className="text-muted-foreground">Created</span>
                       <span className="text-foreground">{formatDistanceToNow(new Date(project.created_at), { addSuffix: true })}</span>
                     </div>
-                    <div className="flex items-center justify-between text-[10px] font-mono">
-                      <span className="text-muted-foreground">Interest</span>
-                      <span className="text-foreground flex items-center gap-1"><Sparkles className="w-3 h-3 text-primary" />{project.interest_count}</span>
-                    </div>
                   </div>
-                </Card>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
-                <Card className="border-border-subtle bg-card shadow-elev-sm p-5">
-                  <h3 className="text-xs font-semibold text-foreground mb-3">Why Post on Shipyard?</h3>
-                  <ul className="space-y-2">
-                    {[
-                      "AI matches the best builders for your project",
-                      "1,200+ vetted builders available",
-                      "Built-in escrow & milestone payments",
-                      "Dispute resolution included",
-                    ].map((tip, i) => (
-                      <li key={i} className="flex items-start gap-2 text-[10px] font-mono text-muted-foreground">
-                        <span className="w-1 h-1 rounded-full bg-primary/60 mt-1.5 shrink-0" />
-                        {tip}
-                      </li>
-                    ))}
-                  </ul>
                 </Card>
               </motion.div>
             </div>
           </div>
         </div>
       </div>
-
-      <ConfirmDialog
-        open={interestDialog}
-        onOpenChange={setInterestDialog}
-        title="Express Interest"
-        desc={
-          <div className="space-y-2">
-            <p>You're about to express interest in <strong className="text-foreground">{project.title}</strong>.</p>
-            <p className="text-muted-foreground">The project creator will see your profile and may reach out. You can also browse similar projects.</p>
-          </div>
-        }
-        confirmText="Confirm Interest"
-        handleConfirm={handleInterestConfirm}
-      />
-
-      <ConfirmDialog
-        open={!!inviteDialog}
-        onOpenChange={(open) => !open && setInviteDialog(null)}
-        title="Invite Builder"
-        desc={
-          inviteDialog ? (
-            <div className="space-y-2">
-              <p>Send an invitation to <strong className="text-foreground">{inviteDialog.builder?.full_name}</strong> for <strong className="text-foreground">{project.title}</strong>.</p>
-              <div className="rounded-lg bg-muted border border-border/50 p-3 text-xs text-muted-foreground">
-                <p className="font-mono text-[10px] text-muted-foreground mb-1">Match score: {inviteDialog.match_score}%</p>
-                <p className="text-muted-foreground">{inviteDialog.match_reasons[0]}</p>
-              </div>
-            </div>
-          ) : null
-        }
-        confirmText="Send Invitation"
-        handleConfirm={() => inviteDialog && handleInvite(inviteDialog)}
-        isLoading={!!invitingId}
-      />
     </div>
   );
 };
-
-const Star = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-  </svg>
-);
 
 export default ProjectDetail;

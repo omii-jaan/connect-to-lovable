@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, useLocation, useParams } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect } from "react";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -20,6 +20,8 @@ import Projects from "./pages/Projects.tsx";
 import ProjectDetail from "./pages/ProjectDetail.tsx";
 import ProfilePreview from "./pages/ProfilePreview.tsx";
 import BuilderProfile from "./pages/BuilderProfile.tsx";
+import Leaderboards from "./pages/Leaderboards.tsx";
+import Feed from "./pages/Feed.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -56,6 +58,11 @@ const RouteAnnouncer = () => {
   return null;
 };
 
+const ProjectsRedirect = () => {
+  const { id } = useParams<{ id: string }>();
+  return <Navigate to={`/project/${id}`} replace />;
+};
+
 const AppRoutes = () => {
   const { user, loading } = useAuth();
   const location = useLocation();
@@ -81,9 +88,11 @@ const AppRoutes = () => {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<AnimatedPage><Index /></AnimatedPage>} />
         <Route path="/login" element={<AnimatedPage>{user ? <Navigate to="/dashboard" replace /> : <Login />}</AnimatedPage>} />
+        <Route path="/sign-up" element={<AnimatedPage>{user ? <Navigate to="/dashboard" replace /> : <Login />}</AnimatedPage>} />
         <Route path="/auth/callback" element={<AnimatedPage><AuthCallback /></AnimatedPage>} />
         <Route path="/profile-preview" element={<AnimatedPage><ProfilePreview /></AnimatedPage>} />
         <Route path="/builder/:username" element={<AnimatedPage><BuilderProfile /></AnimatedPage>} />
+        <Route path="/@:username" element={<AnimatedPage><BuilderProfile /></AnimatedPage>} />
         <Route
           path="/dashboard"
           element={
@@ -94,9 +103,21 @@ const AppRoutes = () => {
             </AnimatedPage>
           }
         />
-        <Route path="/post-project" element={<AnimatedPage><PostProject /></AnimatedPage>} />
+        <Route path="/post-project" element={<AnimatedPage><ProtectedRoute><PostProject /></ProtectedRoute></AnimatedPage>} />
         <Route path="/projects" element={<AnimatedPage><Projects /></AnimatedPage>} />
-        <Route path="/projects/:id" element={<AnimatedPage><ProjectDetail /></AnimatedPage>} />
+        <Route path="/explore" element={<AnimatedPage><Projects /></AnimatedPage>} />
+        <Route path="/loads" element={<Navigate to="/projects" replace />} />
+        <Route path="/workloads" element={<Navigate to="/projects" replace />} />
+        <Route path="/projects/:id" element={<ProjectsRedirect />} />
+        <Route path="/project/:slug" element={<AnimatedPage><ProjectDetail /></AnimatedPage>} />
+        <Route path="/project/:id" element={<AnimatedPage><ProjectDetail /></AnimatedPage>} />
+        <Route path="/leaderboards" element={<AnimatedPage><Leaderboards /></AnimatedPage>} />
+        <Route path="/feed" element={<AnimatedPage><Feed /></AnimatedPage>} />
+        <Route path="/messages" element={<AnimatedPage><ProtectedRoute><Dashboard defaultTab="messages" /></ProtectedRoute></AnimatedPage>} />
+        <Route path="/settings" element={<AnimatedPage><ProtectedRoute><Dashboard defaultTab="settings" /></ProtectedRoute></AnimatedPage>} />
+        <Route path="/notifications" element={<AnimatedPage><ProtectedRoute><Dashboard defaultTab="overview" /></ProtectedRoute></AnimatedPage>} />
+        <Route path="/analytics" element={<AnimatedPage><ProtectedRoute><Dashboard defaultTab="overview" /></ProtectedRoute></AnimatedPage>} />
+        <Route path="/onboarding" element={<AnimatedPage><ProtectedRoute><Dashboard defaultTab="profile" /></ProtectedRoute></AnimatedPage>} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<AnimatedPage><NotFound /></AnimatedPage>} />
       </Routes>

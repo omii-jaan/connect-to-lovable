@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { User, FolderGit2, Star, Zap, FileText, Check, Globe, Github, ExternalLink, Calendar, ArrowLeft, MapPin, Loader2 } from "lucide-react";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
+import { User, FolderGit2, Star, Zap, FileText, Check, Globe, Github, ExternalLink, Calendar, ArrowLeft, MapPin, Loader2, MessageSquare, UserPlus, UserCheck } from "lucide-react";
 import { format } from "date-fns";
 import { profileApi, projectApi } from "@/lib/api";
 import type { Profile, Project } from "@/types";
 import TechBadge from "@/components/TechBadge";
+import { useAuth } from "@/context/AuthContext";
+import { notify as toast } from "@/lib/notify";
+import { sendNotification } from "@/lib/notifications";
+import { Button } from "@/components/ui/button";
 
 const MOCK_PROFILE: Profile = {
   id: "b2",
@@ -23,7 +27,7 @@ const MOCK_PROFILE: Profile = {
   is_verified: true,
   ships_count: 8,
   stars_count: 567,
-  vibe_score: 97,
+  reputation: 97,
   created_at: "2024-06-01T00:00:00Z",
   updated_at: "2026-01-15T00:00:00Z",
   github_username: "priya_ships",
@@ -38,34 +42,115 @@ const MOCK_PROJECTS: Project[] = [
   { id: "p4", title: "Multi-Lang Chatbot Framework", description: "Plug-and-play chatbot SDK supporting 12 languages.", stack: ["Python", "OpenAI"], status: "draft", created_at: "2026-01-05", builder_id: "b2", github_repo_id: null, github_repo_full_name: null, github_repo_url: null, github_stars: 0, github_forks: 0, github_language: null, github_topics: [], live_url: null, demo_video_url: null, category: null, category_color: null, is_featured: false, views_count: 0, updated_at: "2026-01-05", builder: undefined },
 ];
 
+const MOCK_DEMO_PROFILE: Profile = {
+  id: "b_demo",
+  username: "demo",
+  full_name: "Demo Builder",
+  avatar_url: "https://api.dicebear.com/7.x/avataaars/svg?seed=demobuilder&backgroundColor=00f2ff",
+  bio: "AI Engineer & Systems Architect. Shipped 12 autonomous agent pipelines, custom RAG systems, and fine-tuned multi-modal LLMs.",
+  stack: ["Python", "PyTorch", "LangChain", "FastAPI", "Claude 3.5", "GPT-4o", "Qdrant", "Docker"],
+  social_links: {
+    github: "https://github.com/demo-builder",
+    twitter: "https://x.com/demo_builder",
+    linkedin: "https://linkedin.com/in/demo-builder",
+    website: "https://shipyards.dev/@demo",
+  },
+  role: "builder",
+  is_verified: true,
+  ships_count: 12,
+  stars_count: 1240,
+  reputation: 99,
+  created_at: "2024-01-10T00:00:00Z",
+  updated_at: "2026-02-01T00:00:00Z",
+  github_username: "demo-builder",
+  github_id: null,
+  github_access_token: null,
+};
+
 const BuilderProfile = () => {
   const { username } = useParams<{ username: string }>();
+  const cleanUsername = username?.replace(/^@/, "") || "";
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [activeTab, setActiveTab] = useState<"overview" | "projects" | "identity">("overview");
+
+  const handleFollow = () => {
+    if (!user) {
+      toast.error("Sign in to follow builders", {
+        action: {
+          label: "Sign In",
+          onClick: () => navigate("/login"),
+        },
+      });
+      return;
+    }
+    const nextFollowing = !isFollowing;
+    setIsFollowing(nextFollowing);
+    toast.success(nextFollowing ? `Now following @${cleanUsername}` : `Unfollowed @${cleanUsername}`);
+
+    if (nextFollowing) {
+      const recipientUid = cleanUsername === "priya_ships" ? "user_b" : (profile?.id || cleanUsername);
+      sendNotification({
+        recipientUid,
+        actorUid: user.id,
+        actorName: user.user_metadata?.full_name || "Alex Rivera",
+        actorAvatar: user.user_metadata?.avatar_url || "",
+        type: "follow",
+        targetId: profile?.id || cleanUsername,
+        title: `${user.user_metadata?.full_name || "A builder"} started following you`,
+        text: `New follower on Shipyards`,
+        link: `/@${cleanUsername}`,
+      });
+    }
+  };
+
+  const handleMessage = () => {
+    if (!user) {
+      toast.error("Sign in to send messages", {
+        action: {
+          label: "Sign In",
+          onClick: () => navigate("/login"),
+        },
+      });
+      return;
+    }
+    navigate(`/messages?user=${cleanUsername}`);
+  };
 
   useEffect(() => {
     const loadProfile = async () => {
-      if (!username) {
+      if (!cleanUsername) {
         setError(true);
         setLoading(false);
         return;
       }
       try {
-        const [profileData, projectsData] = await Promise.all([
-          profileApi.getByUsername(username),
-          projectApi.getAll({ builder_id: undefined, limit: 20 }),
-        ]);
+        const profileData = await profileApi.getByUsername(cleanUsername);
         if (profileData) {
           setProfile(profileData);
           const builderProjects = await projectApi.getAll({ builder_id: profileData.id, limit: 20 }).catch(() => []);
           setProjects(builderProjects || []);
         } else {
-          setError(true);
+          if (cleanUsername === "demo") {
+            setProfile(MOCK_DEMO_PROFILE);
+            setProjects(MOCK_PROJECTS);
+          } else if (cleanUsername === "priya_ships") {
+            setProfile(MOCK_PROFILE);
+            setProjects(MOCK_PROJECTS);
+          } else {
+            setError(true);
+          }
         }
       } catch {
-        if (username === "priya_ships") {
+        if (cleanUsername === "demo") {
+          setProfile(MOCK_DEMO_PROFILE);
+          setProjects(MOCK_PROJECTS);
+        } else if (cleanUsername === "priya_ships") {
           setProfile(MOCK_PROFILE);
           setProjects(MOCK_PROJECTS);
         } else {
@@ -76,7 +161,7 @@ const BuilderProfile = () => {
       }
     };
     loadProfile();
-  }, [username]);
+  }, [cleanUsername]);
 
   if (loading) {
     return (
@@ -134,19 +219,46 @@ const BuilderProfile = () => {
               </div>
             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex flex-wrap items-center gap-3 mb-2">
-                <h1 className="font-display font-bold text-2xl md:text-3xl text-foreground">
-                  {profile.full_name}
-                </h1>
-                {profile.is_verified && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary uppercase tracking-wider">
-                    <Check className="w-3 h-3" /> Verified
-                  </span>
-                )}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+                <div>
+                  <div className="flex flex-wrap items-center gap-3 mb-1">
+                    <h1 className="font-display font-bold text-2xl md:text-3xl text-foreground">
+                      {profile.full_name}
+                    </h1>
+                    {profile.is_verified && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary uppercase tracking-wider">
+                        <Check className="w-3 h-3" /> Verified
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm font-mono text-muted-foreground">
+                    @{profile.username}
+                  </p>
+                </div>
+
+                {/* Follow & Message Buttons */}
+                <div className="flex items-center gap-2">
+                  <Button
+                    onClick={handleFollow}
+                    variant={isFollowing ? "outline" : "default"}
+                    size="sm"
+                    className="font-mono text-xs gap-1.5"
+                  >
+                    {isFollowing ? <UserCheck className="w-3.5 h-3.5" /> : <UserPlus className="w-3.5 h-3.5" />}
+                    {isFollowing ? "Following" : "Follow"}
+                  </Button>
+                  <Button
+                    onClick={handleMessage}
+                    variant="outline"
+                    size="sm"
+                    className="font-mono text-xs gap-1.5"
+                  >
+                    <MessageSquare className="w-3.5 h-3.5" />
+                    Message
+                  </Button>
+                </div>
               </div>
-              <p className="text-sm font-mono text-muted-foreground mb-2">
-                @{profile.username}
-              </p>
+
               {profile.bio && (
                 <p className="text-sm text-muted-foreground mb-4 max-w-xl">
                   {profile.bio}
@@ -173,7 +285,7 @@ const BuilderProfile = () => {
           {[
             { label: "Ships Docked", value: profile.ships_count, icon: FolderGit2, color: "primary" },
             { label: "GitHub Stars", value: profile.stars_count, icon: Star, color: "accent" },
-            { label: "Vibe Score", value: `${profile.vibe_score}%`, icon: Zap, color: "secondary" },
+            { label: "Reputation", value: `${profile.reputation}%`, icon: Zap, color: "secondary" },
             { label: "Active Contracts", value: projects.filter(p => p.status === "verified").length, icon: FileText, color: "primary" },
           ].map((stat, i) => (
             <div key={i} className="rounded-xl border border-border-subtle bg-card p-4">
@@ -194,7 +306,84 @@ const BuilderProfile = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Tab Navigation */}
+        <div className="flex items-center gap-2 border-b border-border-subtle pb-2">
+          {(["overview", "projects", "identity"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 rounded-lg text-xs font-mono capitalize transition-all ${
+                activeTab === tab
+                  ? "bg-primary/10 border border-primary/20 text-primary font-bold"
+                  : "text-muted-foreground hover:text-foreground hover:bg-card/50"
+              }`}
+            >
+              {tab === "projects" ? `Projects (${projects.length})` : tab}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === "projects" ? (
+          <div className="rounded-2xl border border-border-subtle bg-card p-6 space-y-4">
+            <h3 className="font-display font-bold text-lg text-foreground">
+              Public Projects by @{profile.username}
+            </h3>
+            {projects.length === 0 ? (
+              <p className="text-xs font-mono text-muted-foreground py-4">No public projects docked yet.</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {projects.map((project) => (
+                  <Link
+                    key={project.id}
+                    to={`/project/${project.slug || project.id}`}
+                    className="group border border-border-subtle bg-muted/30 p-4 rounded-xl hover:border-primary/30 transition-all flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-mono font-bold text-foreground group-hover:text-primary transition-colors">
+                          {project.title}
+                        </span>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-primary/10 text-primary uppercase">
+                          {project.status}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
+                        {project.description || "No description provided."}
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-between pt-2 border-t border-border/40">
+                      <div className="flex gap-1">
+                        {project.stack?.slice(0, 3).map((s) => (
+                          <TechBadge key={s} name={s} size="xs" />
+                        ))}
+                      </div>
+                      <ExternalLink className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : activeTab === "identity" ? (
+          <div className="rounded-2xl border border-border-subtle bg-card p-6 space-y-4">
+            <h3 className="font-display font-bold text-lg text-foreground">Identity & Verification</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-xs">
+              <div className="p-4 rounded-xl bg-muted/40 border border-border/40">
+                <span className="text-[10px] text-muted-foreground block mb-1">MEMBER SINCE</span>
+                <span className="font-bold text-foreground">{format(new Date(profile.created_at), "MMMM yyyy")}</span>
+              </div>
+              <div className="p-4 rounded-xl bg-muted/40 border border-border/40">
+                <span className="text-[10px] text-muted-foreground block mb-1">VERIFICATION STATUS</span>
+                <span className="font-bold text-primary">{profile.is_verified ? "✓ Verified AI Builder" : "Standard Account"}</span>
+              </div>
+              <div className="p-4 rounded-xl bg-muted/40 border border-border/40">
+                <span className="text-[10px] text-muted-foreground block mb-1">GITHUB ACCOUNT</span>
+                <span className="font-bold text-foreground">{profile.github_username || "@" + profile.username}</span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             <div className="rounded-2xl border border-border-subtle bg-card p-6">
               <h3 className="font-display font-bold text-lg text-foreground mb-4">Tech Stack</h3>
@@ -290,6 +479,7 @@ const BuilderProfile = () => {
             </div>
           </div>
         </div>
+        )}
       </main>
     </div>
   );

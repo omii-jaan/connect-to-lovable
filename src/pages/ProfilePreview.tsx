@@ -11,7 +11,7 @@ const MOCK_PROFILE = {
   is_verified: true,
   ships_count: 12,
   stars_count: 342,
-  vibe_score: 94,
+  reputation: 94,
   created_at: "2024-03-15T00:00:00Z",
   stack: ["OpenAI", "LangChain", "Supabase", "Next.js", "TypeScript", "Python", "Postgres", "Redis"],
   social_links: {
@@ -109,7 +109,7 @@ const ProfilePreview = () => {
           {[
             { label: "Ships Docked", value: MOCK_PROFILE.ships_count, icon: FolderGit2, color: "primary" },
             { label: "GitHub Stars", value: MOCK_PROFILE.stars_count, icon: Star, color: "accent" },
-            { label: "Vibe Score", value: `${MOCK_PROFILE.vibe_score}%`, icon: Zap, color: "secondary" },
+            { label: "Reputation", value: `${MOCK_PROFILE.reputation}%`, icon: Zap, color: "secondary" },
             { label: "Active Contracts", value: 3, icon: FileText, color: "primary" },
           ].map((stat, i) => (
             <div key={i} className="rounded-xl border border-border-subtle bg-card p-4">

@@ -291,7 +291,7 @@ const ProjectCard = ({ project, index, saved, onToggleSave }: { project: HirePro
       transition={{ delay: index * 0.04, duration: 0.35, ease: "easeOut" }}
       layout
     >
-      <Link to={`/projects/${project.id}`}>
+      <Link to={`/project/${project.slug || project.id}`}>
         <Card className="group relative border-border-subtle bg-card shadow-elev-sm hover:bg-muted/80 hover:border-primary/30 hover:shadow-[0_0_30px_-5px] hover:shadow-primary/10 transition-all duration-300 p-5 h-full flex flex-col overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
@@ -406,7 +406,7 @@ const ProjectListItem = ({ project, index, saved, onToggleSave }: { project: Hir
       transition={{ delay: index * 0.03, duration: 0.25 }}
       layout
     >
-      <Link to={`/projects/${project.id}`}>
+      <Link to={`/project/${project.slug || project.id}`}>
         <div className="group flex items-center gap-4 px-4 py-3.5 rounded-xl bg-muted/30 border border-border/30 hover:bg-muted/60 hover:border-border/60 hover:shadow-[0_0_20px_-8px] hover:shadow-primary/5 transition-all duration-200">
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20 flex items-center justify-center shrink-0">
             <Briefcase className="w-4 h-4 text-primary" />

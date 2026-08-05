@@ -1,0 +1,8 @@
+{
+  "name": "Shipyard",
+  "description": "The professional identity platform for AI builders — dock deployed products, get discovered, and land real contracts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

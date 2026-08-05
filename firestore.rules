@@ -1,0 +1,262 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidHandle(handle) {
+      return handle is string && handle.matches('^[a-zA-Z0-9_]{3,30}$');
+    }
+
+    function isValidSlug(slug) {
+      return slug == null || (slug is string && slug.matches('^[a-z0-9-]+$'));
+    }
+
+    // Global default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Collection: profiles
+    match /profiles/{userId} {
+      allow read: if true;
+      allow create, delete: if isOwner(userId);
+      allow update: if isOwner(userId) || (
+        isSignedIn() &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['followersCount', 'followingCount', 'viewsCount', 'reputationScore'])
+      );
+    }
+
+    // Collection: handles (helper collection for uniqueness)
+    match /handles/{handle} {
+      allow read: if true;
+      allow create: if isSignedIn() &&
+        isValidHandle(handle) &&
+        incoming().uid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // Collection: projects
+    match /projects/{projectId} {
+      allow read: if true;
+      allow create: if isSignedIn() &&
+        incoming().ownerUid == request.auth.uid &&
+        isValidSlug(incoming().slug);
+      allow update: if (isSignedIn() && existing().ownerUid == request.auth.uid) || (
+        isSignedIn() &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['likesCount', 'commentsCount', 'sharesCount', 'viewsCount'])
+      );
+      allow delete: if isSignedIn() && existing().ownerUid == request.auth.uid;
+    }
+
+    // Collection: projectLikes (id = `${projectId}_${uid}`)
+    match /projectLikes/{likeId} {
+      allow read: if true;
+      allow create: if isSignedIn() &&
+        likeId == incoming().projectId + '_' + request.auth.uid &&
+        incoming().uid == request.auth.uid;
+      allow delete: if isSignedIn() && existing().uid == request.auth.uid;
+    }
+
+    // Collection: commentLikes (id = `${commentId}_${uid}`)
+    match /commentLikes/{likeId} {
+      allow read: if true;
+      allow create: if isSignedIn() &&
+        likeId == incoming().commentId + '_' + request.auth.uid &&
+        incoming().uid == request.auth.uid;
+      allow delete: if isSignedIn() && existing().uid == request.auth.uid;
+    }
+
+    // Collection: projectComments
+    match /projectComments/{commentId} {
+      allow read: if true;
+      allow create: if isSignedIn() &&
+        incoming().uid == request.auth.uid &&
+        (incoming().parentId == null || (
+          exists(/databases/$(database)/documents/projectComments/$(incoming().parentId)) &&
+          get(/databases/$(database)/documents/projectComments/$(incoming().parentId)).data.parentId == null
+        ));
+      allow update: if isSignedIn() && (
+        (existing().uid == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['content', 'editedAt'])) ||
+        incoming().diff(existing()).affectedKeys().hasOnly(['likesCount'])
+      );
+      allow delete: if isSignedIn() && existing().uid == request.auth.uid;
+    }
+
+    // Collection: projectBookmarks
+    match /projectBookmarks/{bookmarkId} {
+      allow read: if true;
+      allow create: if isSignedIn() && incoming().uid == request.auth.uid;
+      allow delete: if isSignedIn() && existing().uid == request.auth.uid;
+    }
+
+    // Collection: follows (id = `${followerUid}_${followeeUid}`)
+    match /follows/{followId} {
+      allow read: if true;
+      allow create: if isSignedIn() &&
+        followId == request.auth.uid + '_' + incoming().followeeUid &&
+        incoming().followerUid == request.auth.uid;
+      allow delete: if isSignedIn() && existing().followerUid == request.auth.uid;
+    }
+
+    // Collection: notifications
+    match /notifications/{notifId} {
+      allow read: if isSignedIn() && existing().uid == request.auth.uid;
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() &&
+        existing().uid == request.auth.uid &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['read']);
+      allow delete: if isSignedIn() && existing().uid == request.auth.uid;
+    }
+
+    // Collection: conversations
+    match /conversations/{convId} {
+      allow read: if isSignedIn() && request.auth.uid in existing().memberUids;
+      allow create: if isSignedIn() && request.auth.uid in incoming().memberUids;
+      allow update: if isSignedIn() && request.auth.uid in existing().memberUids;
+      allow delete: if isSignedIn() && request.auth.uid in existing().memberUids;
+    }
+
+    // Collection: messages
+    match /messages/{msgId} {
+      allow read: if isSignedIn() &&
+        request.auth.uid in get(/databases/$(database)/documents/conversations/$(existing().conversationId)).data.memberUids;
+      allow create: if isSignedIn() &&
+        incoming().senderUid == request.auth.uid &&
+        incoming().createdAt == request.time &&
+        request.auth.uid in get(/databases/$(database)/documents/conversations/$(incoming().conversationId)).data.memberUids;
+      allow update, delete: if false;
+    }
+
+    // Collection: waitlist
+    match /waitlist/{entryId} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+
+    // Collection: marketplaceProjects
+    match /marketplaceProjects/{mpId} {
+      allow read: if true;
+      allow create: if isSignedIn() && incoming().creatorUid == request.auth.uid;
+      allow update: if (isSignedIn() && existing().creatorUid == request.auth.uid) || (
+        isSignedIn() && incoming().diff(existing()).affectedKeys().hasOnly(['viewsCount'])
+      );
+      allow delete: if isSignedIn() && existing().creatorUid == request.auth.uid;
+    }
+
+    // Collection: applications
+    match /applications/{appId} {
+      allow read: if isSignedIn() && (
+        existing().builderUid == request.auth.uid ||
+        get(/databases/$(database)/documents/marketplaceProjects/$(existing().projectId)).data.creatorUid == request.auth.uid
+      );
+      allow create: if isSignedIn() && incoming().builderUid == request.auth.uid;
+      allow update: if isSignedIn() && (
+        existing().builderUid == request.auth.uid ||
+        get(/databases/$(database)/documents/marketplaceProjects/$(existing().projectId)).data.creatorUid == request.auth.uid
+      );
+      allow delete: if isSignedIn() && existing().builderUid == request.auth.uid;
+    }
+
+    // Collection: invitations
+    match /invitations/{invId} {
+      allow read: if isSignedIn() && (
+        existing().builderUid == request.auth.uid ||
+        existing().senderUid == request.auth.uid
+      );
+      allow create: if isSignedIn() && incoming().senderUid == request.auth.uid;
+      allow update: if isSignedIn() && (
+        existing().builderUid == request.auth.uid ||
+        existing().senderUid == request.auth.uid
+      );
+    }
+
+    // Collection: contracts
+    match /contracts/{contractId} {
+      allow read: if isSignedIn() && (
+        existing().builderUid == request.auth.uid ||
+        existing().creatorUid == request.auth.uid
+      );
+      allow create: if isSignedIn() && (
+        incoming().builderUid == request.auth.uid ||
+        incoming().creatorUid == request.auth.uid
+      );
+      allow update: if isSignedIn() && (
+        existing().builderUid == request.auth.uid ||
+        existing().creatorUid == request.auth.uid
+      );
+    }
+
+    // Collection: ratings
+    match /ratings/{ratingId} {
+      allow read: if true;
+      allow create: if isSignedIn() && incoming().raterUid == request.auth.uid;
+    }
+
+    // Collection: workspaces
+    match /workspaces/{wsId} {
+      allow read: if isSignedIn() && request.auth.uid in existing().memberUids;
+      allow create: if isSignedIn() && request.auth.uid in incoming().memberUids;
+      allow update: if isSignedIn() && request.auth.uid in existing().memberUids;
+    }
+
+    // Collection: workspaceTasks
+    match /workspaceTasks/{taskId} {
+      allow read: if isSignedIn() &&
+        request.auth.uid in get(/databases/$(database)/documents/workspaces/$(existing().workspaceId)).data.memberUids;
+      allow create: if isSignedIn() &&
+        request.auth.uid in get(/databases/$(database)/documents/workspaces/$(incoming().workspaceId)).data.memberUids;
+      allow update: if isSignedIn() &&
+        request.auth.uid in get(/databases/$(database)/documents/workspaces/$(existing().workspaceId)).data.memberUids;
+      allow delete: if isSignedIn() &&
+        request.auth.uid in get(/databases/$(database)/documents/workspaces/$(existing().workspaceId)).data.memberUids;
+    }
+
+    // Collection: taskComments
+    match /taskComments/{tcId} {
+      allow read: if isSignedIn() &&
+        request.auth.uid in get(/databases/$(database)/documents/workspaces/$(get(/databases/$(database)/documents/workspaceTasks/$(existing().taskId)).data.workspaceId)).data.memberUids;
+      allow create: if isSignedIn() &&
+        incoming().uid == request.auth.uid;
+    }
+
+    // Collection: workspaceMessages
+    match /workspaceMessages/{wmId} {
+      allow read: if isSignedIn() &&
+        request.auth.uid in get(/databases/$(database)/documents/workspaces/$(existing().workspaceId)).data.memberUids;
+      allow create: if isSignedIn() &&
+        incoming().senderUid == request.auth.uid &&
+        request.auth.uid in get(/databases/$(database)/documents/workspaces/$(incoming().workspaceId)).data.memberUids;
+    }
+
+    // Collection: workspaceFiles
+    match /workspaceFiles/{wfId} {
+      allow read: if isSignedIn() &&
+        request.auth.uid in get(/databases/$(database)/documents/workspaces/$(existing().workspaceId)).data.memberUids;
+      allow create: if isSignedIn() &&
+        incoming().uploaderUid == request.auth.uid &&
+        request.auth.uid in get(/databases/$(database)/documents/workspaces/$(incoming().workspaceId)).data.memberUids;
+    }
+
+    // Collection: workspaceCommits
+    match /workspaceCommits/{wcId} {
+      allow read: if isSignedIn() &&
+        request.auth.uid in get(/databases/$(database)/documents/workspaces/$(existing().workspaceId)).data.memberUids;
+      allow write: if false;
+    }
+  }
+}
