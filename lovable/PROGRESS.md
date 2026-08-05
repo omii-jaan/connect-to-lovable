@@ -32,7 +32,7 @@ Status legend: ✅ done · 🔧 in progress · ⏳ pending
 - ✅ **Cleanup pass**: "Vibe Score" → "Reputation" everywhere; removed Express Interest, match rankings, AI-parsed scope breakdowns, Match Engine remnants (except landing sandbox), MOCK_CONTRACTS + Contracts tab, DiscoverFeed; /projects/:id → /project/:slug canonical + legacy redirect; lint + build 0 errors.
 - ✅ **Pile 15 — Security rules review**: full collection-by-collection audit of firestore.rules vs DB_SCHEMA_FIRESTORE.md; public read + owner write on content, narrow counter-only updates (hasOnly), doc-id binding (projectLikes/follows/commentLikes), 1-level reply depth via get(), handle regex + update/delete:false, notifications owner-only read, conversations/messages membership via get() + server timestamp, waitlist create-only, Marketplace/Workspace collections pre-secured; deployed; lint_applet w/ @firebase/eslint-plugin-security-rules 0 errors.
 - ⏳ **Open:** fix reputationScore writable-by-anyone (remove from non-owner counter list).
-- ⏳ **Pile 16 — Notifications polish**
+- ✅ **Pile 16 — Notifications polish**: no self-notifications (actor != recipient), dedupe via deterministic ids (recipient_actor_type_target) + setDoc merge (repeat actions update timestamp instead of spamming), live bell unread badge via onSnapshot, mark-all-read live, click = mark-one-read + navigate, test user switcher (dev tool — remove/gate before production).
 - ⏳ Chunk 4 — Project creation modal + public project detail page.
 - ⏳ Chunk 5 — Home feed (For You / Trending, composer, live likes/follows).
 - ⏳ Chunk 6 — Comments on projects.
