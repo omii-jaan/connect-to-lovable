@@ -58,9 +58,18 @@ Status legend: ✅ done · ⏳ pending · 🔧 in progress
 - ✅ Layer 1 checkpoint version tagged + Git-synced in AI Studio.
 - ✅ Pile 17 (Analytics detail / Top Builders recompute) — resolved by L2.2 server-side match engine.
 - ✅ Full workspace state (Layer 2 + polish) synced to GitHub (`connect-to-lovable`, commit a987b52), verified build, AI Studio re-cloned from it.
+- ✅ Re-pasted refreshed KNOWLEDGE.md + WORKSPACE.md (Firebase track, QUALITY BAR) into AI Studio system instructions.
 - ⏳ Gate/remove the test user switcher before production.
-- ⏳ Tag the Layer 2 checkpoint version + Git-sync in AI Studio.
-- ⏳ Re-paste refreshed KNOWLEDGE.md + WORKSPACE.md (Firebase track, Layer 2 complete) into AI Studio system instructions before Layer 3 chunks.
+- ⏳ Tag the Layer 2 + Layer 3 checkpoint versions + Git-sync in AI Studio.
+
+## Layer 3 — Collaboration Workspace ("The Yard") (all chunks ✅)
+- ✅ L3.1 Yard foundation — workspaces doc auto-created on active contract (transactional, idempotent backfill), `src/lib/workspace.ts` helpers (getWorkspaceByContract, listMyWorkspaces, createWorkspaceIfMissing), /workspace "My Yards" (founder/builder lists, progress rings, empty state), /workspace/:contractId shell (header + progress %, Milestones | Channel | Deliverables tabs), access = contract parties only, rules deployed, sidebar nav item.
+- ✅ L3.2 Milestone tracking — `contracts.milestones[]` {id, title, description, dueDate, status pending|in_progress|done, completedAt}, "Project kickoff" backfill, progress bar (confirmed/total + %), founder add/edit/remove (locked once done), builder request completion, founder confirm (only confirmed counts), notifications (added/in_progress/requested/confirmed) + deep links, rules deployed.
+- ✅ L3.3 Shared channel — `workspaceMessages` {workspaceId, senderUid, content, createdAt, readBy[]}, onSnapshot realtime, day groups, role-colored sender chips, sticky composer (Enter send / Shift+Enter newline), optimistic send, auto-scroll, unread badges (tab + nav item), notifications (no self, dedupe, deep links), rules deployed.
+- ✅ L3.4 Deliverables handoff — `workspaceDeliverables` {submitterUid, title, description, links[], status submitted|accepted|revision_requested, revisionNote, submittedAt, reviewedAt}, submit modal (1-3 links), status chips, founder Accept / Request revision (note + resubmit), completion handshake (all milestones confirmed + all deliverables accepted → contract completed + post completed + ratings unlock per L2.6), rules deployed.
+- ✅ L3.5 Polish + checkpoint — notifications audit (all fire, no self, dedupe, deep links), security walk (workspaces/workspaceMessages/workspaceDeliverables = members only, deployed, lint clean), guest pass (auth-gated w/ return), responsive + a11y sweep, seed (@demo: 1 active contract w/ 2 milestones + 3 messages + 1 deliverable; 1 completed contract w/ accepted deliverables + L2.7 ratings), final checkpoint green, version tagged + Git-synced.
+
+## Layer 3 — ✅ COMPLETE (all 5 chunks; MVP Layers 1-3 done end to end: showcase → match → contract → collaborate → deliver)
 
 ## Next up
-- **Layer 3 — Collaboration Workspace (The Yard)** — build plan in `lovable/BUILD_PLAN_LAYER3.md`: L3.1 Yard foundation ✅ · L3.2 Milestones ✅ · L3.3 Channel ✅ · L3.4 Deliverables ✅ · **L3.5 polish + checkpoint ⏳ (next prompt)**
+- **MVP complete (Layers 1-3).** Before any Layer 4/5 work: production hardening — gate/remove test user switcher, final guest + authenticated pass on the tagged version, decide Layers 4-5 scope (email identity, smart breakdown) with a new build plan.

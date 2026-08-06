@@ -3,7 +3,7 @@
 This file guides any AI agent (Google AI Studio, Cursor, Claude Code, opencode, etc.) working in this repository.
 
 ## Project
-Shipyards — the professional identity platform for AI builders ("LinkedIn for AI developers"). React + TypeScript + Tailwind (Vite), built in **Google AI Studio Build mode**, backend on **Firebase** (Firestore, Firebase Auth, security rules). Dark mode, muted-teal accent (#14B8A6) design. MVP covers Layers 1-3: **Discovery & Showcase**, **Project Marketplace**, **Collaboration Workspace**. Layers 1-2 complete; Layer 3 is the active build.
+Shipyards — the professional identity platform for AI builders ("LinkedIn for AI developers"). React + TypeScript + Tailwind (Vite), built in **Google AI Studio Build mode**, backend on **Firebase** (Firestore, Firebase Auth, security rules). Dark mode, muted-teal accent (#14B8A6) design. MVP covers Layers 1-3: **Discovery & Showcase**, **Project Marketplace**, **Collaboration Workspace**. **MVP (Layers 1-3) is complete**; production hardening and Layers 4-5 are next, per `lovable/PROGRESS.md`.
 
 ## Always follow
 1. Read `lovable/KNOWLEDGE.md`, `lovable/WORKSPACE.md`, `lovable/BUILD_PLAN.md`, and `lovable/PROGRESS.md` in this repo before making changes — they are the project memory and global standards.
@@ -15,10 +15,11 @@ Shipyards — the professional identity platform for AI builders ("LinkedIn for 
 7. Numeric data uses `tabular-nums`; body text max 65ch lines.
 
 ## Build status & order
-The build is executed chunk by chunk, one component per prompt, per `lovable/BUILD_PLAN.md` (Chunk 1 Auth + Onboarding ✅, Chunk 2 Builder Profile ✅, Chunk 3 = projects data model, then 4-12). Track progress in `lovable/PROGRESS.md`. Do not implement unreleased later layers (4: email identity, 5: smart breakdown) until the build plan reaches them.
+The build is executed chunk by chunk, one component per prompt, per `lovable/BUILD_PLAN.md` (Layer 1), `lovable/BUILD_PLAN_LAYER2.md`, and `lovable/BUILD_PLAN_LAYER3.md`. Track progress in `lovable/PROGRESS.md`. Do not implement unreleased later layers (4: email identity, 5: smart breakdown) until a new build plan reaches them.
 - **Layer 1 (Discovery & Showcase) ✅ COMPLETE** — 12 chunks + pile, verified.
-- **Layer 2 (Project Marketplace) ✅ COMPLETE** — 7 chunks (post → AI match → apply → invite → contract → rating → checkpoint), plan in `lovable/BUILD_PLAN_LAYER2.md`.
-- **Layer 3 (Collaboration Workspace) — next** — plan from `lovable/BUILD_PLAN_LAYER3.md` once written.
+- **Layer 2 (Project Marketplace) ✅ COMPLETE** — 7 chunks (post → AI match → apply → invite → contract → rating → checkpoint).
+- **Layer 3 (Collaboration Workspace) ✅ COMPLETE** — 5 chunks (Yard foundation → milestones → channel → deliverables → checkpoint), plan in `lovable/BUILD_PLAN_LAYER3.md`.
+- **MVP (Layers 1-3) ✅ COMPLETE.** Next: production hardening (gate test user switcher, final guest/auth pass), then Layers 4-5 planning.
 
 ## Repository layout
 - **Active repo: `omii-jaan/connect-to-lovable`** — current Git-sync target; contains the full app state (Layers 1-2 + polish). All builds and memory updates land there.
