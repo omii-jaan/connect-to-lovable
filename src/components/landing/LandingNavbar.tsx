@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Anchor, Menu, X, ArrowRight } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { Anchor, Menu, X, ArrowRight, LayoutDashboard, Plus, User } from "lucide-react";
 import MotionToggle from "@/components/MotionToggle";
+import { useAuth } from "@/context/AuthContext";
 
 export const LandingNavbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user } = useAuth();
+  const location = useLocation();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -15,6 +18,8 @@ export const LandingNavbar = () => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [mobileMenuOpen]);
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <header className="fixed top-0 left-0 right-0 h-16 border-b border-border bg-background/90 backdrop-blur-md z-50 transition-colors">
@@ -35,48 +40,87 @@ export const LandingNavbar = () => {
 
         {/* Center: Desktop Navigation links */}
         <nav className="hidden md:flex items-center gap-8" aria-label="Main Navigation">
-          <a
-            href="#builders"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-1 py-0.5"
+          <Link
+            to="/leaderboards"
+            className={`text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-1 py-0.5 ${
+              isActive("/leaderboards") || isActive("/builders")
+                ? "text-primary font-semibold"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
           >
             Builders
-          </a>
+          </Link>
           <Link
             to="/projects"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-1 py-0.5"
+            className={`text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-1 py-0.5 ${
+              isActive("/projects")
+                ? "text-primary font-semibold"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
           >
             Projects
           </Link>
-          <a
-            href="#pricing"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-1 py-0.5"
+          <Link
+            to="/feed"
+            className={`text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-1 py-0.5 ${
+              isActive("/feed")
+                ? "text-primary font-semibold"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
           >
-            Pricing
-          </a>
-          <a
-            href="#blog"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-1 py-0.5"
-          >
-            Blog
-          </a>
+            Live Feed
+          </Link>
+          {user && (
+            <Link
+              to="/dashboard"
+              className={`text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-1 py-0.5 ${
+                isActive("/dashboard")
+                  ? "text-primary font-semibold"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Dashboard
+            </Link>
+          )}
         </nav>
 
         {/* Right: Actions */}
         <div className="hidden md:flex items-center gap-3">
           <MotionToggle />
-          <Link
-            to="/login"
-            className="px-3.5 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md"
-          >
-            Sign In
-          </Link>
-          <Link
-            to="/sign-up"
-            className="px-4 py-1.5 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors rounded-md shadow-sm flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            Get Started
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+          {user ? (
+            <div className="flex items-center gap-2">
+              <Link
+                to="/post-project"
+                className="px-3 py-1.5 text-xs font-mono font-medium border border-primary/30 bg-primary/10 text-primary hover:bg-primary/20 transition-colors rounded-md flex items-center gap-1.5"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Post Project
+              </Link>
+              <Link
+                to="/dashboard"
+                className="px-3.5 py-1.5 text-sm font-medium bg-card border border-border text-foreground hover:bg-muted transition-colors rounded-md flex items-center gap-2"
+              >
+                <LayoutDashboard className="w-4 h-4 text-primary" />
+                <span>Dashboard</span>
+              </Link>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link
+                to="/login"
+                className="px-3.5 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/sign-up"
+                className="px-4 py-1.5 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors rounded-md shadow-sm flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                Get Started
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Mobile menu button */}
@@ -95,51 +139,66 @@ export const LandingNavbar = () => {
       {mobileMenuOpen && (
         <div className="md:hidden border-b border-border bg-card/95 backdrop-blur-xl px-4 pt-4 pb-6 space-y-4">
           <nav className="flex flex-col space-y-3">
-            <a
-              href="#builders"
+            <Link
+              to="/leaderboards"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-base font-medium text-foreground py-2 border-b border-border-subtle"
+              className="text-base font-medium text-foreground py-2 border-b border-border-subtle flex items-center justify-between"
             >
-              Builders
-            </a>
+              <span>Builders</span>
+            </Link>
             <Link
               to="/projects"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-base font-medium text-foreground py-2 border-b border-border-subtle"
+              className="text-base font-medium text-foreground py-2 border-b border-border-subtle flex items-center justify-between"
             >
-              Projects
+              <span>Projects</span>
             </Link>
-            <a
-              href="#pricing"
+            <Link
+              to="/feed"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-base font-medium text-foreground py-2 border-b border-border-subtle"
+              className="text-base font-medium text-foreground py-2 border-b border-border-subtle flex items-center justify-between"
             >
-              Pricing
-            </a>
-            <a
-              href="#blog"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-base font-medium text-foreground py-2"
-            >
-              Blog
-            </a>
+              <span>Live Feed</span>
+            </Link>
+            {user && (
+              <Link
+                to="/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-base font-medium text-foreground py-2 border-b border-border-subtle"
+              >
+                Dashboard
+              </Link>
+            )}
           </nav>
           <div className="pt-2 flex flex-col gap-2.5">
-            <Link
-              to="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-2.5 text-sm font-medium border border-border rounded-md text-foreground"
-            >
-              Sign In
-            </Link>
-            <Link
-              to="/sign-up"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-2.5 text-sm font-medium bg-primary text-primary-foreground rounded-md flex items-center justify-center gap-2"
-            >
-              Get Started
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            {user ? (
+              <Link
+                to="/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full text-center py-2.5 text-sm font-medium bg-primary text-primary-foreground rounded-md flex items-center justify-center gap-2"
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                Go to Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full text-center py-2.5 text-sm font-medium border border-border rounded-md text-foreground"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/sign-up"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full text-center py-2.5 text-sm font-medium bg-primary text-primary-foreground rounded-md flex items-center justify-center gap-2"
+                >
+                  Get Started
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}

@@ -1,12 +1,13 @@
 import { useEffect } from "react";
-import LandingNavbar from "@/components/landing/LandingNavbar";
-import LandingHero from "@/components/landing/LandingHero";
-import SocialProofTicker from "@/components/landing/SocialProofTicker";
-import ProblemSection from "@/components/landing/ProblemSection";
-import FeaturesSection from "@/components/landing/FeaturesSection";
-import HowItWorksSection from "@/components/landing/HowItWorksSection";
-import CtaBandSection from "@/components/landing/CtaBandSection";
-import LandingFooter from "@/components/landing/LandingFooter";
+import Navbar from "@/components/Navbar";
+import HeroSection from "@/components/HeroSection";
+import LiveActivityStrip from "@/components/LiveActivityStrip";
+import MarqueeSection from "@/components/MarqueeSection";
+import FeaturedBuilders from "@/components/FeaturedBuilders";
+import FeaturedProjects from "@/components/FeaturedProjects";
+import HowItWorks from "@/components/HowItWorks";
+import CTASection from "@/components/CTASection";
+import SiteFooter from "@/components/SiteFooter";
 
 const Index = () => {
   useEffect(() => {
@@ -15,42 +16,46 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-primary/20 selection:text-primary">
-      {/* Accessibility: Skip to main content */}
+      {/* Skip to main content for accessibility */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-card focus:text-foreground focus:border focus:border-border focus:rounded-md text-sm"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-card focus:text-foreground focus:border focus:border-border focus:rounded-md text-sm font-semibold"
       >
         Skip to main content
       </a>
 
-      {/* Section 1: Fixed Nav 64px */}
-      <LandingNavbar />
+      {/* Floating Navbar */}
+      <Navbar />
 
       {/* Main Content Area */}
       <main id="main-content" className="flex-1">
-        {/* Section 2: Hero */}
-        <LandingHero />
+        {/* Hero with Interactive Terminal & Stats */}
+        <HeroSection />
 
-        {/* Section 3: Social proof ticker */}
-        <SocialProofTicker />
+        {/* Real-time Activity Telemetry Strip */}
+        <LiveActivityStrip />
 
-        {/* Section 4: Problem section */}
-        <ProblemSection />
+        {/* Tech Stack Marquee */}
+        <MarqueeSection />
 
-        {/* Section 5: Features (5 layers) */}
-        <FeaturesSection />
+        {/* Featured Builders Grid */}
+        <FeaturedBuilders />
 
-        {/* Section 6: How it works timeline */}
-        <HowItWorksSection />
+        {/* Featured Live Projects */}
+        <FeaturedProjects />
 
-        {/* Section 7: Final CTA band */}
-        <CtaBandSection />
+        {/* How It Works Pipeline */}
+        <HowItWorks />
+
+        {/* Conversion CTA Section */}
+        <CTASection />
       </main>
 
-      {/* Section 8: Footer */}
-      <LandingFooter />
+      {/* Site Footer */}
+      <SiteFooter />
     </div>
   );
 };
 
 export default Index;
+

@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, UserCheck, Sparkles, CheckCircle2, ShieldCheck, Terminal, Cpu, Activity, ExternalLink, GitBranch, Star } from "lucide-react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useMotionPreference } from "@/context/MotionContext";
 
 export const LandingHero = () => {
@@ -156,34 +156,35 @@ export const LandingHero = () => {
           </motion.div>
 
           {/* Main 3D Parallax Tilt Preview Frame */}
-          <motion.div
-            style={
-              reduced
-                ? {}
-                : {
-                    rotateX: cardRotateX,
-                    scale: cardScale,
-                    y: cardY,
-                    opacity: cardOpacity,
-                    transformStyle: "preserve-3d",
-                  }
-            }
-            className="rounded-2xl border border-border bg-card/95 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] overflow-hidden text-left hover:border-primary/40 transition-colors"
-          >
-            {/* Header bar of mock UI */}
-            <div className="bg-surface px-4 py-3 border-b border-border flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-destructive/60" />
-                <div className="w-3 h-3 rounded-full bg-amber-500/60" />
-                <div className="w-3 h-3 rounded-full bg-accent/60" />
-                <span className="ml-2 font-mono text-xs text-muted-foreground">shipyards.dev/@alex-rivera</span>
+          <Link to="/@demo" className="block text-left group">
+            <motion.div
+              style={
+                reduced
+                  ? {}
+                  : {
+                      rotateX: cardRotateX,
+                      scale: cardScale,
+                      y: cardY,
+                      opacity: cardOpacity,
+                      transformStyle: "preserve-3d",
+                    }
+              }
+              className="rounded-2xl border border-border bg-card/95 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] overflow-hidden hover:border-primary/50 transition-all cursor-pointer group-hover:shadow-[0_25px_60px_-10px_rgba(20,184,166,0.2)]"
+            >
+              {/* Header bar of mock UI */}
+              <div className="bg-surface px-4 py-3 border-b border-border flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-destructive/60" />
+                  <div className="w-3 h-3 rounded-full bg-amber-500/60" />
+                  <div className="w-3 h-3 rounded-full bg-accent/60" />
+                  <span className="ml-2 font-mono text-xs text-muted-foreground group-hover:text-primary transition-colors">shipyards.dev/@demo</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 font-mono text-[11px] text-primary">
+                    <ShieldCheck className="w-3 h-3" /> Verified Builder
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 font-mono text-[11px] text-primary">
-                  <ShieldCheck className="w-3 h-3" /> Verified Builder
-                </span>
-              </div>
-            </div>
 
             {/* Mock Profile Visual Content */}
             <div className="p-6 sm:p-8 space-y-6 bg-gradient-to-b from-card via-card to-background">
@@ -258,6 +259,7 @@ export const LandingHero = () => {
 
             </div>
           </motion.div>
+          </Link>
         </div>
 
       </div>

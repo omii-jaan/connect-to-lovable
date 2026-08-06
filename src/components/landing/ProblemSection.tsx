@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { CheckCircle2, ShieldCheck, XCircle, FolderGit2, Star, Trophy, ArrowRight, Lock, Zap, ExternalLink, Heart, MessageSquare } from "lucide-react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useMotionPreference } from "@/context/MotionContext";
 
 export const ProblemSection = () => {
@@ -9,14 +9,14 @@ export const ProblemSection = () => {
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "center center"],
+    offset: ["start end", "start 0.2"],
   });
 
-  const rotateX = useTransform(scrollYProgress, [0, 1], [16, 0]);
-  const rotateY = useTransform(scrollYProgress, [0, 1], [-8, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [0.9, 1.0]);
-  const translateY = useTransform(scrollYProgress, [0, 1], [50, 0]);
-  const opacity = useTransform(scrollYProgress, [0, 0.4, 1], [0.3, 0.8, 1]);
+  const rotateX = useTransform(scrollYProgress, [0, 1], [10, 0]);
+  const rotateY = useTransform(scrollYProgress, [0, 1], [-5, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [0.93, 1.0]);
+  const translateY = useTransform(scrollYProgress, [0, 1], [35, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.6, 1], [0.4, 0.9, 1]);
 
   return (
     <section ref={sectionRef} className="relative py-20 bg-background border-b border-border overflow-hidden" id="problem">
@@ -28,10 +28,10 @@ export const ProblemSection = () => {
           
           {/* Left Column: Problem Copy */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -15 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+            viewport={{ once: true, margin: "0px 0px 250px 0px" }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
             className="lg:col-span-5 space-y-6"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-destructive/10 border border-destructive/20 text-xs font-mono text-destructive">
@@ -87,13 +87,13 @@ export const ProblemSection = () => {
                 {/* Mock Address Bar */}
                 <div className="px-3 py-1 rounded bg-background border border-border-subtle text-[11px] font-mono text-muted-foreground flex items-center gap-1.5 max-w-xs mx-auto truncate">
                   <Lock className="w-3 h-3 text-accent shrink-0" />
-                  <span>shipyards.dev/@demo</span>
+                  <span>shipyards.dev/@alex-rivera</span>
                 </div>
 
                 {/* Top-right Status */}
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                  <span className="text-[10px] font-mono text-muted-foreground hidden sm:inline">Verified Identity</span>
+                  <span className="text-[10px] font-mono text-muted-foreground hidden sm:inline">Verified Builder</span>
                 </div>
               </div>
 
@@ -105,138 +105,123 @@ export const ProblemSection = () => {
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                     
                     {/* 96px Avatar */}
-                    <div className="w-24 h-24 sm:w-24 sm:h-24 rounded-xl border-2 border-primary/30 bg-primary/10 overflow-hidden shrink-0 flex items-center justify-center">
+                    <div className="w-20 h-20 sm:w-20 sm:h-20 rounded-xl border-2 border-primary/30 bg-primary/10 overflow-hidden shrink-0 flex items-center justify-center">
                       <img
-                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=demobuilder&backgroundColor=00f2ff"
-                        alt="Demo Builder"
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=alex-rivera&backgroundColor=00f2ff"
+                        alt="Alex Rivera"
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover"
                       />
                     </div>
 
                     {/* Builder Info */}
-                    <div className="space-y-1.5 flex-1 min-w-0">
+                    <div className="space-y-1 flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="font-display font-bold text-lg text-foreground truncate">
-                          Demo Builder
+                          Alex Rivera
                         </h3>
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-mono font-bold text-primary">
                           <CheckCircle2 className="w-3 h-3" />
-                          Verified
+                          Verified Builder
                         </span>
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-accent/10 border border-accent/20 text-[10px] font-mono font-semibold text-accent">
-                          Top 1%
+                          Top 1% Agent Architect
                         </span>
                       </div>
 
                       <p className="font-mono text-xs text-muted-foreground">
-                        @demo · AI Systems Architect
-                      </p>
-
-                      <p className="text-xs text-muted-foreground line-clamp-1">
-                        Building autonomous agent pipelines, fine-tuned RAG systems, and custom LLM tools.
+                        @alex-rivera · Autonomous AI Systems • LangGraph • vLLM • Fine-Tuning
                       </p>
                     </div>
                   </div>
 
-                  {/* 4 Stat Cells */}
+                  {/* Stat Cells */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-3 border-t border-border-subtle">
-                    <div className="p-2.5 rounded-md bg-background/80 border border-border-subtle text-center">
+                    <div className="p-2 rounded-md bg-background/80 border border-border-subtle text-center">
                       <div className="flex items-center justify-center gap-1 text-xs font-mono font-bold text-foreground">
                         <Trophy className="w-3.5 h-3.5 text-accent" />
-                        <span>1,940</span>
+                        <span>2,480</span>
                       </div>
                       <p className="text-[10px] font-mono text-neutral-400 uppercase mt-0.5">Reputation</p>
                     </div>
 
-                    <div className="p-2.5 rounded-md bg-background/80 border border-border-subtle text-center">
+                    <div className="p-2 rounded-md bg-background/80 border border-border-subtle text-center">
                       <div className="flex items-center justify-center gap-1 text-xs font-mono font-bold text-foreground">
                         <FolderGit2 className="w-3.5 h-3.5 text-primary" />
-                        <span>12</span>
+                        <span>34</span>
                       </div>
-                      <p className="text-[10px] font-mono text-neutral-400 uppercase mt-0.5">Ships</p>
+                      <p className="text-[10px] font-mono text-neutral-400 uppercase mt-0.5">Docks</p>
                     </div>
 
-                    <div className="p-2.5 rounded-md bg-background/80 border border-border-subtle text-center">
+                    <div className="p-2 rounded-md bg-background/80 border border-border-subtle text-center">
                       <div className="flex items-center justify-center gap-1 text-xs font-mono font-bold text-foreground">
                         <Star className="w-3.5 h-3.5 text-secondary" />
-                        <span>1,240</span>
+                        <span>2.8k</span>
                       </div>
                       <p className="text-[10px] font-mono text-neutral-400 uppercase mt-0.5">Stars</p>
                     </div>
 
-                    <div className="p-2.5 rounded-md bg-background/80 border border-border-subtle text-center">
+                    <div className="p-2 rounded-md bg-background/80 border border-border-subtle text-center">
                       <div className="flex items-center justify-center gap-1 text-xs font-mono font-bold text-foreground">
                         <Zap className="w-3.5 h-3.5 text-accent" />
-                        <span>99%</span>
+                        <span>98.6%</span>
                       </div>
-                      <p className="text-[10px] font-mono text-neutral-400 uppercase mt-0.5">Stack Match</p>
+                      <p className="text-[10px] font-mono text-neutral-400 uppercase mt-0.5">Eval Score</p>
                     </div>
                   </div>
                 </div>
 
-                {/* 2. One Feed-Style Project Card */}
-                <div className="p-4 rounded-lg bg-card border border-border-subtle space-y-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="space-y-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-primary/10 text-primary border border-primary/20">
-                          Agents & RAG
-                        </span>
-                        <span className="text-[10px] font-mono text-muted-foreground">
-                          Shipped 3d ago
-                        </span>
+                {/* 2. Featured Projects */}
+                <div className="space-y-3">
+                  <div className="p-3.5 rounded-lg bg-card border border-border-subtle space-y-2.5">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="space-y-0.5 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-accent/10 text-accent border border-accent/20">
+                            Live API
+                          </span>
+                          <span className="text-[10px] font-mono text-emerald-400 font-semibold">
+                            Eval Score: 98.6%
+                          </span>
+                        </div>
+                        <h4 className="font-display font-bold text-sm text-foreground truncate">
+                          vLLM-Function-Caller
+                        </h4>
                       </div>
-                      <h4 className="font-display font-bold text-base text-foreground truncate">
-                        Agentic Workflow Orchestrator
-                      </h4>
-                    </div>
 
-                    <div className="flex items-center gap-1 shrink-0">
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-background border border-border-subtle text-[11px] font-mono text-accent">
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-background border border-border-subtle text-[10px] font-mono text-accent shrink-0">
                         <ExternalLink className="w-3 h-3" />
-                        Live Demo
-                      </span>
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    Autonomous multi-agent task planner & executor with fine-tuned tool-calling routines and real-time streaming feedback loops.
-                  </p>
-
-                  {/* Tech Stack Badges */}
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    {["Python", "LangChain", "Claude 3.5", "FastAPI"].map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 rounded bg-background border border-border-subtle text-[10px] font-mono text-muted-foreground"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Card Footer Metrics */}
-                  <div className="pt-2.5 border-t border-border-subtle flex items-center justify-between text-xs font-mono text-muted-foreground">
-                    <div className="flex items-center gap-4">
-                      <span className="flex items-center gap-1 text-foreground">
-                        <Star className="w-3.5 h-3.5 text-accent" />
-                        <span>428</span>
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Heart className="w-3.5 h-3.5 text-primary" />
-                        <span>184</span>
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <MessageSquare className="w-3.5 h-3.5" />
-                        <span>24</span>
+                        Demo
                       </span>
                     </div>
 
-                    <span className="text-[10px] text-accent font-semibold flex items-center gap-1">
-                      <ShieldCheck className="w-3.5 h-3.5" />
-                      Code Verified
-                    </span>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      Sub-50ms latency function call router tuned on Qwen2.5-72B for parallel agentic workflows.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-lg bg-card border border-border-subtle space-y-2.5">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="space-y-0.5 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-primary/10 text-primary border border-primary/20">
+                            Open Source
+                          </span>
+                        </div>
+                        <h4 className="font-display font-bold text-sm text-foreground truncate">
+                          LangGraph-Coder-Agent
+                        </h4>
+                      </div>
+
+                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-background border border-border-subtle text-[10px] font-mono text-primary shrink-0">
+                        <Star className="w-3 h-3 text-accent" />
+                        1,420 Stars
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      Multi-agent pair programmer with automatic lint error correction loops & human-in-the-loop gates.
+                    </p>
                   </div>
                 </div>
 

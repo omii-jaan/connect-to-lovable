@@ -37,7 +37,7 @@ service cloud.firestore {
       allow create, delete: if isOwner(userId);
       allow update: if isOwner(userId) || (
         isSignedIn() &&
-        incoming().diff(existing()).affectedKeys().hasOnly(['followersCount', 'followingCount', 'viewsCount', 'reputationScore'])
+        incoming().diff(existing()).affectedKeys().hasOnly(['followersCount', 'followingCount', 'viewsCount'])
       );
     }
 
@@ -153,7 +153,7 @@ service cloud.firestore {
       allow read: if true;
       allow create: if isSignedIn() && incoming().creatorUid == request.auth.uid;
       allow update: if (isSignedIn() && existing().creatorUid == request.auth.uid) || (
-        isSignedIn() && incoming().diff(existing()).affectedKeys().hasOnly(['viewsCount'])
+        isSignedIn() && incoming().diff(existing()).affectedKeys().hasOnly(['viewsCount', 'applicationsCount', 'matches', 'status', 'updatedAt'])
       );
       allow delete: if isSignedIn() && existing().creatorUid == request.auth.uid;
     }
@@ -162,12 +162,14 @@ service cloud.firestore {
     match /applications/{appId} {
       allow read: if isSignedIn() && (
         existing().builderUid == request.auth.uid ||
-        get(/databases/$(database)/documents/marketplaceProjects/$(existing().projectId)).data.creatorUid == request.auth.uid
+        get(/databases/$(database)/documents/marketplaceProjects/$(existing().projectId)).data.creatorUid == request.auth.uid ||
+        get(/databases/$(database)/documents/marketplaceProjects/$(existing().marketplaceProjectId)).data.creatorUid == request.auth.uid
       );
       allow create: if isSignedIn() && incoming().builderUid == request.auth.uid;
       allow update: if isSignedIn() && (
         existing().builderUid == request.auth.uid ||
-        get(/databases/$(database)/documents/marketplaceProjects/$(existing().projectId)).data.creatorUid == request.auth.uid
+        get(/databases/$(database)/documents/marketplaceProjects/$(existing().projectId)).data.creatorUid == request.auth.uid ||
+        get(/databases/$(database)/documents/marketplaceProjects/$(existing().marketplaceProjectId)).data.creatorUid == request.auth.uid
       );
       allow delete: if isSignedIn() && existing().builderUid == request.auth.uid;
     }
@@ -176,11 +178,19 @@ service cloud.firestore {
     match /invitations/{invId} {
       allow read: if isSignedIn() && (
         existing().builderUid == request.auth.uid ||
+        existing().founderUid == request.auth.uid ||
+        existing().creatorUid == request.auth.uid ||
         existing().senderUid == request.auth.uid
       );
-      allow create: if isSignedIn() && incoming().senderUid == request.auth.uid;
+      allow create: if isSignedIn() && (
+        incoming().founderUid == request.auth.uid ||
+        incoming().senderUid == request.auth.uid ||
+        incoming().creatorUid == request.auth.uid
+      );
       allow update: if isSignedIn() && (
         existing().builderUid == request.auth.uid ||
+        existing().founderUid == request.auth.uid ||
+        existing().creatorUid == request.auth.uid ||
         existing().senderUid == request.auth.uid
       );
     }
@@ -189,15 +199,24 @@ service cloud.firestore {
     match /contracts/{contractId} {
       allow read: if isSignedIn() && (
         existing().builderUid == request.auth.uid ||
-        existing().creatorUid == request.auth.uid
+        existing().builder_id == request.auth.uid ||
+        existing().founderUid == request.auth.uid ||
+        existing().creatorUid == request.auth.uid ||
+        existing().founder_id == request.auth.uid
       );
       allow create: if isSignedIn() && (
         incoming().builderUid == request.auth.uid ||
-        incoming().creatorUid == request.auth.uid
+        incoming().builder_id == request.auth.uid ||
+        incoming().founderUid == request.auth.uid ||
+        incoming().creatorUid == request.auth.uid ||
+        incoming().founder_id == request.auth.uid
       );
       allow update: if isSignedIn() && (
         existing().builderUid == request.auth.uid ||
-        existing().creatorUid == request.auth.uid
+        existing().builder_id == request.auth.uid ||
+        existing().founderUid == request.auth.uid ||
+        existing().creatorUid == request.auth.uid ||
+        existing().founder_id == request.auth.uid
       );
     }
 
@@ -205,6 +224,13 @@ service cloud.firestore {
     match /ratings/{ratingId} {
       allow read: if true;
       allow create: if isSignedIn() && incoming().raterUid == request.auth.uid;
+    }
+
+    // Collection: marketplaceMatches
+    match /marketplaceMatches/{matchId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
     }
 
     // Collection: workspaces

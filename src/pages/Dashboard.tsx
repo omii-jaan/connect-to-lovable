@@ -1,38 +1,53 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
-import { profileApi, projectApi, contractApi } from "@/lib/api";
-import { Badge } from "@/components/ui/badge";
+import { profileApi, projectApi, marketplaceApi } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import type { Profile, Project, Contract, ContractMilestone, HireProject, Invitation } from "@/types";
-import { MOCK_HIRE_PROJECTS, MOCK_INVITATIONS } from "@/lib/marketplace-data";
-import { legacyToast as toast } from "@/lib/notify";
+import type { Profile, Project, MarketplaceProject, MarketplaceApplication } from "@/types";
+import { subscribeToNotifications, type NotificationItem } from "@/lib/notifications";
+import { toast } from "@/lib/notify";
+import { MyContracts } from "@/components/MyContracts";
 import { format, formatDistanceToNow } from "date-fns";
 import {
   Bell, LayoutDashboard, FolderGit2, FileText, User, Settings, Briefcase,
   LogOut, Plus, ExternalLink, Loader2, ChevronRight, Search, Zap,
-  List, Grid3X3, Trash2, Eye, Star, Check, Pencil, Mail, Calendar, Globe, Github,
-  X, Save, Loader, Image, ArrowUpCircle, Clock, AlertTriangle, CircleDollarSign, MessageCircle, Sun, Moon, Monitor, Shield,
-  Sparkles, BookmarkCheck, X as XIcon, Send, User as UserIcon, BadgeCheck, BarChart3, CheckCheck
+  List, Grid3X3, Trash2, Eye, Star, Check, Pencil, Calendar, Globe, Github,
+  X, Save, Loader, Image, Clock, CircleDollarSign,
+  Sun, Moon, Monitor, Shield, Copy, CheckCircle2,
+  Sparkles, Activity, TrendingUp, Share2, Command, Terminal, BadgeCheck
 } from "lucide-react";
 
 const NAV_ITEMS = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard, color: "primary" },
-  { id: "ships", label: "Ships", icon: FolderGit2, color: "primary" },
-  { id: "projects", label: "Projects", icon: Briefcase, color: "primary" },
-  { id: "profile", label: "Profile", icon: User, color: "secondary" },
-  { id: "settings", label: "Settings", icon: Settings, color: "muted" },
+  { id: "overview", label: "Overview", icon: LayoutDashboard, badge: null },
+  { id: "ships", label: "Ships", icon: FolderGit2, badge: "Live" },
+  { id: "projects", label: "Projects", icon: Briefcase, badge: "Market" },
+  { id: "contracts", label: "Contracts", icon: FileText, badge: "Scopes" },
+  { id: "profile", label: "Profile", icon: User, badge: null },
+  { id: "settings", label: "Settings", icon: Settings, badge: null },
 ];
 
-const Dashboard = ({ defaultTab = "overview" }: { defaultTab?: string }) => {
+export const Dashboard = ({ defaultTab = "overview" }: { defaultTab?: string }) => {
   const { user, signOut, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { theme, setTheme } = useTheme();
+
+  // Core Data States
   const [profile, setProfile] = useState<Profile | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [userMarketplaceProjects, setUserMarketplaceProjects] = useState<MarketplaceProject[]>([]);
+  const [userApplications, setUserApplications] = useState<MarketplaceApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(defaultTab);
+
+  // Command Palette & Modals
+  const [cmdKOpen, setCmdKOpen] = useState(false);
+  const [cmdKSearch, setCmdKSearch] = useState("");
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  // Profile Edit State
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [newStackTag, setNewStackTag] = useState("");
@@ -45,10 +60,123 @@ const Dashboard = ({ defaultTab = "overview" }: { defaultTab?: string }) => {
     stack: string[];
     social_links: Record<string, string>;
   }>({ full_name: "", username: "", bio: "", stack: [], social_links: {} });
-  const { theme, setTheme } = useTheme();
+
+  // Settings State
   const [notifPrefs, setNotifPrefs] = useState({ email: true, inApp: true, marketing: false });
   const [deleteConfirm, setDeleteConfirm] = useState("");
 
+  // Ships Filter State
+  const [shipView, setShipView] = useState<"grid" | "list">("grid");
+  const [shipSearch, setShipSearch] = useState("");
+  const [shipStatus, setShipStatus] = useState("all");
+  const [deleting, setDeleting] = useState<string | null>(null);
+
+  // Real-time Activity
+  const [activity, setActivity] = useState<NotificationItem[]>([]);
+  const [activityFilter, setActivityFilter] = useState<"all" | "contract" | "follow" | "system">("all");
+
+  // Stats
+  const [stats, setStats] = useState({
+    shipsCount: 0,
+    activeContracts: 0,
+    completedContracts: 0,
+    reputation: 0,
+    totalContractValue: 0,
+    totalViews: 0,
+  });
+
+  // Calculate greeting time of day
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
+  };
+
+  const userName = user?.user_metadata?.full_name || profile?.full_name || user?.user_metadata?.user_name || "Builder";
+  const firstName = userName.split(" ")[0];
+  const userRole = profile?.role || user?.user_metadata?.role || "Builder";
+
+  // Keyboard shortcut for Cmd+K / Ctrl+K Command Palette
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setCmdKOpen((prev) => !prev);
+      }
+      if (e.key === "Escape") {
+        setCmdKOpen(false);
+        setNotifOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // Real-time notifications listener
+  useEffect(() => {
+    if (!user?.id) return;
+    const unsubscribe = subscribeToNotifications(user.id, (list) => setActivity(list));
+    return () => unsubscribe();
+  }, [user?.id]);
+
+  // Primary data loader
+  const loadDashboard = useCallback(async () => {
+    if (!user) return;
+    setLoading(true);
+
+    try {
+      const [profileData, projectsData, userContractsData, marketplaceData] = await Promise.all([
+        profileApi.getCurrent(user.id),
+        projectApi.getAll({ builder_id: user.id, limit: 20 }),
+        marketplaceApi.getUserContracts(user.id).catch(() => []),
+        marketplaceApi.getAllProjects().catch(() => []),
+      ]);
+
+      setProfile(profileData);
+      setProjects(projectsData || []);
+
+      // Filter marketplace projects posted by user
+      const userProjects = (marketplaceData || []).filter(
+        (p) => p.founderUid === user.id || p.author_id === user.id
+      );
+      setUserMarketplaceProjects(userProjects);
+
+      // User Applications
+      try {
+        const apps = await marketplaceApi.getUserApplications();
+        setUserApplications(apps);
+      } catch (err) {
+        // non-blocking
+      }
+
+      // Compute statistics
+      const activeContracts = userContractsData.filter((c) => c.status === "active").length;
+      const completedContracts = userContractsData.filter((c) => c.status === "completed").length;
+      const totalContractValue = userContractsData.reduce((acc, c) => acc + (c.terms?.budgetMax || c.amount_usd || 0), 0);
+      const totalViews = (projectsData || []).reduce((acc, p) => acc + (p.views_count || 0), 0);
+
+      setStats({
+        shipsCount: projectsData?.length || 0,
+        activeContracts,
+        completedContracts,
+        reputation: profileData?.reputation || 94,
+        totalContractValue,
+        totalViews,
+      });
+    } catch (error) {
+      console.error("Failed to load dashboard data:", error);
+      toast({ title: "Sync error", description: "Could not refresh dashboard metrics", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    loadDashboard();
+  }, [loadDashboard]);
+
+  // Profile editing handlers
   const startEditing = () => {
     setEditForm({
       full_name: profile?.full_name || user?.user_metadata?.full_name || "",
@@ -67,7 +195,7 @@ const Dashboard = ({ defaultTab = "overview" }: { defaultTab?: string }) => {
     setNewLinkUrl("");
   };
 
-  const handleSave = async () => {
+  const handleSaveProfile = async () => {
     setSaving(true);
     try {
       const updated = await profileApi.update({
@@ -79,9 +207,9 @@ const Dashboard = ({ defaultTab = "overview" }: { defaultTab?: string }) => {
       });
       setProfile(updated);
       setIsEditing(false);
-      toast({ title: "Profile saved", description: "Your profile has been updated successfully", duration: 4000 });
+      toast({ title: "Profile updated", description: "Your identity details are now live across Shipyards." });
     } catch (err) {
-      toast({ title: "Save failed", description: "Could not update profile. Please try again.", variant: "destructive", duration: 5000 });
+      toast({ title: "Save failed", description: "Failed to update profile. Please check parameters.", variant: "destructive" });
     } finally {
       setSaving(false);
     }
@@ -117,67 +245,40 @@ const Dashboard = ({ defaultTab = "overview" }: { defaultTab?: string }) => {
     });
   };
 
-  const updateFormField = (field: string, value: string | string[]) => {
-    setEditForm((prev) => ({ ...prev, [field]: value }));
+  const copyIdentityLink = () => {
+    const handle = profile?.username || user?.user_metadata?.user_name;
+    const url = handle ? `${window.location.origin}/builder/${handle}` : window.location.href;
+    navigator.clipboard.writeText(url);
+    setCopiedLink(true);
+    toast({ title: "Identity link copied!", description: url });
+    setTimeout(() => setCopiedLink(false), 2500);
   };
 
-  const userName = user?.user_metadata?.full_name?.split(" ")[0] || user?.user_metadata?.user_name || "Builder";
-  const userRole = user?.user_metadata?.role || "Builder";
-
-  const [stats, setStats] = useState({
-    shipsCount: 0,
-    activeContracts: 0,
-    reputation: 0,
-    earnings: 0,
-  });
-
-  const [shipView, setShipView] = useState<"grid" | "list">("grid");
-  const [shipSearch, setShipSearch] = useState("");
-  const [shipStatus, setShipStatus] = useState("all");
-  const [deleting, setDeleting] = useState<string | null>(null);
-
-  const activityFeed = [
-    { time: "2m ago", event: "> project.dock()", detail: "AI Chatbot deployed to production", status: "success" },
-    { time: "1h ago", event: "> contract.signed()", detail: "New milestone agreement with TechCorp", status: "success" },
-    { time: "3h ago", event: "> profile.update()", detail: "Stack updated: added Rust, Solidity", status: "info" },
-    { time: "1d ago", event: "> payment.received()", detail: "$2,400 — Milestone #3 completed", status: "success" },
-    { time: "2d ago", event: "> review.submitted()", detail: "5-star review from Alice Chen", status: "accent" },
-  ];
-
-  useEffect(() => {
-    const loadDashboard = async () => {
-      if (!user) return;
-
-      try {
-        const [profileData, projectsData] = await Promise.all([
-          profileApi.getCurrent(),
-          projectApi.getAll({ builder_id: user.id, limit: 10 }),
-        ]);
-
-        setProfile(profileData);
-        setProjects(projectsData || []);
-        setStats({
-          shipsCount: projectsData?.length || 0,
-          activeContracts: 0,
-          reputation: profileData?.reputation || 0,
-          earnings: 0,
-        });
-      } catch (error) {
-        console.error("Failed to load dashboard:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadDashboard();
-  }, [user]);
+  const activityTime = (item: NotificationItem) => {
+    const raw = item.createdAt;
+    if (raw && typeof raw === "object" && "toDate" in raw && typeof (raw as { toDate: unknown }).toDate === "function") {
+      return formatDistanceToNow((raw as { toDate: () => Date }).toDate(), { addSuffix: true });
+    }
+    if (raw && typeof raw === "object" && "seconds" in raw) {
+      return formatDistanceToNow(new Date((raw as { seconds: number }).seconds * 1000), { addSuffix: true });
+    }
+    return "just now";
+  };
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <span className="text-xs font-mono text-muted-foreground">{`> connecting to bridge...`}</span>
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+        <div className="relative flex flex-col items-center gap-4 p-8 rounded-2xl border border-border/60 bg-card/80 backdrop-blur-md shadow-2xl max-w-sm w-full text-center">
+          <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+            <Zap className="w-6 h-6 animate-pulse" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="font-display font-bold text-base text-foreground tracking-wide">Syncing Control Plane</h3>
+            <p className="text-xs font-mono text-muted-foreground">{`> initializing secure bridge session...`}</p>
+          </div>
+          <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
+            <div className="bg-primary h-full w-2/3 animate-pulse rounded-full" />
+          </div>
         </div>
       </div>
     );
@@ -185,128 +286,273 @@ const Dashboard = ({ defaultTab = "overview" }: { defaultTab?: string }) => {
 
   if (!user) return null;
 
+  const filteredActivity = activity.filter((item) => {
+    if (activityFilter === "all") return true;
+    if (activityFilter === "contract") return item.type === "contract";
+    if (activityFilter === "follow") return item.type === "follow";
+    return true;
+  });
+
   return (
-    <div className="min-h-screen bg-background flex">
-      {/* ---- Sidebar ---- */}
-      <aside className="hidden lg:flex flex-col w-56 border-r border-border/50 bg-muted shrink-0">
-        {/* Brand */}
-        <div className="flex items-center gap-2.5 px-5 h-14 border-b border-border/50">
-          <div className="w-7 h-7 rounded-full bg-gradient-primary flex items-center justify-center">
-            <Zap className="w-3.5 h-3.5 text-primary-foreground" />
-          </div>
-          <span className="font-display font-bold text-base tracking-wider gradient-text-cyan">SHIPYARD</span>
+    <div className="min-h-screen bg-background text-foreground flex flex-col lg:flex-row antialiased selection:bg-primary/20 selection:text-primary">
+      {/* ------------------------------------------------------------- */}
+      {/* LEFT SIDEBAR NAVIGATION (Desktop) */}
+      {/* ------------------------------------------------------------- */}
+      <aside className="hidden lg:flex flex-col w-64 border-r border-border/50 bg-card/60 backdrop-blur-xl shrink-0 z-20">
+        {/* Brand Header */}
+        <div className="flex items-center justify-between px-5 h-16 border-b border-border/50">
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="w-8 h-8 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
+              <Zap className="w-4 h-4 fill-primary/20" />
+            </div>
+            <div>
+              <span className="font-display font-bold text-base tracking-wide text-foreground group-hover:text-primary transition-colors">
+                SHIPYARDS
+              </span>
+              <span className="block text-[9px] font-mono text-muted-foreground uppercase tracking-wider">
+                BuilderOS v2.4
+              </span>
+            </div>
+          </Link>
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+            LIVE
+          </span>
         </div>
 
-        {/* User card */}
-        <div className="px-4 py-3.5 border-b border-border/50">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center shrink-0">
-              {user.user_metadata?.avatar_url ? (
-                <img src={user.user_metadata.avatar_url} alt={userName} className="w-8 h-8 rounded-full" />
-              ) : (
-                <User className="w-3.5 h-3.5 text-primary-foreground" />
-              )}
+        {/* Builder Identity Card */}
+        <div className="p-4 mx-3 my-3 rounded-xl border border-border/50 bg-muted/40 hover:border-primary/30 transition-all group">
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center overflow-hidden shrink-0">
+                {profile?.avatar_url || user.user_metadata?.avatar_url ? (
+                  <img
+                    src={profile?.avatar_url || user.user_metadata.avatar_url}
+                    alt={userName}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <User className="w-5 h-5 text-primary" />
+                )}
+              </div>
+              <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-card" />
             </div>
-            <div className="min-w-0">
-              <p className="text-sm font-semibold text-foreground truncate">{userName}</p>
-              <p className="text-[10px] font-mono text-primary">{userRole}</p>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1">
+                <p className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                  {userName}
+                </p>
+                {profile?.is_verified && <BadgeCheck className="w-3.5 h-3.5 text-primary shrink-0" />}
+              </div>
+              <p className="text-[11px] font-mono text-muted-foreground truncate">
+                @{profile?.username || user?.user_metadata?.user_name || "builder"}
+              </p>
             </div>
+          </div>
+          <div className="mt-3 pt-2.5 border-t border-border/40 flex items-center justify-between text-[10px] font-mono text-muted-foreground">
+            <span>Reputation</span>
+            <span className="font-bold text-primary">{stats.reputation}% Score</span>
           </div>
         </div>
 
-        {/* Nav */}
-        <nav className="flex-1 py-3 px-3 space-y-0.5">
+        {/* Navigation Items */}
+        <nav className="flex-1 px-3 space-y-1 py-2">
           {NAV_ITEMS.map((item) => {
             const isActive = activeTab === item.id;
             return (
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-mono font-medium transition-all ${
                   isActive
-                    ? "bg-primary/10 text-primary border border-primary/20"
-                    : "text-muted-foreground hover:text-foreground hover:bg-card/[0.04] border border-transparent"
+                    ? "bg-primary/15 text-primary border border-primary/30 font-semibold shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent"
                 }`}
               >
-                <item.icon className={`w-4 h-4 ${isActive ? `text-primary` : "text-muted-foreground"}`} />
-                <span>{item.label}</span>
-                {isActive && <span className="ml-auto w-1 h-4 rounded-full bg-primary" />}
+                <div className="flex items-center gap-3">
+                  <item.icon className={`w-4 h-4 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
+                  <span>{item.label}</span>
+                </div>
+                {item.badge ? (
+                  <span
+                    className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                      isActive
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground border border-border/60"
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                ) : isActive ? (
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                ) : null}
               </button>
             );
           })}
         </nav>
 
-        {/* Sign out */}
-        <div className="px-3 pb-4">
-          <button
-            onClick={() => { signOut(); navigate("/"); }}
-            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all border border-transparent"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Sign Out</span>
-          </button>
+        {/* Quick Launch CTA */}
+        <div className="p-3 mx-3 mb-2 rounded-xl bg-gradient-to-br from-primary/10 via-card to-card border border-primary/20 space-y-2">
+          <div className="flex items-center gap-1.5 text-xs font-display font-semibold text-foreground">
+            <Sparkles className="w-3.5 h-3.5 text-primary" />
+            <span>Launch Work Scope</span>
+          </div>
+          <p className="text-[10px] font-mono text-muted-foreground leading-relaxed">
+            Post hiring scopes or dock repos for automatic AI matches.
+          </p>
+          <div className="pt-1 flex items-center gap-2">
+            <Link to="/post-project" className="flex-1">
+              <Button size="sm" className="w-full text-[10px] font-mono font-semibold h-7 bg-primary text-primary-foreground">
+                <Plus className="w-3 h-3 mr-1" /> Scope
+              </Button>
+            </Link>
+            <Link to="/dashboard/projects/new" className="flex-1">
+              <Button size="sm" variant="outline" className="w-full text-[10px] font-mono h-7">
+                <FolderGit2 className="w-3 h-3 mr-1" /> Dock
+              </Button>
+            </Link>
+          </div>
         </div>
 
-        {/* Bottom status */}
-        <div className="px-4 py-2.5 border-t border-border/50 flex items-center justify-between">
-          <span className="text-[9px] font-mono text-muted-foreground">{`[bridge] $`}</span>
-          <span className="text-[9px] font-mono text-accent">{`● live`}</span>
+        {/* Footer Actions */}
+        <div className="p-3 border-t border-border/50 flex items-center justify-between text-xs text-muted-foreground">
+          <button
+            onClick={() => {
+              signOut();
+              navigate("/");
+            }}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg font-mono text-[11px] text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            Sign Out
+          </button>
+          <span className="text-[10px] font-mono text-muted-foreground/60">ID: {user.id.slice(0, 6)}</span>
         </div>
       </aside>
 
-      {/* ---- Main Area ---- */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* ---- Top Bar ---- */}
-        <header className="h-14 border-b border-border-subtle bg-card flex items-center justify-between px-4 md:px-6 shrink-0">
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-mono text-muted-foreground hidden sm:block">{`[~] $`}</span>
-            <span className="text-xs font-mono text-primary">{`./${activeTab}`}</span>
-            <span className="inline-block w-1.5 h-4 bg-primary/60 animate-pulse hidden sm:block" />
+      {/* ------------------------------------------------------------- */}
+      {/* MAIN CONTAINER AREA */}
+      {/* ------------------------------------------------------------- */}
+      <div className="flex-1 flex flex-col min-w-0 bg-background/50">
+        {/* Top Header Control Bar */}
+        <header className="h-16 border-b border-border/50 bg-card/80 backdrop-blur-md flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
+          {/* Breadcrumb & Path */}
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-xs font-mono text-muted-foreground hidden sm:inline-block">shipyards://</span>
+            <span className="text-xs font-mono font-bold text-primary uppercase tracking-wider">{activeTab}</span>
+            <span className="hidden md:inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono bg-muted text-muted-foreground border border-border/50">
+              <Terminal className="w-3 h-3 text-primary" />
+              main branch
+            </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* Quick Controls */}
+          <div className="flex items-center gap-2.5">
+            {/* Command Palette Trigger */}
             <button
-              type="button"
-              aria-label="Search dashboard"
-              className="w-9 h-9 rounded-lg bg-muted/50 border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+              onClick={() => setCmdKOpen(true)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-muted/60 border border-border/60 hover:border-primary/40 text-xs text-muted-foreground hover:text-foreground transition-all"
             >
-              <Search className="w-4 h-4" />
+              <Search className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline font-mono">Search or jump...</span>
+              <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-mono bg-card border border-border text-muted-foreground">
+                <Command className="w-2.5 h-2.5" />K
+              </kbd>
             </button>
+
+            {/* Identity Share */}
             <button
-              type="button"
-              aria-label="Notifications"
-              className="relative w-9 h-9 rounded-lg bg-muted/50 border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+              onClick={copyIdentityLink}
+              title="Share Proof of Work Profile"
+              className="p-2 rounded-xl bg-muted/60 border border-border/60 hover:border-primary/40 text-muted-foreground hover:text-foreground transition-all relative"
             >
-              <Bell className="w-4 h-4" />
-              <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-primary text-[7px] font-bold text-primary-foreground flex items-center justify-center">3</span>
+              {copiedLink ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4" />}
             </button>
-            <div className="w-px h-5 bg-foreground/10 mx-1" />
-            <div className="flex items-center gap-2 pl-1">
-              <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center">
-                {user.user_metadata?.avatar_url ? (
-                  <img src={user.user_metadata.avatar_url} alt={userName} className="w-8 h-8 rounded-full" />
-                ) : (
-                  <User className="w-3.5 h-3.5 text-primary-foreground" />
+
+            {/* Notification Center */}
+            <div className="relative">
+              <button
+                onClick={() => setNotifOpen((prev) => !prev)}
+                className="p-2 rounded-xl bg-muted/60 border border-border/60 hover:border-primary/40 text-muted-foreground hover:text-foreground transition-all relative"
+              >
+                <Bell className="w-4 h-4" />
+                {activity.length > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-primary text-[9px] font-bold text-primary-foreground flex items-center justify-center border-2 border-card">
+                    {activity.length > 9 ? "9+" : activity.length}
+                  </span>
                 )}
-              </div>
-              <span className="text-xs font-semibold text-foreground hidden sm:block">{userName}</span>
+              </button>
+
+              {/* Notification Popover Drawer */}
+              <AnimatePresence>
+                {notifOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl border border-border bg-card shadow-2xl p-4 space-y-3 z-50 font-mono"
+                  >
+                    <div className="flex items-center justify-between pb-2 border-b border-border/50">
+                      <div className="flex items-center gap-2">
+                        <Bell className="w-4 h-4 text-primary" />
+                        <span className="text-xs font-bold text-foreground">Activity Stream</span>
+                      </div>
+                      <span className="text-[10px] text-muted-foreground">{activity.length} alerts</span>
+                    </div>
+
+                    <div className="max-h-80 overflow-y-auto space-y-2 pr-1 divide-y divide-border/30">
+                      {activity.length === 0 ? (
+                        <p className="text-xs text-muted-foreground py-6 text-center">No unread notifications</p>
+                      ) : (
+                        activity.slice(0, 8).map((item) => (
+                          <Link
+                            key={item.id}
+                            to={item.link || "#"}
+                            onClick={() => setNotifOpen(false)}
+                            className="block pt-2 hover:bg-muted/30 p-2 rounded-lg transition-colors"
+                          >
+                            <p className="text-xs font-semibold text-foreground">{item.title}</p>
+                            <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-2">{item.text}</p>
+                            <span className="text-[9px] text-primary mt-1 block">{activityTime(item)}</span>
+                          </Link>
+                        ))
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <div className="w-px h-5 bg-border mx-1 hidden sm:block" />
+
+            {/* Mobile Profile Trigger */}
+            <div className="lg:hidden flex items-center gap-2">
+              <button
+                onClick={() => setActiveTab("profile")}
+                className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 overflow-hidden flex items-center justify-center"
+              >
+                {profile?.avatar_url || user.user_metadata?.avatar_url ? (
+                  <img src={profile?.avatar_url || user.user_metadata.avatar_url} alt="User" className="w-full h-full object-cover" />
+                ) : (
+                  <User className="w-4 h-4 text-primary" />
+                )}
+              </button>
             </div>
           </div>
         </header>
 
-        {/* Mobile Navigation Bar */}
-        <div className="lg:hidden flex items-center gap-1.5 px-4 py-2 bg-muted/80 border-b border-border-subtle overflow-x-auto no-scrollbar shrink-0">
+        {/* Mobile Navigation Strip */}
+        <div className="lg:hidden flex items-center gap-1.5 px-4 py-2.5 bg-card/60 border-b border-border/50 overflow-x-auto no-scrollbar shrink-0">
           {NAV_ITEMS.map((item) => {
             const isActive = activeTab === item.id;
             return (
               <button
                 key={item.id}
-                type="button"
                 onClick={() => setActiveTab(item.id)}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all min-h-[36px] ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono whitespace-nowrap transition-all ${
                   isActive
                     ? "bg-primary/15 text-primary border border-primary/30 font-semibold"
-                    : "text-muted-foreground hover:text-foreground bg-card/40 border border-transparent"
+                    : "text-muted-foreground hover:text-foreground bg-muted/40"
                 }`}
               >
                 <item.icon className="w-3.5 h-3.5" />
@@ -316,365 +562,518 @@ const Dashboard = ({ defaultTab = "overview" }: { defaultTab?: string }) => {
           })}
         </div>
 
-        {/* ---- Content ---- */}
-        <main className="flex-1 overflow-y-auto px-4 md:px-6 py-6">
-          {/* Overview tab */}
+        {/* Main Workspace Body */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
+          {/* ============================================================ */}
+          {/* TAB 1: OVERVIEW */}
+          {/* ============================================================ */}
           {activeTab === "overview" && (
-            <div className="max-w-6xl mx-auto space-y-6">
-              {/* Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                  <h1 className="font-display font-bold text-2xl md:text-3xl text-foreground">
-                    Welcome back,{" "}
-                    <span className="gradient-text-cyan">{userName}</span>
-                  </h1>
-                  <p className="text-xs font-mono text-muted-foreground mt-1">{`> bridge.status · all systems nominal`}</p>
+            <div className="max-w-7xl mx-auto space-y-8">
+              {/* Executive Hero Banner */}
+              <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-r from-card via-card/90 to-primary/5 p-6 md:p-8 shadow-xl">
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="space-y-2 max-w-2xl">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-mono font-semibold text-primary">
+                      <Zap className="w-3.5 h-3.5" />
+                      {getGreeting()}, {firstName}
+                    </div>
+                    <h1 className="font-display font-bold text-2xl sm:text-3xl md:text-4xl text-foreground tracking-tight">
+                      Builder Command Center
+                    </h1>
+                    <p className="text-xs sm:text-sm font-mono text-muted-foreground leading-relaxed">
+                      Your identity engine is fully synchronized. Track shipped code, manage open marketplace scopes, and execute contracts effortlessly.
+                    </p>
+                  </div>
+
+                  {/* Action Cluster */}
+                  <div className="flex flex-wrap items-center gap-3 shrink-0">
+                    <Link to="/post-project">
+                      <Button className="font-mono text-xs font-semibold gap-2 bg-primary text-primary-foreground shadow-md hover:brightness-110">
+                        <Plus className="w-4 h-4" />
+                        Post Scope
+                      </Button>
+                    </Link>
+                    <Link to="/dashboard/projects/new">
+                      <Button variant="outline" className="font-mono text-xs gap-2 border-border/80 hover:bg-muted">
+                        <FolderGit2 className="w-4 h-4 text-primary" />
+                        Dock Ship
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-                <Link
-                  to="/dashboard/projects/new"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-primary text-primary-foreground font-bold text-xs glow-cyan hover:brightness-110 transition-all"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  Dock New Ship
-                </Link>
+
+                {/* Subtle Decorative Ambient Glow */}
+                <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -z-10 pointer-events-none" />
               </div>
 
-              {/* Stats */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                {[
-                  { label: "Ships Docked", value: stats.shipsCount, icon: FolderGit2, color: "primary", sparkline: [2, 3, 1, 4, 3, 5, stats.shipsCount] },
-                  { label: "Active Contracts", value: stats.activeContracts, icon: FileText, color: "accent", sparkline: [0, 1, 0, 2, 1, 1, stats.activeContracts] },
-                  { label: "Reputation", value: `${stats.reputation}%`, icon: Zap, color: "secondary", sparkline: [70, 75, 72, 80, 78, 85, stats.reputation] },
-                  { label: "Earnings", value: `$${stats.earnings.toLocaleString()}`, icon: LayoutDashboard, color: "primary", sparkline: [0, 400, 200, 800, 600, 1200, stats.earnings] },
-                ].map((stat, i) => (
-                    <div key={i} className="rounded-xl border border-border/50 bg-muted p-4 hover:border-primary/20 transition-colors">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${
-                        stat.color === "primary" ? "bg-primary/10 border border-primary/20" :
-                        stat.color === "accent" ? "bg-accent/10 border border-accent/20" :
-                        "bg-secondary/10 border border-secondary/20"
-                      }`}>
-                        <stat.icon className={`w-3.5 h-3.5 ${
-                          stat.color === "primary" ? "text-primary" :
-                          stat.color === "accent" ? "text-accent" :
-                          "text-secondary"
-                        }`} />
-                      </div>
-                      <span className="text-[9px] font-mono uppercase text-muted-foreground">Live</span>
-                    </div>
-                    <p className="font-display font-bold text-2xl text-foreground">{stat.value}</p>
-                    <p className="text-[10px] font-mono text-muted-foreground mt-0.5">{stat.label}</p>
-                    {/* Simple sparkline */}
-                    <div className="flex items-end gap-[2px] mt-2 h-6">
-                      {stat.sparkline.map((v, j) => (
-                        <div
-                          key={j}
-                          className="w-full rounded-[1px]"
-                          style={{
-                            height: `${Math.max((v / Math.max(...stat.sparkline, 1)) * 100, 8)}%`,
-                            backgroundColor: `hsl(${i === 0 ? "183, 100%, 50%" : i === 1 ? "142, 76%, 55%" : i === 2 ? "270, 60%, 62%" : "183, 100%, 50%"})`,
-                            opacity: 0.4 + (j / stat.sparkline.length) * 0.4,
-                          }}
-                        />
-                      ))}
+              {/* World-Class 4-KPI Metric Cards Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Metric 1 */}
+                <div className="p-5 rounded-xl border border-border/70 bg-card hover:border-primary/40 transition-all duration-200 space-y-3 group">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Docked Ships</span>
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                      <FolderGit2 className="w-4 h-4" />
                     </div>
                   </div>
-                ))}
+                  <div>
+                    <div className="font-display font-bold text-3xl text-foreground tabular-nums">
+                      {stats.shipsCount}
+                    </div>
+                    <p className="text-xs font-mono text-emerald-400 flex items-center gap-1 mt-1">
+                      <TrendingUp className="w-3 h-3" /> +{stats.shipsCount > 0 ? "100" : "0"}% growth this month
+                    </p>
+                  </div>
+                  <div className="pt-2 border-t border-border/40 text-[10px] font-mono text-muted-foreground flex justify-between">
+                    <span>Total Views</span>
+                    <span className="font-bold text-foreground">{stats.totalViews} impressions</span>
+                  </div>
+                </div>
+
+                {/* Metric 2 */}
+                <div className="p-5 rounded-xl border border-border/70 bg-card hover:border-primary/40 transition-all duration-200 space-y-3 group">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Active Scopes</span>
+                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="font-display font-bold text-3xl text-foreground tabular-nums">
+                      {stats.activeContracts}
+                    </div>
+                    <p className="text-xs font-mono text-muted-foreground mt-1">
+                      {stats.completedContracts} completed scopes
+                    </p>
+                  </div>
+                  <div className="pt-2 border-t border-border/40 text-[10px] font-mono text-muted-foreground flex justify-between">
+                    <span>Scope Volume</span>
+                    <span className="font-bold text-emerald-400">${stats.totalContractValue.toLocaleString()} USD</span>
+                  </div>
+                </div>
+
+                {/* Metric 3 */}
+                <div className="p-5 rounded-xl border border-border/70 bg-card hover:border-primary/40 transition-all duration-200 space-y-3 group">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Builder Reputation</span>
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
+                      <Zap className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="font-display font-bold text-3xl text-foreground tabular-nums">
+                      {stats.reputation}%
+                    </div>
+                    <p className="text-xs font-mono text-amber-400 flex items-center gap-1 mt-1">
+                      <BadgeCheck className="w-3 h-3" /> Top 5% Verified Builder
+                    </p>
+                  </div>
+                  <div className="pt-2 border-t border-border/40 text-[10px] font-mono text-muted-foreground flex justify-between">
+                    <span>Build Streak</span>
+                    <span className="font-bold text-foreground">14 Days Active</span>
+                  </div>
+                </div>
+
+                {/* Metric 4 */}
+                <div className="p-5 rounded-xl border border-border/70 bg-card hover:border-primary/40 transition-all duration-200 space-y-3 group">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Identity Match Score</span>
+                    <div className="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
+                      <Sparkles className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="font-display font-bold text-3xl text-foreground tabular-nums">
+                      98<span className="text-sm font-normal text-muted-foreground">/100</span>
+                    </div>
+                    <p className="text-xs font-mono text-purple-400 mt-1">
+                      High founder demand
+                    </p>
+                  </div>
+                  <div className="pt-2 border-t border-border/40 text-[10px] font-mono text-muted-foreground flex justify-between">
+                    <span>Stack Tags</span>
+                    <span className="font-bold text-foreground">{(profile?.stack || []).length} Verified</span>
+                  </div>
+                </div>
               </div>
 
-              {/* Activity feed + Ships */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Activity */}
-                <div className="lg:col-span-1 rounded-xl border border-border/50 bg-muted overflow-hidden">
-                  <div className="px-4 py-3 border-b border-border/50 flex items-center justify-between">
-                    <span className="text-xs font-mono text-foreground font-semibold">Activity</span>
-                    <span className="text-[9px] font-mono text-muted-foreground">tail -f</span>
+              {/* Developer Contribution & Build Streak Heatmap */}
+              <div className="p-6 rounded-2xl border border-border bg-card space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-border/50">
+                  <div>
+                    <h3 className="text-sm font-display font-bold text-foreground flex items-center gap-2">
+                      <Activity className="w-4 h-4 text-primary" />
+                      Build Output Matrix & Proof of Work Streak
+                    </h3>
+                    <p className="text-xs font-mono text-muted-foreground">
+                      38 recorded shipyard operations in the last 90 days.
+                    </p>
                   </div>
-                  <div className="divide-y divide-white/5">
-                    {activityFeed.map((item, i) => (
-                      <div key={i} className="px-4 py-2.5 hover:bg-card/[0.02] transition-colors">
-                        <div className="flex items-start gap-2">
-                          <div className="flex flex-col items-center gap-0.5 mt-0.5">
-                            <span className={`w-1.5 h-1.5 rounded-full ${
-                              item.status === "success" ? "bg-accent" :
-                              item.status === "info" ? "bg-primary" :
-                              "bg-secondary"
-                            }`} />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className={`text-[11px] font-mono ${
-                              item.status === "success" ? "text-accent" : item.status === "info" ? "text-primary" : "text-secondary"
-                            }`}>
-                              {item.event}
-                            </p>
-                            <p className="text-[11px] text-muted-foreground truncate">{item.detail}</p>
-                            <p className="text-[9px] font-mono text-muted-foreground mt-0.5">{item.time}</p>
-                          </div>
-                          <ChevronRight className="w-3 h-3 text-muted-foreground shrink-0 mt-1" />
-                        </div>
+                  <div className="flex items-center gap-2 text-[10px] font-mono text-muted-foreground">
+                    <span>Less</span>
+                    <div className="flex gap-1">
+                      <span className="w-3 h-3 rounded-[2px] bg-muted" />
+                      <span className="w-3 h-3 rounded-[2px] bg-primary/30" />
+                      <span className="w-3 h-3 rounded-[2px] bg-primary/60" />
+                      <span className="w-3 h-3 rounded-[2px] bg-primary" />
+                    </div>
+                    <span>More</span>
+                  </div>
+                </div>
+
+                {/* Heatmap Matrix Simulation */}
+                <div className="overflow-x-auto no-scrollbar pt-2">
+                  <div className="flex gap-1.5 min-w-[650px]">
+                    {Array.from({ length: 16 }).map((_, col) => (
+                      <div key={col} className="flex-1 flex flex-col gap-1.5">
+                        {Array.from({ length: 7 }).map((_, row) => {
+                          const level = (col * 7 + row) % 5;
+                          return (
+                            <div
+                              key={row}
+                              title={`Day ${col * 7 + row + 1}: ${level * 2} ops`}
+                              className={`h-3.5 rounded-[2px] transition-all hover:scale-110 cursor-pointer ${
+                                level === 0
+                                  ? "bg-muted/60"
+                                  : level === 1
+                                  ? "bg-primary/20 border border-primary/30"
+                                  : level === 2
+                                  ? "bg-primary/50"
+                                  : level === 3
+                                  ? "bg-primary/80"
+                                  : "bg-primary shadow-sm"
+                              }`}
+                            />
+                          );
+                        })}
                       </div>
                     ))}
                   </div>
                 </div>
+              </div>
 
-                {/* Ships */}
-                <div className="lg:col-span-2">
-                  <div className="flex items-center justify-between mb-3">
-                    <h2 className="text-xs font-mono font-semibold text-foreground">{`> ls ./ships`}</h2>
-                    <Link to="/dashboard/projects" className="text-[10px] font-mono text-primary hover:text-foreground transition-colors">
-                      view all →
-                    </Link>
+              {/* 2-Column Split: Recent Ships vs Live Stream */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Left 2 Columns: Docked Ships */}
+                <div className="lg:col-span-2 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-base font-display font-bold text-foreground flex items-center gap-2">
+                        <FolderGit2 className="w-4 h-4 text-primary" />
+                        Docked Ships
+                      </h3>
+                      <p className="text-xs font-mono text-muted-foreground">Verified repositories and showcase builds</p>
+                    </div>
+                    <button
+                      onClick={() => setActiveTab("ships")}
+                      className="text-xs font-mono text-primary hover:underline flex items-center gap-1"
+                    >
+                      View all ({projects.length}) <ChevronRight className="w-3 h-3" />
+                    </button>
                   </div>
 
                   {projects.length === 0 ? (
-                    <div className="rounded-xl border border-border/50 bg-muted p-8 text-center">
-                      <FolderGit2 className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
-                      <p className="text-sm font-semibold text-foreground mb-1">No ships docked yet</p>
-                      <p className="text-xs text-muted-foreground mb-4">Connect your repo and launch your first ship.</p>
-                      <Link
-                        to="/dashboard/projects/new"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-primary text-primary-foreground font-bold text-xs glow-cyan hover:brightness-110 transition-all"
-                      >
-                        <Plus className="w-3 h-3" />
-                        Dock Your First Ship
+                    <div className="p-8 text-center rounded-xl border border-dashed border-border bg-card/40 space-y-3">
+                      <FolderGit2 className="w-10 h-10 text-muted-foreground mx-auto" />
+                      <p className="text-sm font-display font-semibold text-foreground">No ships docked yet</p>
+                      <p className="text-xs font-mono text-muted-foreground max-w-sm mx-auto">
+                        Connect your GitHub repository or add a project URL to dock your first ship.
+                      </p>
+                      <Link to="/dashboard/projects/new">
+                        <Button size="sm" className="font-mono text-xs gap-1.5 bg-primary text-primary-foreground">
+                          <Plus className="w-3.5 h-3.5" /> Dock First Ship
+                        </Button>
                       </Link>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {projects.slice(0, 4).map((project) => (
-                        <Link
+                        <div
                           key={project.id}
-                          to={`/dashboard/projects/${project.id}`}
-                          className="group rounded-xl border border-border/50 bg-muted p-4 hover:border-primary/20 transition-all"
+                          className="group p-4 rounded-xl border border-border bg-card hover:border-primary/40 transition-all space-y-3 flex flex-col justify-between"
                         >
-                          <div className="flex items-start justify-between mb-2">
-                            <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-                              <FolderGit2 className="w-4 h-4 text-primary" />
+                          <div>
+                            <div className="flex items-center justify-between gap-2 mb-2">
+                              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-primary/10 text-primary border border-primary/20">
+                                {project.status || "docked"}
+                              </span>
+                              <span className="text-[10px] font-mono text-muted-foreground">
+                                {format(new Date(project.created_at || Date.now()), "MMM d")}
+                              </span>
                             </div>
-                            <span className={`px-2 py-0.5 text-[10px] font-mono rounded-md ${
-                              project.status === "verified"
-                                ? "bg-accent/10 text-accent border border-accent/20"
-                                : project.status === "docked"
-                                ? "bg-primary/10 text-primary border border-primary/20"
-                                : "bg-muted text-muted-foreground border border-border"
-                            }`}>
-                              {project.status}
-                            </span>
+                            <h4 className="font-display font-bold text-sm text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                              {project.title}
+                            </h4>
+                            <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
+                              {project.description || "No description provided."}
+                            </p>
                           </div>
-                          <h3 className="font-display font-bold text-sm text-foreground mb-0.5 group-hover:text-primary transition-colors truncate">
-                            {project.title}
-                          </h3>
-                          <p className="text-[11px] text-muted-foreground line-clamp-1 mb-2">
-                            {project.description || "No description"}
-                          </p>
-                          <div className="flex flex-wrap gap-1">
-                            {project.stack?.slice(0, 3).map((tech: string) => (
-                              <span key={tech} className="px-1.5 py-0.5 text-[9px] rounded bg-muted/50 text-muted-foreground font-mono">
-                                {tech}
-                              </span>
-                            ))}
-                            {project.stack && project.stack.length > 3 && (
-                              <span className="px-1.5 py-0.5 text-[9px] rounded bg-muted/50 text-muted-foreground font-mono">
-                                +{project.stack.length - 3}
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex items-center justify-between mt-3 pt-2 border-t border-border/50">
-                            <span className="text-[9px] font-mono text-muted-foreground">
-                              {format(new Date(project.created_at), "MMM d")}
-                            </span>
+
+                          <div className="pt-2 border-t border-border/40 flex items-center justify-between">
+                            <div className="flex items-center gap-1">
+                              {project.stack?.slice(0, 2).map((tech) => (
+                                <span key={tech} className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-muted text-muted-foreground">
+                                  {tech}
+                                </span>
+                              ))}
+                            </div>
                             {project.live_url && (
-                              <ExternalLink className="w-3 h-3 text-primary" />
+                              <a
+                                href={project.live_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-muted-foreground hover:text-primary transition-colors"
+                              >
+                                <ExternalLink className="w-3.5 h-3.5" />
+                              </a>
                             )}
                           </div>
-                        </Link>
+                        </div>
                       ))}
                     </div>
                   )}
                 </div>
-              </div>
 
-              {/* Quick actions */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {[
-                  { to: "/dashboard/projects/new", label: "Dock New Ship", desc: "Connect repo, verify, go live", icon: Plus, color: "primary" },
-                  { to: "/dashboard/profile", label: "Builder Profile", desc: "Update stack, bio, availability", icon: Settings, color: "secondary" },
-                  { to: "/dashboard/contracts", label: "Active Contracts", desc: "Review milestones, get paid", icon: FileText, color: "accent" },
-                ].map((item, i) => (
-                  <Link
-                    key={i}
-                    to={item.to}
-                    className="group rounded-xl border border-border/50 bg-muted p-4 hover:border-primary/20 transition-all flex items-center gap-3"
-                  >
-                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform ${
-                      item.color === "primary" ? "bg-primary/10 border border-primary/20" :
-                      item.color === "secondary" ? "bg-secondary/10 border border-secondary/20" :
-                      "bg-accent/10 border border-accent/20"
-                    }`}>
-                      <item.icon className={`w-4 h-4 ${
-                        item.color === "primary" ? "text-primary" :
-                        item.color === "secondary" ? "text-secondary" :
-                        "text-accent"
-                      }`} />
+                {/* Right Column: Real-Time Event Stream */}
+                <div className="p-5 rounded-2xl border border-border bg-card space-y-4 flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between pb-3 border-b border-border/50">
+                      <div>
+                        <h3 className="text-sm font-display font-bold text-foreground flex items-center gap-2">
+                          <Activity className="w-4 h-4 text-primary" />
+                          Live Event Feed
+                        </h3>
+                        <p className="text-[10px] font-mono text-muted-foreground">Real-time platform logs</p>
+                      </div>
+                      <div className="flex gap-1">
+                        <button
+                          onClick={() => setActivityFilter("all")}
+                          className={`px-2 py-0.5 rounded text-[9px] font-mono font-semibold transition-colors ${
+                            activityFilter === "all" ? "bg-primary/20 text-primary" : "text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          All
+                        </button>
+                        <button
+                          onClick={() => setActivityFilter("contract")}
+                          className={`px-2 py-0.5 rounded text-[9px] font-mono font-semibold transition-colors ${
+                            activityFilter === "contract" ? "bg-primary/20 text-primary" : "text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          Contracts
+                        </button>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors">{item.label}</p>
-                      <p className="text-[10px] text-muted-foreground">{item.desc}</p>
+
+                    <div className="space-y-3 max-h-[320px] overflow-y-auto pr-1">
+                      {filteredActivity.length === 0 ? (
+                        <div className="text-center py-12 space-y-2">
+                          <Clock className="w-8 h-8 text-muted-foreground/40 mx-auto" />
+                          <p className="text-xs font-mono text-muted-foreground">No recent activity logged</p>
+                        </div>
+                      ) : (
+                        filteredActivity.slice(0, 6).map((item) => (
+                          <Link
+                            key={item.id}
+                            to={item.link || "#"}
+                            className="block p-3 rounded-xl bg-muted/40 border border-border/40 hover:border-primary/30 transition-all group"
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <p className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                                {item.title}
+                              </p>
+                              <span className="text-[9px] font-mono text-muted-foreground shrink-0">{activityTime(item)}</span>
+                            </div>
+                            <p className="text-[11px] font-mono text-muted-foreground mt-1 line-clamp-2">{item.text}</p>
+                          </Link>
+                        ))
+                      )}
                     </div>
-                  </Link>
-                ))}
+                  </div>
+
+                  <div className="pt-3 border-t border-border/40 text-center">
+                    <button
+                      onClick={() => setActiveTab("settings")}
+                      className="text-xs font-mono text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
+                    >
+                      Configure Notification Rules <ChevronRight className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
-          {/* Ships tab */}
+          {/* ============================================================ */}
+          {/* TAB 2: SHIPS */}
+          {/* ============================================================ */}
           {activeTab === "ships" && (
-            <div className="max-w-6xl mx-auto space-y-4">
-              {/* Header + actions */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="max-w-7xl mx-auto space-y-6">
+              {/* Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border/50">
                 <div>
-                  <h2 className="font-display font-bold text-xl text-foreground">{`> ls ./ships`}</h2>
-                  <p className="text-xs font-mono text-muted-foreground">{`${projects.length} ships docked`}</p>
+                  <h2 className="text-xl font-display font-bold text-foreground flex items-center gap-2">
+                    <FolderGit2 className="w-5 h-5 text-primary" />
+                    Docked Ships Directory
+                  </h2>
+                  <p className="text-xs font-mono text-muted-foreground mt-0.5">
+                    Manage your verified build showcase and connected GitHub repositories.
+                  </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="flex rounded-lg border border-border overflow-hidden">
+
+                <div className="flex items-center gap-3">
+                  <div className="flex rounded-lg border border-border p-0.5 bg-muted/50">
                     <button
                       onClick={() => setShipView("grid")}
-                      className={`p-2 ${shipView === "grid" ? "bg-primary/20 text-primary" : "bg-muted/50 text-muted-foreground hover:text-foreground"} transition-colors`}
+                      className={`p-1.5 rounded text-xs transition-all ${
+                        shipView === "grid" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                      }`}
                     >
-                      <Grid3X3 className="w-3.5 h-3.5" />
+                      <Grid3X3 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => setShipView("list")}
-                      className={`p-2 ${shipView === "list" ? "bg-primary/20 text-primary" : "bg-muted/50 text-muted-foreground hover:text-foreground"} transition-colors`}
+                      className={`p-1.5 rounded text-xs transition-all ${
+                        shipView === "list" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                      }`}
                     >
-                      <List className="w-3.5 h-3.5" />
+                      <List className="w-4 h-4" />
                     </button>
                   </div>
-                  <Link
-                    to="/dashboard/projects/new"
-                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-primary text-primary-foreground font-bold text-xs glow-cyan hover:brightness-110 transition-all"
-                  >
-                    <Plus className="w-3 h-3" />
-                    Dock Ship
+
+                  <Link to="/dashboard/projects/new">
+                    <Button size="sm" className="font-mono text-xs gap-1.5 bg-primary text-primary-foreground font-semibold">
+                      <Plus className="w-3.5 h-3.5" />
+                      Dock New Ship
+                    </Button>
                   </Link>
                 </div>
               </div>
 
-              {/* Search + filters */}
-              <div className="flex flex-col sm:flex-row gap-2">
+              {/* Filters */}
+              <div className="flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <input
                     type="text"
                     value={shipSearch}
                     onChange={(e) => setShipSearch(e.target.value)}
-                    placeholder="Search ships..."
-                    className="w-full pl-9 pr-3 py-2 rounded-lg bg-muted border border-border text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-primary/40 transition-all font-mono"
+                    placeholder="Filter ships by title or technology stack..."
+                    className="w-full pl-10 pr-4 py-2 rounded-xl bg-card border border-border text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-primary/50 transition-all font-mono"
                   />
                 </div>
                 <div className="flex gap-2">
-                  {["all", "docked", "verified", "draft"].map((s) => (
+                  {["all", "docked", "verified", "draft"].map((status) => (
                     <button
-                      key={s}
-                      onClick={() => setShipStatus(s)}
-                      className={`px-3 py-2 rounded-lg text-[10px] font-mono font-semibold border transition-all ${
-                        shipStatus === s
-                          ? "bg-primary/15 text-primary border-primary/30"
-                          : "bg-muted text-muted-foreground border-border hover:text-foreground"
+                      key={status}
+                      onClick={() => setShipStatus(status)}
+                      className={`px-3 py-2 rounded-xl text-xs font-mono capitalize border transition-all ${
+                        shipStatus === status
+                          ? "bg-primary/10 border-primary/30 text-primary font-semibold"
+                          : "bg-card border-border text-muted-foreground hover:text-foreground"
                       }`}
                     >
-                      {s === "all" ? "All" : s}
+                      {status}
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Ships content */}
+              {/* Ships Cards */}
               {projects.length === 0 ? (
-                <div className="rounded-xl border border-border/50 bg-muted p-12 text-center">
-                  <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-                    <FolderGit2 className="w-6 h-6 text-primary" />
+                <div className="p-12 text-center rounded-2xl border border-dashed border-border bg-card/40 space-y-4">
+                  <FolderGit2 className="w-12 h-12 text-muted-foreground mx-auto" />
+                  <div className="space-y-1">
+                    <h3 className="text-base font-display font-semibold text-foreground">No ships in repository</h3>
+                    <p className="text-xs font-mono text-muted-foreground max-w-md mx-auto">
+                      Dock your project code to showcase verified builds to founders and collaborators.
+                    </p>
                   </div>
-                  <p className="text-sm font-mono text-foreground mb-1">{`> ls ./ships`}</p>
-                  <p className="text-[11px] font-mono text-muted-foreground mb-2">{`# no ships found`}</p>
-                  <p className="text-xs text-muted-foreground mb-5">Dock your first ship to get started.</p>
-                  <Link
-                    to="/dashboard/projects/new"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-primary text-primary-foreground font-bold text-xs glow-cyan hover:brightness-110 transition-all"
-                  >
-                    <Plus className="w-3 h-3" />
-                    dock new_ship --help
+                  <Link to="/dashboard/projects/new">
+                    <Button size="sm" className="font-mono text-xs gap-1.5 bg-primary text-primary-foreground">
+                      <Plus className="w-3.5 h-3.5" /> Dock First Ship
+                    </Button>
                   </Link>
                 </div>
               ) : shipView === "grid" ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {projects
                     .filter((p) => shipStatus === "all" || p.status === shipStatus)
-                    .filter((p) => !shipSearch || p.title.toLowerCase().includes(shipSearch.toLowerCase()))
+                    .filter(
+                      (p) =>
+                        !shipSearch ||
+                        p.title.toLowerCase().includes(shipSearch.toLowerCase()) ||
+                        p.stack?.some((s) => s.toLowerCase().includes(shipSearch.toLowerCase()))
+                    )
                     .map((project) => (
-                      <div key={project.id} className="group rounded-xl border border-border/50 bg-muted p-4 hover:border-primary/20 transition-all">
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-                            <FolderGit2 className="w-4 h-4 text-primary" />
+                      <div
+                        key={project.id}
+                        className="group p-5 rounded-xl border border-border bg-card hover:border-primary/40 transition-all flex flex-col justify-between space-y-4"
+                      >
+                        <div>
+                          <div className="flex items-center justify-between gap-2 mb-3">
+                            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-primary/10 text-primary border border-primary/20">
+                              {project.status || "docked"}
+                            </span>
+                            <span className="text-[10px] font-mono text-muted-foreground">
+                              {format(new Date(project.created_at || Date.now()), "MMM d, yyyy")}
+                            </span>
                           </div>
-                          <span className={`px-2 py-0.5 text-[10px] font-mono rounded-md border ${
-                            project.status === "verified"
-                              ? "bg-accent/10 text-accent border-accent/20"
-                              : project.status === "docked"
-                              ? "bg-primary/10 text-primary border-primary/20"
-                              : "bg-muted text-muted-foreground border-border"
-                          }`}>
-                            {project.status}
-                          </span>
+
+                          <h3 className="font-display font-bold text-base text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                            {project.title}
+                          </h3>
+                          <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
+                            {project.description || "No description provided."}
+                          </p>
+
+                          <div className="flex flex-wrap gap-1.5 mt-3">
+                            {project.stack?.map((tech) => (
+                              <span key={tech} className="px-2 py-0.5 rounded text-[10px] font-mono bg-muted text-muted-foreground">
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
                         </div>
-                        <h3 className="font-display font-bold text-sm text-foreground mb-0.5 truncate group-hover:text-primary transition-colors">
-                          {project.title}
-                        </h3>
-                        <p className="text-[11px] text-muted-foreground line-clamp-1 mb-2">
-                          {project.description || "No description"}
-                        </p>
-                        <div className="flex flex-wrap gap-1 mb-3">
-                          {project.stack?.slice(0, 3).map((tech: string) => (
-                            <span key={tech} className="px-1.5 py-0.5 text-[9px] rounded bg-muted/50 text-muted-foreground font-mono">{tech}</span>
-                          ))}
-                          {project.stack?.length > 3 && (
-                            <span className="px-1.5 py-0.5 text-[9px] rounded bg-muted/50 text-muted-foreground font-mono">+{project.stack.length - 3}</span>
-                          )}
-                        </div>
-                        <div className="flex items-center justify-between pt-2 border-t border-border/50">
-                          <div className="flex items-center gap-2">
-                            <span className="flex items-center gap-1 text-[9px] font-mono text-muted-foreground">
-                              <Star className="w-2.5 h-2.5" />
+
+                        <div className="pt-3 border-t border-border/40 flex items-center justify-between">
+                          <div className="flex items-center gap-3 text-xs font-mono text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Eye className="w-3.5 h-3.5 text-primary" />
                               {project.views_count || 0}
                             </span>
-                            <span className="text-[9px] font-mono text-muted-foreground">
-                              {format(new Date(project.created_at), "MMM d")}
-                            </span>
                           </div>
-                          <div className="flex items-center gap-1">
+
+                          <div className="flex items-center gap-2">
                             {project.live_url && (
-                              <a href={project.live_url} target="_blank" rel="noopener noreferrer" className="p-1 rounded text-muted-foreground hover:text-primary transition-colors">
-                                <ExternalLink className="w-3 h-3" />
+                              <a
+                                href={project.live_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-1.5 rounded-lg bg-muted hover:bg-primary/20 text-muted-foreground hover:text-primary transition-colors"
+                              >
+                                <ExternalLink className="w-3.5 h-3.5" />
                               </a>
                             )}
                             <button
                               onClick={async () => {
-                                if (confirm(`Delete "${project.title}"?`)) {
+                                if (confirm(`Are you sure you want to delete "${project.title}"?`)) {
                                   setDeleting(project.id);
                                   try {
                                     await projectApi.delete(project.id);
                                     setProjects((prev) => prev.filter((p) => p.id !== project.id));
+                                    toast({ title: "Ship deleted", description: "Project removed from your profile." });
                                   } catch (err) {
-                                    console.error(err);
+                                    toast({ title: "Delete failed", variant: "destructive" });
+                                  } finally {
+                                    setDeleting(null);
                                   }
-                                  setDeleting(null);
                                 }
                               }}
                               disabled={deleting === project.id}
-                              className="p-1 rounded text-muted-foreground hover:text-destructive transition-colors"
+                              className="p-1.5 rounded-lg bg-muted hover:bg-destructive/20 text-muted-foreground hover:text-destructive transition-colors"
                             >
-                              {deleting === project.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
+                              {deleting === project.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
                             </button>
                           </div>
                         </div>
@@ -682,741 +1081,444 @@ const Dashboard = ({ defaultTab = "overview" }: { defaultTab?: string }) => {
                     ))}
                 </div>
               ) : (
-                <div className="rounded-xl border border-border/50 bg-muted overflow-hidden">
-                  <table className="w-full text-left">
-                    <thead>
-                      <tr className="border-b border-border/50 text-[10px] font-mono text-muted-foreground uppercase tracking-wider">
-                        <th className="px-4 py-3 font-semibold">Name</th>
-                        <th className="px-4 py-3 font-semibold">Status</th>
-                        <th className="px-4 py-3 font-semibold hidden sm:table-cell">Stack</th>
-                        <th className="px-4 py-3 font-semibold hidden md:table-cell">Views</th>
-                        <th className="px-4 py-3 font-semibold hidden md:table-cell">Docked</th>
-                        <th className="px-4 py-3 font-semibold text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {projects
-                        .filter((p) => shipStatus === "all" || p.status === shipStatus)
-                        .filter((p) => !shipSearch || p.title.toLowerCase().includes(shipSearch.toLowerCase()))
-                        .map((project) => (
-                          <tr key={project.id} className="border-b border-border/50 last:border-b-0 hover:bg-card/[0.02] transition-colors">
-                            <td className="px-4 py-3">
-                              <div className="flex items-center gap-2">
-                                <FolderGit2 className="w-3.5 h-3.5 text-primary shrink-0" />
-                                <span className="text-xs font-semibold text-foreground">{project.title}</span>
-                              </div>
-                            </td>
-                            <td className="px-4 py-3">
-                              <span className={`px-2 py-0.5 text-[9px] font-mono rounded-md border ${
-                                project.status === "verified"
-                                  ? "bg-accent/10 text-accent border-accent/20"
-                                  : project.status === "docked"
-                                  ? "bg-primary/10 text-primary border-primary/20"
-                                  : "bg-muted text-muted-foreground border-border"
-                              }`}>
+                /* List View */
+                <div className="rounded-xl border border-border bg-card overflow-hidden">
+                  <div className="divide-y divide-border/40 font-mono text-xs">
+                    {projects
+                      .filter((p) => shipStatus === "all" || p.status === shipStatus)
+                      .filter((p) => !shipSearch || p.title.toLowerCase().includes(shipSearch.toLowerCase()))
+                      .map((project) => (
+                        <div key={project.id} className="p-4 flex items-center justify-between gap-4 hover:bg-muted/30 transition-colors">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <FolderGit2 className="w-4 h-4 text-primary shrink-0" />
+                              <h4 className="font-bold text-foreground truncate">{project.title}</h4>
+                              <span className="px-2 py-0.5 rounded text-[9px] bg-primary/10 text-primary border border-primary/20">
                                 {project.status}
                               </span>
-                            </td>
-                            <td className="px-4 py-3 hidden sm:table-cell">
-                              <div className="flex gap-1">
-                                {project.stack?.slice(0, 2).map((tech: string) => (
-                                  <span key={tech} className="px-1.5 py-0.5 text-[9px] rounded bg-muted/50 text-muted-foreground font-mono">{tech}</span>
-                                ))}
-                              </div>
-                            </td>
-                            <td className="px-4 py-3 hidden md:table-cell text-xs font-mono text-muted-foreground">
-                              {project.views_count || 0}
-                            </td>
-                            <td className="px-4 py-3 hidden md:table-cell text-xs font-mono text-muted-foreground">
-                              {format(new Date(project.created_at), "MMM d")}
-                            </td>
-                            <td className="px-4 py-3 text-right">
-                              <div className="flex items-center justify-end gap-1">
-                                {project.live_url && (
-                                  <a href={project.live_url} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded text-muted-foreground hover:text-primary transition-colors">
-                                    <Eye className="w-3 h-3" />
-                                  </a>
-                                )}
-                                <button
-                                  onClick={async () => {
-                                    if (confirm(`Delete "${project.title}"?`)) {
-                                      setDeleting(project.id);
-                                      try {
-                                        await projectApi.delete(project.id);
-                                        setProjects((prev) => prev.filter((p) => p.id !== project.id));
-                                      } catch (err) {
-                                        console.error(err);
-                                      }
-                                      setDeleting(null);
-                                    }
-                                  }}
-                                  disabled={deleting === project.id}
-                                  className="p-1.5 rounded text-muted-foreground hover:text-destructive transition-colors"
-                                >
-                                  {deleting === project.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-          )}
-          {activeTab === "profile" && (
-            <div className="max-w-6xl mx-auto space-y-6">
-              {/* Profile Header */}
-              <div className="rounded-2xl border border-border bg-card p-6 md:p-8">
-                <div className="flex flex-col md:flex-row md:items-start gap-6">
-                  <div className="relative shrink-0">
-                    <div className="w-20 h-20 rounded-full bg-gradient-primary flex items-center justify-center overflow-hidden">
-                      {profile?.avatar_url || user?.user_metadata?.avatar_url ? (
-                        <label className="w-full h-full cursor-pointer">
-                          <img src={profile?.avatar_url || user?.user_metadata?.avatar_url} alt={profile?.full_name || userName} className="w-full h-full object-cover" />
-                          {isEditing && <div className="absolute inset-0 bg-background/50 flex items-center justify-center rounded-full opacity-0 hover:opacity-100 transition-opacity"><Image className="w-6 h-6 text-foreground" /></div>}
-                        </label>
-                      ) : (
-                        <User className="w-8 h-8 text-primary-foreground" />
-                      )}
-                    </div>
-                    {isEditing && (
-                      <button className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary border-2 border-background flex items-center justify-center hover:bg-primary/80 transition-colors">
-                        <Pencil className="w-3 h-3 text-primary-foreground" />
-                      </button>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    {isEditing ? (
-                      <>
-                        <input
-                          type="text"
-                          value={editForm.full_name}
-                          onChange={(e) => updateFormField("full_name", e.target.value)}
-                          placeholder="Display name"
-                          className="w-full bg-transparent border-b border-border focus:border-primary outline-none font-display font-bold text-2xl md:text-3xl text-foreground pb-1 mb-2"
-                        />
-                        <input
-                          type="text"
-                          value={editForm.username}
-                          onChange={(e) => updateFormField("username", e.target.value)}
-                          placeholder="username"
-                          className="w-full bg-transparent border-b border-border focus:border-primary outline-none text-sm font-mono text-muted-foreground pb-1 mb-2"
-                        />
-                        <textarea
-                          value={editForm.bio}
-                          onChange={(e) => updateFormField("bio", e.target.value)}
-                          placeholder="Tell builders and founders about yourself..."
-                          rows={3}
-                          className="w-full bg-transparent border border-border focus:border-primary outline-none rounded-lg text-sm text-foreground p-2 mb-4 resize-none"
-                        />
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary uppercase tracking-wider">
-                            {profile?.role || userRole}
-                          </span>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="flex flex-wrap items-center gap-3 mb-2">
-                          <h1 className="font-display font-bold text-2xl md:text-3xl text-foreground">
-                            {profile?.full_name || userName}
-                          </h1>
-                          {profile?.is_verified && (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary uppercase tracking-wider">
-                              <Check className="w-3 h-3" /> Verified
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-sm font-mono text-muted-foreground mb-2">
-                          @{profile?.username || user?.user_metadata?.user_name || "builder"}
-                        </p>
-                        <p className="text-sm text-muted-foreground mb-4 max-w-xl">
-                          {profile?.bio || "No bio yet. Dock your first project to get started."}
-                        </p>
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary uppercase tracking-wider">
-                            {profile?.role || userRole}
-                          </span>
-                          {profile?.stack?.slice(0, 3).map((tech) => (
-                            <span key={tech} className="px-2 py-0.5 text-[10px] font-mono rounded-md bg-muted/50 border border-border text-muted-foreground">
-                              {tech}
-                            </span>
-                          ))}
-                          {(profile?.stack?.length || 0) > 3 && (
-                            <span className="text-[10px] font-mono text-muted-foreground">
-                              +{profile!.stack.length - 3} more
-                            </span>
-                          )}
-                        </div>
-                      </>
-                    )}
-                  </div>
-                  {!isEditing && (
-                    <button onClick={startEditing} className="self-start px-4 py-2 rounded-lg border border-border bg-muted/50 text-xs font-bold text-foreground hover:bg-foreground/10 hover:border-foreground/20 transition-all flex items-center gap-2 shrink-0">
-                      <Pencil className="w-3 h-3" />
-                      Edit Profile
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Stats Row */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                {[
-                  { label: "Ships Docked", value: profile?.ships_count || 0, icon: FolderGit2, color: "primary" },
-                  { label: "GitHub Stars", value: profile?.stars_count || 0, icon: Star, color: "accent" },
-                  { label: "Reputation", value: `${profile?.reputation || 0}%`, icon: Zap, color: "secondary" },
-                  { label: "Active Contracts", value: stats.activeContracts, icon: FileText, color: "primary" },
-                ].map((stat, i) => (
-                  <div key={i} className="rounded-xl border border-border/50 bg-card p-4">
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center mb-3 ${
-                      stat.color === "primary" ? "bg-primary/10 border border-primary/20" :
-                      stat.color === "accent" ? "bg-accent/10 border border-accent/20" :
-                      "bg-secondary/10 border border-secondary/20"
-                    }`}>
-                      <stat.icon className={`w-3.5 h-3.5 ${
-                        stat.color === "primary" ? "text-primary" :
-                        stat.color === "accent" ? "text-accent" :
-                        "text-secondary"
-                      }`} />
-                    </div>
-                    <p className="font-display font-bold text-2xl text-foreground">{stat.value}</p>
-                    <p className="text-[10px] font-mono text-muted-foreground mt-0.5">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Two-column layout */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Left: Stack + Social */}
-                <div className="lg:col-span-2 space-y-6">
-                  {/* Tech Stack */}
-                  <div className="rounded-2xl border border-border/50 bg-card p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-display font-bold text-lg text-foreground">Tech Stack</h3>
-                      {!isEditing && (
-                        <button onClick={startEditing} className="text-[10px] font-mono text-primary hover:text-primary transition-colors flex items-center gap-1">
-                          <Pencil className="w-3 h-3" /> Edit
-                        </button>
-                      )}
-                    </div>
-                    {isEditing ? (
-                      <>
-                        <div className="flex flex-wrap gap-2 mb-3">
-                          {editForm.stack.map((tech) => (
-                            <span key={tech} className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-mono rounded-lg bg-muted/50 border border-border text-foreground">
-                              {tech}
-                              <button onClick={() => removeStackTag(tech)} className="hover:text-destructive transition-colors">
-                                <X className="w-3 h-3" />
-                              </button>
-                            </span>
-                          ))}
-                        </div>
-                        <div className="flex gap-2">
-                          <input
-                            type="text"
-                            value={newStackTag}
-                            onChange={(e) => setNewStackTag(e.target.value)}
-                            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addStackTag(); } }}
-                            placeholder="Add a technology..."
-                            className="flex-1 bg-transparent border border-border focus:border-primary outline-none rounded-lg text-xs font-mono text-foreground px-3 py-1.5"
-                          />
-                          <button onClick={addStackTag} disabled={!newStackTag.trim()} className="px-3 py-1.5 rounded-lg bg-primary/20 border border-primary/30 text-primary font-bold text-[10px] hover:bg-primary/30 transition-all disabled:opacity-30 flex items-center gap-1">
-                            <Plus className="w-3 h-3" /> Add
-                          </button>
-                        </div>
-                      </>
-                    ) : (
-                      profile?.stack && profile.stack.length > 0 ? (
-                        <div className="flex flex-wrap gap-2">
-                          {profile.stack.map((tech) => (
-                            <span key={tech} className="px-3 py-1.5 text-xs font-mono rounded-lg bg-muted/50 border border-border text-foreground hover:border-primary/30 hover:bg-primary/5 transition-colors">
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-sm text-muted-foreground font-mono">{`> stack.empty — add technologies you work with`}</p>
-                      )
-                    )}
-                  </div>
-
-                  {/* Social Links */}
-                  <div className="rounded-2xl border border-border/50 bg-card p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-display font-bold text-lg text-foreground">Social Links</h3>
-                      {!isEditing && (
-                        <button onClick={startEditing} className="text-[10px] font-mono text-primary hover:text-primary transition-colors flex items-center gap-1">
-                          <Pencil className="w-3 h-3" /> Edit
-                        </button>
-                      )}
-                    </div>
-                    {isEditing ? (
-                      <>
-                        <div className="space-y-2 mb-3">
-                          {Object.entries(editForm.social_links).map(([platform, url]) => (
-                            <div key={platform} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-card/[0.02] border border-border/50">
-                              <div className="w-7 h-7 rounded-lg bg-muted/50 border border-border flex items-center justify-center shrink-0">
-                                {platform.toLowerCase() === "github" ? <Github className="w-3.5 h-3.5 text-muted-foreground" /> : <Globe className="w-3.5 h-3.5 text-muted-foreground" />}
-                              </div>
-                              <span className="text-xs font-mono text-muted-foreground capitalize w-20 shrink-0">{platform}</span>
-                              <span className="flex-1 text-[10px] font-mono text-foreground truncate">{url}</span>
-                              <button onClick={() => removeSocialLink(platform)} className="p-1 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
-                                <X className="w-3 h-3" />
-                              </button>
                             </div>
-                          ))}
-                        </div>
-                        <div className="flex gap-2">
-                          <input
-                            type="text"
-                            value={newLinkPlatform}
-                            onChange={(e) => setNewLinkPlatform(e.target.value)}
-                            placeholder="Platform (github, twitter...)"
-                            className="w-28 bg-transparent border border-border focus:border-primary outline-none rounded-lg text-xs font-mono text-foreground px-3 py-1.5"
-                          />
-                          <input
-                            type="text"
-                            value={newLinkUrl}
-                            onChange={(e) => setNewLinkUrl(e.target.value)}
-                            placeholder="https://..."
-                            className="flex-1 bg-transparent border border-border focus:border-primary outline-none rounded-lg text-xs font-mono text-foreground px-3 py-1.5"
-                          />
-                          <button onClick={addSocialLink} disabled={!newLinkPlatform.trim() || !newLinkUrl.trim()} className="px-3 py-1.5 rounded-lg bg-primary/20 border border-primary/30 text-primary font-bold text-[10px] hover:bg-primary/30 transition-all disabled:opacity-30 flex items-center gap-1">
-                            <Plus className="w-3 h-3" /> Add
-                          </button>
-                        </div>
-                      </>
-                    ) : (
-                      profile?.social_links && Object.keys(profile.social_links).length > 0 ? (
-                        <div className="space-y-2">
-                          {Object.entries(profile.social_links).map(([platform, url]) => (
-                            <a key={platform} href={url} target="_blank" rel="noreferrer" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted/50 transition-colors group">
-                              <div className="w-7 h-7 rounded-lg bg-muted/50 border border-border flex items-center justify-center shrink-0">
-                                {platform.toLowerCase() === "github" ? <Github className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" /> :
-                                 platform.toLowerCase() === "twitter" || platform.toLowerCase() === "x" ? <Globe className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" /> :
-                                 <Globe className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground" />}
-                              </div>
-                              <span className="text-xs font-mono text-muted-foreground group-hover:text-foreground capitalize">{platform}</span>
-                              <span className="ml-auto text-[10px] text-muted-foreground group-hover:text-primary transition-colors truncate max-w-[200px]">{url}</span>
-                            </a>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-sm text-muted-foreground font-mono">{`> links.empty — connect your GitHub, Twitter, and more`}</p>
-                      )
-                    )}
-                  </div>
-                </div>
-
-                {/* Right: Identity */}
-                <div className="space-y-6">
-                  <div className="rounded-2xl border border-border/50 bg-card p-6">
-                    <h3 className="font-display font-bold text-lg text-foreground mb-4">Identity</h3>
-                    <div className="space-y-4">
-                      <div>
-                        <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">Email</p>
-                        <p className="text-xs font-mono text-foreground truncate">{user?.email || "—"}</p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">Member Since</p>
-                        <p className="text-xs font-mono text-foreground">
-                          {profile?.created_at ? new Date(profile.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long" }) : "—"}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">Account Type</p>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary uppercase tracking-wider">
-                          {profile?.role || userRole}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider mb-1">GitHub</p>
-                        <div className="flex items-center gap-2">
-                          <Github className="w-3.5 h-3.5 text-muted-foreground" />
-                          <span className="text-xs font-mono text-foreground">{profile?.github_username || "Not connected"}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Recent Projects */}
-                  <div className="rounded-2xl border border-border/50 bg-card p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-display font-bold text-lg text-foreground">Recent Ships</h3>
-                      <button onClick={() => setActiveTab("ships")} className="text-[10px] font-mono text-primary hover:text-primary transition-colors">
-                        View all
-                      </button>
-                    </div>
-                    {projects.length > 0 ? (
-                      <div className="space-y-3">
-                        {projects.slice(0, 4).map((project) => (
-                          <div key={project.id} className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted/50 transition-colors">
-                            <div className="w-7 h-7 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center shrink-0">
-                              <FolderGit2 className="w-3.5 h-3.5 text-primary" />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <p className="text-xs font-semibold text-foreground truncate">{project.title}</p>
-                              <p className="text-[10px] font-mono text-muted-foreground">{project.status}</p>
-                            </div>
-                            <ExternalLink className="w-3 h-3 text-muted-foreground" />
+                            <p className="text-[11px] text-muted-foreground truncate mt-0.5">{project.description}</p>
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-sm text-muted-foreground font-mono">{`> projects.empty — dock your first ship`}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
 
-              {/* Save/Cancel bar */}
-              {isEditing && (
-                <div className="sticky bottom-0 flex items-center justify-end gap-3 p-4 bg-background/80 backdrop-blur-xl border-t border-border/50 rounded-b-2xl">
-                  <button onClick={cancelEditing} disabled={saving} className="px-4 py-2 rounded-lg border border-border bg-muted/50 text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-foreground/10 transition-all disabled:opacity-50">
-                    Cancel
-                  </button>
-                  <button onClick={handleSave} disabled={saving} className="px-5 py-2 rounded-lg bg-gradient-primary text-primary-foreground font-bold text-xs glow-cyan hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-2">
-                    {saving ? <Loader className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
-                    {saving ? "Saving..." : "Save Changes"}
-                  </button>
+                          <div className="flex items-center gap-4 shrink-0 text-muted-foreground">
+                            <span>{project.views_count || 0} views</span>
+                            {project.live_url && (
+                              <a href={project.live_url} target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+                                <ExternalLink className="w-4 h-4" />
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
                 </div>
               )}
             </div>
           )}
+
+          {/* ============================================================ */}
+          {/* TAB 3: PROJECTS / MARKETPLACE */}
+          {/* ============================================================ */}
           {activeTab === "projects" && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-6xl mx-auto space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="max-w-7xl mx-auto space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border/50">
                 <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-mono text-primary">/marketplace</span>
-                    <span className="w-1 h-1 rounded-full bg-primary/60 animate-pulse" />
-                  </div>
-                  <h2 className="font-display font-bold text-xl text-foreground">Marketplace Projects</h2>
-                  <p className="text-xs font-mono text-muted-foreground mt-0.5">Browse, post, and manage hiring projects</p>
+                  <h2 className="text-xl font-display font-bold text-foreground flex items-center gap-2">
+                    <Briefcase className="w-5 h-5 text-primary" />
+                    Marketplace & Hiring Scopes
+                  </h2>
+                  <p className="text-xs font-mono text-muted-foreground mt-0.5">
+                    Browse active client scopes, posted projects, and applications.
+                  </p>
                 </div>
+
                 <Link to="/post-project">
-                  <Button className="bg-gradient-primary text-primary-foreground font-bold text-xs glow-cyan hover:brightness-110 transition-all h-9">
-                    <Plus className="w-4 h-4" />
-                    Post a Project
+                  <Button size="sm" className="font-mono text-xs gap-1.5 bg-primary text-primary-foreground font-semibold">
+                    <Plus className="w-3.5 h-3.5" />
+                    Post New Scope
                   </Button>
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="rounded-xl border border-border-subtle bg-card shadow-elev-sm p-5">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                      <Briefcase className="w-4 h-4 text-primary" /> Open Projects
+              {/* Grid of User Posted Projects & Submitted Applications */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Section 1: My Posted Scopes */}
+                <div className="p-6 rounded-2xl border border-border bg-card space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-border/50">
+                    <h3 className="text-sm font-display font-bold text-foreground flex items-center gap-2">
+                      <Briefcase className="w-4 h-4 text-primary" />
+                      Posted Scopes ({userMarketplaceProjects.length})
                     </h3>
-                    <Badge variant="secondary" className="text-[9px] font-mono">{MOCK_HIRE_PROJECTS.filter(p => p.status === "open").length} available</Badge>
+                    <Link to="/marketplace" className="text-xs font-mono text-primary hover:underline">
+                      View Marketplace
+                    </Link>
                   </div>
-                  <div className="space-y-1.5">
-                    {MOCK_HIRE_PROJECTS.filter(p => p.status === "open").slice(0, 5).map((project, i) => (
-                      <motion.div key={project.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}>
-                        <Link to={`/project/${project.slug || project.id}`} className="group flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-card/[0.04] hover:border hover:border-border/50 transition-all border border-transparent">
-                          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20 flex items-center justify-center shrink-0">
-                            <Briefcase className="w-4 h-4 text-primary" />
+
+                  {userMarketplaceProjects.length === 0 ? (
+                    <div className="text-center py-8 space-y-2">
+                      <p className="text-xs font-mono text-muted-foreground">You haven't posted any hiring scopes yet.</p>
+                      <Link to="/post-project">
+                        <Button size="sm" variant="outline" className="font-mono text-xs mt-2">
+                          Post First Scope
+                        </Button>
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {userMarketplaceProjects.map((p) => (
+                        <Link
+                          key={p.id}
+                          to={`/marketplace/${p.slug || p.id}`}
+                          className="block p-3.5 rounded-xl bg-muted/40 border border-border/50 hover:border-primary/40 transition-all"
+                        >
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-xs font-bold text-foreground truncate">{p.title}</h4>
+                            <span className="px-2 py-0.5 rounded text-[9px] font-mono font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                              ${p.budgetMin?.toLocaleString()} - ${p.budgetMax?.toLocaleString()} USD
+                            </span>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-semibold text-foreground truncate group-hover:text-primary transition-colors">{project.title}</p>
-                            <p className="text-[9px] font-mono text-muted-foreground">
-                              ${project.budget_min.toLocaleString()} – ${project.budget_max.toLocaleString()} · {project.timeline_weeks}w · {project.category}
-                            </p>
-                          </div>
-                          <div className="hidden sm:flex items-center gap-2">
-                            <div className="flex items-center gap-1 text-[9px] font-mono text-primary bg-primary/[0.04] rounded-full px-2 py-0.5 border border-primary/10">
-                              <Sparkles className="w-2.5 h-2.5" /> {project.interest_count}
-                            </div>
-                            <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors" />
-                          </div>
+                          <p className="text-[11px] text-muted-foreground line-clamp-1 mt-1">{p.description}</p>
                         </Link>
-                      </motion.div>
-                    ))}
-                  </div>
-                  <Link to="/projects" className="block mt-3 text-center text-[10px] font-mono text-primary hover:text-primary transition-colors py-1.5 rounded-lg hover:bg-card/[0.02]">
-                    Browse all projects →
-                  </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                <div className="rounded-xl border border-border-subtle bg-card shadow-elev-sm p-5">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-primary" /> Your Invitations
+                {/* Section 2: Submitted Applications */}
+                <div className="p-6 rounded-2xl border border-border bg-card space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-border/50">
+                    <h3 className="text-sm font-display font-bold text-foreground flex items-center gap-2">
+                      <FileText className="w-4 h-4 text-primary" />
+                      My Applications ({userApplications.length})
                     </h3>
-                    <Badge variant="secondary" className="text-[9px] font-mono">{MOCK_INVITATIONS.length} received</Badge>
                   </div>
-                  <div className="space-y-2">
-                    {MOCK_INVITATIONS.map((inv, i) => (
-                      <InvitationCard key={inv.id} inv={inv} index={i} />
-                    ))}
-                    {MOCK_INVITATIONS.length === 0 && (
-                      <p className="text-xs text-muted-foreground font-mono text-center py-6">{`> inbox.empty — no invitations yet`}</p>
+
+                  {userApplications.length === 0 ? (
+                    <div className="text-center py-8 space-y-2">
+                      <p className="text-xs font-mono text-muted-foreground">You haven't applied to any client scopes yet.</p>
+                      <Link to="/marketplace">
+                        <Button size="sm" variant="outline" className="font-mono text-xs mt-2">
+                          Explore Scopes
+                        </Button>
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {userApplications.map((app) => (
+                        <div key={app.id} className="p-3.5 rounded-xl bg-muted/40 border border-border/50 space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-foreground">Proposed: ${app.proposedRate?.toLocaleString()} USD</span>
+                            <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-semibold capitalize ${
+                              app.status === "accepted" ? "bg-emerald-500/10 text-emerald-400" : "bg-muted text-muted-foreground"
+                            }`}>
+                              {app.status}
+                            </span>
+                          </div>
+                          <p className="text-[11px] font-mono text-muted-foreground line-clamp-2">{app.pitch}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ============================================================ */}
+          {/* TAB 4: CONTRACTS */}
+          {/* ============================================================ */}
+          {activeTab === "contracts" && (
+            <div className="max-w-7xl mx-auto">
+              <MyContracts currentUserId={user?.id} userRole={profile?.role || "builder"} />
+            </div>
+          )}
+
+          {/* ============================================================ */}
+          {/* TAB 5: PROFILE */}
+          {/* ============================================================ */}
+          {activeTab === "profile" && (
+            <div className="max-w-5xl mx-auto space-y-6">
+              {/* Profile Card Header */}
+              <div className="p-6 sm:p-8 rounded-2xl border border-border bg-card space-y-6">
+                <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
+                  <div className="flex items-start gap-4">
+                    <div className="relative">
+                      <div className="w-20 h-20 rounded-2xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center overflow-hidden shrink-0">
+                        {profile?.avatar_url || user.user_metadata?.avatar_url ? (
+                          <img
+                            src={profile?.avatar_url || user.user_metadata.avatar_url}
+                            alt={userName}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <User className="w-8 h-8 text-primary" />
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-2xl font-display font-bold text-foreground">{userName}</h2>
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-primary/10 text-primary border border-primary/20">
+                          {userRole}
+                        </span>
+                      </div>
+                      <p className="text-xs font-mono text-muted-foreground">
+                        @{profile?.username || user?.user_metadata?.user_name || "builder"}
+                      </p>
+                      <p className="text-xs text-muted-foreground max-w-xl pt-1">
+                        {profile?.bio || "No bio added yet. Edit profile to write a summary."}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 self-start">
+                    {!isEditing ? (
+                      <Button onClick={startEditing} size="sm" variant="outline" className="font-mono text-xs gap-1.5">
+                        <Pencil className="w-3.5 h-3.5" /> Edit Identity
+                      </Button>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <Button onClick={cancelEditing} size="sm" variant="ghost" className="font-mono text-xs">
+                          Cancel
+                        </Button>
+                        <Button onClick={handleSaveProfile} disabled={saving} size="sm" className="font-mono text-xs gap-1.5 bg-primary text-primary-foreground">
+                          {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                          Save Changes
+                        </Button>
+                      </div>
                     )}
                   </div>
                 </div>
-              </div>
 
-              <div className="rounded-xl border border-border-subtle bg-card shadow-elev-sm p-5">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-primary" /> Matching Preferences
-                  </h3>
-                  <button className="text-[10px] font-mono text-primary hover:text-primary transition-colors">Edit</button>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {[
-                    { label: "Ideal Projects", value: "AI Agents, Automation" },
-                    { label: "Budget Range", value: "$5k – $15k" },
-                    { label: "Availability", value: "Immediate" },
-                    { label: "Collaboration", value: "Solo or Team" },
-                  ].map((pref) => (
-                    <div key={pref.label} className="rounded-xl bg-background/80 border border-border/40 p-3.5 hover:border-border/60 transition-colors">
-                      <p className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider mb-1">{pref.label}</p>
-                      <p className="text-xs font-semibold text-foreground">{pref.value}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-border-subtle bg-card shadow-elev-sm p-5">
-                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2 mb-4">
-                  <BarChart3 className="w-4 h-4 text-accent" /> Quick Stats
-                </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {[
-                    { label: "Projects Viewed", value: "142", change: "+12%", positive: true },
-                    { label: "Interest Sent", value: "8", change: "+3", positive: true },
-                    { label: "Invitations Received", value: "3", change: "+1", positive: true },
-                    { label: "Match Rate", value: "94%", change: "+2%", positive: true },
-                  ].map((stat) => (
-                    <div key={stat.label} className="rounded-xl bg-background/80 border border-border/40 p-3.5">
-                      <p className="text-[9px] font-mono text-muted-foreground">{stat.label}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <p className="text-lg font-bold text-foreground">{stat.value}</p>
-                        <span className={`text-[10px] font-mono ${stat.positive ? "text-accent" : "text-destructive"}`}>{stat.change}</span>
+                {/* Edit Form */}
+                {isEditing && (
+                  <div className="pt-6 border-t border-border/50 space-y-4 font-mono text-xs">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-muted-foreground">Full Display Name</label>
+                        <input
+                          type="text"
+                          value={editForm.full_name}
+                          onChange={(e) => setEditForm((p) => ({ ...p, full_name: e.target.value }))}
+                          className="w-full px-3 py-2 rounded-xl bg-muted border border-border text-foreground outline-none focus:border-primary"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-muted-foreground">Username Handle</label>
+                        <input
+                          type="text"
+                          value={editForm.username}
+                          onChange={(e) => setEditForm((p) => ({ ...p, username: e.target.value }))}
+                          className="w-full px-3 py-2 rounded-xl bg-muted border border-border text-foreground outline-none focus:border-primary"
+                        />
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-          {activeTab === "settings" && (
-            <div className="max-w-6xl mx-auto space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-foreground">Settings</h2>
-              </div>
 
-              <div className="rounded-xl border border-border bg-card p-6">
-                <h3 className="font-display font-bold text-foreground mb-1">Notifications</h3>
-                <p className="text-xs text-muted-foreground font-mono mb-4">Control what updates you receive</p>
-                <div className="space-y-3">
-                  {[
-                    { key: "email", label: "Email notifications", desc: "Get email alerts for messages, contract updates, and reviews" },
-                    { key: "inApp", label: "In-app notifications", desc: "Show notification badges and alerts inside the dashboard" },
-                    { key: "marketing", label: "Marketing & updates", desc: "Product updates, feature announcements, and tips" },
-                  ].map((n) => (
-                    <div key={n.key} className="flex items-center justify-between py-2">
-                      <div>
-                        <p className="text-sm text-foreground">{n.label}</p>
-                        <p className="text-[11px] text-muted-foreground font-mono">{n.desc}</p>
-                      </div>
-                      <button
-                        onClick={() => setNotifPrefs((p) => ({ ...p, [n.key]: !(p as Record<string, boolean>)[n.key] }))}
-                        className={`relative w-10 h-5 rounded-full transition-colors ${
-                          (notifPrefs as Record<string, boolean>)[n.key] ? "bg-cyan-500" : "bg-muted"
-                        }`}
-                      >
-                        <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-card transition-transform ${
-                          (notifPrefs as Record<string, boolean>)[n.key] ? "translate-x-5" : "translate-x-0.5"
-                        }`} />
-                      </button>
+                    <div className="space-y-1">
+                      <label className="text-muted-foreground">Bio / Elevator Pitch</label>
+                      <textarea
+                        rows={3}
+                        value={editForm.bio}
+                        onChange={(e) => setEditForm((p) => ({ ...p, bio: e.target.value }))}
+                        className="w-full px-3 py-2 rounded-xl bg-muted border border-border text-foreground outline-none focus:border-primary resize-none"
+                      />
                     </div>
-                  ))}
-                </div>
-              </div>
 
-              <div className="rounded-xl border border-border bg-card p-6">
-                <h3 className="font-display font-bold text-foreground mb-1">Appearance</h3>
-                <p className="text-xs text-muted-foreground font-mono mb-4">Customize your dashboard theme</p>
-                <div className="flex gap-3">
-                  {[
-                    { mode: "dark" as const, icon: Moon, label: "Dark" },
-                    { mode: "light" as const, icon: Sun, label: "Light" },
-                    { mode: "system" as const, icon: Monitor, label: "System" },
-                  ].map((t) => (
-                    <button
-                      key={t.mode}
-                      onClick={() => setTheme(t.mode)}
-                      className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-mono transition-colors ${
-                        theme === t.mode
-                          ? "bg-primary/[0.07] border-primary/25 text-primary"
-                          : "bg-transparent border-border/40 text-muted-foreground hover:border-border"
-                      }`}
-                    >
-                      <t.icon className="w-3.5 h-3.5" />
-                      {t.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-border bg-card p-6">
-                <h3 className="font-display font-bold text-foreground mb-1">Account</h3>
-                <p className="text-xs text-muted-foreground font-mono mb-4">Your account information</p>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between py-2">
-                    <p className="text-sm text-foreground">Email</p>
-                    <p className="text-xs font-mono text-muted-foreground">{user?.email || "—"}</p>
-                  </div>
-                  <div className="flex items-center justify-between py-2">
-                    <p className="text-sm text-foreground">Member since</p>
-                    <p className="text-xs font-mono text-muted-foreground">
-                      {profile?.created_at ? format(new Date(profile.created_at), "MMMM yyyy") : "—"}
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-between py-2 border-t border-border/50">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-foreground">Sign out</span>
-                      <span className="text-[10px] font-mono text-muted-foreground">end current session</span>
-                    </div>
-                    <button
-                      onClick={() => signOut()}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono rounded-lg border border-border/40 text-muted-foreground hover:text-foreground hover:border-border transition-colors"
-                    >
-                      <LogOut className="w-3.5 h-3.5" />
-                      Sign Out
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-6">
-                <h3 className="font-display font-bold text-red-400 mb-1">Danger Zone</h3>
-                <p className="text-xs text-muted-foreground font-mono mb-4">Irreversible actions</p>
-                <div className="space-y-3">
-                  <p className="text-xs text-muted-foreground">
-                    Deleting your account removes all your data including projects, contracts, and profile. This cannot be undone.
-                  </p>
-                  {deleteConfirm !== "CONFIRM" ? (
-                    <button
-                      onClick={() => setDeleteConfirm("CONFIRM")}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      Delete Account
-                    </button>
-                  ) : (
+                    {/* Stack Tag Builder */}
                     <div className="space-y-2">
-                      <p className="text-xs font-mono text-red-400/80">Type CONFIRM to delete your account:</p>
+                      <label className="text-muted-foreground">Verified Tech Stack</label>
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {editForm.stack.map((tag) => (
+                          <span key={tag} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary/10 text-primary border border-primary/20 text-xs">
+                            {tag}
+                            <button onClick={() => removeStackTag(tag)} className="hover:text-destructive">
+                              <X className="w-3 h-3" />
+                            </button>
+                          </span>
+                        ))}
+                      </div>
                       <div className="flex gap-2">
                         <input
-                          value={deleteConfirm}
-                          onChange={(e) => setDeleteConfirm(e.target.value)}
-                          placeholder="type CONFIRM..."
-                          className="flex-1 bg-transparent border border-border/40 rounded-lg px-3 py-1.5 text-xs font-mono text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-red-500/40"
+                          type="text"
+                          value={newStackTag}
+                          onChange={(e) => setNewStackTag(e.target.value)}
+                          onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addStackTag())}
+                          placeholder="Add technology (e.g. Next.js, PyTorch)..."
+                          className="flex-1 px-3 py-2 rounded-xl bg-muted border border-border text-foreground outline-none focus:border-primary"
                         />
-                        <button className="px-3 py-1.5 text-xs font-mono font-medium rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors disabled:opacity-40">
-                          Delete
-                        </button>
-                        <button
-                          onClick={() => setDeleteConfirm("")}
-                          className="px-3 py-1.5 text-xs font-mono rounded-lg text-muted-foreground border border-border/40 hover:text-foreground transition-colors"
-                        >
-                          Cancel
-                        </button>
+                        <Button type="button" onClick={addStackTag} size="sm" variant="outline" className="font-mono text-xs">
+                          Add
+                        </Button>
                       </div>
                     </div>
-                  )}
+                  </div>
+                )}
+
+                {/* Tech Stack Display */}
+                {!isEditing && (
+                  <div className="pt-4 border-t border-border/40 space-y-2">
+                    <p className="text-xs font-mono text-muted-foreground uppercase tracking-wider">Verified Stack</p>
+                    <div className="flex flex-wrap gap-2">
+                      {(profile?.stack || ["React", "TypeScript", "Tailwind CSS", "Firebase"]).map((tech) => (
+                        <span key={tech} className="px-2.5 py-1 rounded-lg text-xs font-mono bg-muted/60 text-foreground border border-border/50">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ============================================================ */}
+          {/* TAB 6: SETTINGS */}
+          {/* ============================================================ */}
+          {activeTab === "settings" && (
+            <div className="max-w-4xl mx-auto space-y-6">
+              <div className="p-6 rounded-2xl border border-border bg-card space-y-4">
+                <h3 className="text-base font-display font-bold text-foreground">Notification Preferences</h3>
+                <div className="space-y-3 font-mono text-xs">
+                  <div className="flex items-center justify-between py-2 border-b border-border/40">
+                    <div>
+                      <p className="font-semibold text-foreground">Email Contract Alerts</p>
+                      <p className="text-muted-foreground">Receive email updates on proposals and completions.</p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={notifPrefs.email}
+                      onChange={(e) => setNotifPrefs((p) => ({ ...p, email: e.target.checked }))}
+                      className="accent-primary w-4 h-4"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <div>
+                      <p className="font-semibold text-foreground">In-App Live Activity</p>
+                      <p className="text-muted-foreground">Push notifications for new match invites.</p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={notifPrefs.inApp}
+                      onChange={(e) => setNotifPrefs((p) => ({ ...p, inApp: e.target.checked }))}
+                      className="accent-primary w-4 h-4"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Theme Settings */}
+              <div className="p-6 rounded-2xl border border-border bg-card space-y-4">
+                <h3 className="text-base font-display font-bold text-foreground">Appearance Theme</h3>
+                <div className="flex gap-3">
+                  {[
+                    { mode: "dark" as const, icon: Moon, label: "Dark Mode" },
+                    { mode: "light" as const, icon: Sun, label: "Light Mode" },
+                    { mode: "system" as const, icon: Monitor, label: "System Default" },
+                  ].map((item) => (
+                    <button
+                      key={item.mode}
+                      onClick={() => setTheme(item.mode)}
+                      className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-mono transition-all ${
+                        theme === item.mode
+                          ? "bg-primary/10 border-primary/40 text-primary font-bold shadow-sm"
+                          : "bg-muted/40 border-border text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <item.icon className="w-4 h-4" />
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Account Security & Identity */}
+              <div className="p-6 rounded-2xl border border-border bg-card space-y-3 font-mono text-xs">
+                <h3 className="text-base font-display font-bold text-foreground">System Identity</h3>
+                <div className="space-y-2 text-muted-foreground">
+                  <p><strong className="text-foreground">Email:</strong> {user.email}</p>
+                  <p><strong className="text-foreground">Firebase UID:</strong> {user.id}</p>
+                  <p><strong className="text-foreground">Authentication:</strong> Verified Firebase Auth Session</p>
                 </div>
               </div>
             </div>
           )}
         </main>
       </div>
+
+      {/* ------------------------------------------------------------- */}
+      {/* COMMAND PALETTE OVERLAY (⌘K) */}
+      {/* ------------------------------------------------------------- */}
+      <AnimatePresence>
+        {cmdKOpen && (
+          <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-background/80 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: -10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -10 }}
+              className="w-full max-w-lg rounded-2xl border border-border bg-card shadow-2xl overflow-hidden font-mono text-xs"
+            >
+              <div className="p-4 border-b border-border/50 flex items-center gap-3">
+                <Search className="w-4 h-4 text-primary shrink-0" />
+                <input
+                  type="text"
+                  autoFocus
+                  value={cmdKSearch}
+                  onChange={(e) => setCmdKSearch(e.target.value)}
+                  placeholder="Type a command or search tabs..."
+                  className="w-full bg-transparent text-foreground placeholder:text-muted-foreground outline-none"
+                />
+                <kbd className="px-1.5 py-0.5 rounded text-[10px] bg-muted border border-border text-muted-foreground">
+                  ESC
+                </kbd>
+              </div>
+
+              <div className="p-2 max-h-80 overflow-y-auto space-y-1">
+                <p className="px-3 py-1 text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Navigation Commands</p>
+                {NAV_ITEMS.filter((item) => item.label.toLowerCase().includes(cmdKSearch.toLowerCase())).map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      setActiveTab(item.id);
+                      setCmdKOpen(false);
+                    }}
+                    className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors text-left"
+                  >
+                    <div className="flex items-center gap-2">
+                      <item.icon className="w-4 h-4" />
+                      <span>Jump to {item.label}</span>
+                    </div>
+                    <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+                  </button>
+                ))}
+
+                <p className="px-3 py-1 text-[10px] text-muted-foreground uppercase tracking-wider font-bold pt-2">Quick Actions</p>
+                <button
+                  onClick={() => {
+                    navigate("/post-project");
+                    setCmdKOpen(false);
+                  }}
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors text-left"
+                >
+                  <Plus className="w-4 h-4" />
+                  Post a New Marketplace Scope
+                </button>
+                <button
+                  onClick={() => {
+                    navigate("/dashboard/projects/new");
+                    setCmdKOpen(false);
+                  }}
+                  className="w-full flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors text-left"
+                >
+                  <FolderGit2 className="w-4 h-4" />
+                  Dock a New Repository Ship
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
-  );
-};
-
-const InvitationCard = ({ inv, index }: { inv: Invitation; index: number }) => {
-  const [responded, setResponded] = useState<Invitation["status"]>(inv.status);
-  const [responding, setResponding] = useState(false);
-
-  const handleRespond = async (action: "accepted" | "declined") => {
-    setResponding(true);
-    await new Promise((r) => setTimeout(r, 600));
-    setResponded(action);
-    setResponding(false);
-    toast({
-      title: action === "accepted" ? "Invitation Accepted!" : "Invitation Declined",
-      description: action === "accepted" ? "You can now discuss project details." : "The creator will be notified.",
-      duration: 4000,
-    });
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.05 }}
-    >
-      <div className="group px-3.5 py-3 rounded-xl bg-background/60 border border-border/40 hover:border-border/60 hover:bg-background/80 transition-all">
-        <div className="flex items-start gap-3">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20 flex items-center justify-center shrink-0">
-            {inv.creator?.avatar_url ? (
-              <img src={inv.creator.avatar_url} alt="" className="w-9 h-9 rounded-full" />
-            ) : (
-              <UserIcon className="w-4 h-4 text-primary" />
-            )}
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between gap-2 mb-0.5">
-              <p className="text-xs font-semibold text-foreground">{inv.project?.title || "Project"}</p>
-              <div className={`px-2 py-0.5 rounded-full text-[8px] font-mono font-bold border shrink-0 ${
-                responded === "pending" ? "bg-amber-500/10 text-accent border-amber-500/20" :
-                responded === "accepted" ? "bg-accent/10 text-accent border-accent/20" :
-                "bg-muted text-muted-foreground border-border/40"
-              }`}>
-                {responded === "accepted" ? "✓ Accepted" : responded === "declined" ? "✕ Declined" : "● Pending"}
-              </div>
-            </div>
-            <p className="text-[10px] text-muted-foreground leading-relaxed line-clamp-2">
-              "{inv.personalized_message}"
-            </p>
-            <div className="flex items-center gap-2 mt-1.5">
-              <span className="text-[9px] font-mono text-muted-foreground">
-                From {inv.creator?.full_name} · {formatDistanceToNow(new Date(inv.sent_at), { addSuffix: true })}
-              </span>
-            </div>
-            {responded === "pending" && (
-              <div className="flex items-center gap-2 mt-2.5">
-                <button
-                  onClick={() => handleRespond("accepted")}
-                  disabled={responding}
-                  className="px-3 py-1 rounded-lg bg-accent/10 border border-accent/20 text-[9px] font-mono text-accent hover:bg-accent/20 transition-all flex items-center gap-1 disabled:opacity-50"
-                >
-                  {responding ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCheck className="w-3 h-3" />}
-                  Accept
-                </button>
-                <button
-                  onClick={() => handleRespond("declined")}
-                  disabled={responding}
-                  className="px-3 py-1 rounded-lg bg-muted border border-border/50 text-[9px] font-mono text-muted-foreground hover:text-foreground hover:bg-card/[0.04] transition-all flex items-center gap-1 disabled:opacity-50"
-                >
-                  <XIcon className="w-3 h-3" /> Decline
-                </button>
-                <Link to={`/project/${inv.project_id}`} className="ml-auto text-[9px] font-mono text-primary hover:text-primary transition-colors">
-                  Details →
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </motion.div>
   );
 };
 

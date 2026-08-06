@@ -16,8 +16,13 @@ Shipyards — the professional identity platform for AI builders ("LinkedIn for 
 
 ## Build status & order
 The build is executed chunk by chunk, one component per prompt, per `lovable/BUILD_PLAN.md` (Chunk 1 Auth + Onboarding ✅, Chunk 2 Builder Profile ✅, Chunk 3 = projects data model, then 4-12). Track progress in `lovable/PROGRESS.md`. Do not implement unreleased later layers (4: email identity, 5: smart breakdown) until the build plan reaches them.
+- **Layer 1 (Discovery & Showcase) ✅ COMPLETE** — 12 chunks + pile, verified.
+- **Layer 2 (Project Marketplace) ✅ COMPLETE** — 7 chunks (post → AI match → apply → invite → contract → rating → checkpoint), plan in `lovable/BUILD_PLAN_LAYER2.md`.
+- **Layer 3 (Collaboration Workspace) — next** — plan from `lovable/BUILD_PLAN_LAYER3.md` once written.
 
 ## Repository layout
+- **Canonical repo: `omii-jaan/05july26-wc`** — the live AI Studio workspace and Git-sync target. All builds and memory updates land there.
+- `omii-jaan/connect-to-lovable` is now **archived/stale** — contains the older Firestore export with Supabase remnants; reference only, do not push to it.
 - `lovable/` — the build package (knowledge, schema, plan, progress). Keep it authoritative and up to date.
 - Root documents `SHIPYARDS_*.md` — the original specs. They are reference; the files in `lovable/` are the working truth.
 - `src/` — application code.

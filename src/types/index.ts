@@ -5,6 +5,8 @@ export interface Profile {
   avatar_url: string | null;
   bio: string | null;
   stack: string[];
+  skills?: string[];
+  modelsUsed?: string[];
   social_links: Record<string, string>;
   github_username: string | null;
   github_id: number | null;
@@ -13,6 +15,7 @@ export interface Profile {
   stars_count: number;
   reputation: number;
   role: 'builder' | 'founder' | 'admin';
+  availability?: 'available' | 'busy' | 'not_available';
   is_verified: boolean;
   created_at: string;
   updated_at: string;
@@ -43,24 +46,50 @@ export interface Project {
   builder?: Profile;
 }
 
+export interface ContractTerms {
+  budgetType: "Fixed" | "Hourly" | "Range" | string;
+  budgetMin: number;
+  budgetMax: number;
+  currency: string;
+}
+
+export interface ContractRatingStatus {
+  founder: boolean;
+  builder: boolean;
+}
+
 export interface Contract {
   id: string;
-  project_id: string | null;
-  builder_id: string;
-  founder_id: string;
-  title: string;
-  description: string | null;
-  status: 'pending' | 'active' | 'completed' | 'cancelled' | 'disputed';
-  amount_usd: number | null;
-  currency: string;
-  payment_status: 'unpaid' | 'escrowed' | 'released' | 'refunded';
-  escrow_transaction_id: string | null;
-  milestones: ContractMilestone[];
-  started_at: string | null;
-  completed_at: string | null;
-  deadline: string | null;
-  created_at: string;
-  updated_at: string;
+  marketplaceProjectId?: string;
+  project_id?: string | null;
+  projectId?: string;
+  founderUid?: string;
+  founder_id?: string;
+  creatorUid?: string;
+  builderUid?: string;
+  builder_id?: string;
+  title?: string;
+  description?: string | null;
+  terms?: ContractTerms;
+  status: 'draft' | 'active' | 'completed' | 'cancelled' | 'disputed' | 'pending';
+  startedAt?: string | null;
+  started_at?: string | null;
+  completedAt?: string | null;
+  completed_at?: string | null;
+  ratingStatus?: ContractRatingStatus;
+  amount_usd?: number | null;
+  currency?: string;
+  payment_status?: 'unpaid' | 'escrowed' | 'released' | 'refunded';
+  milestones?: ContractMilestone[];
+  createdAt?: string;
+  created_at?: string;
+  updatedAt?: string;
+  updated_at?: string;
+
+  // Enriched fields
+  project?: MarketplaceProject;
+  founder?: Profile;
+  builder?: Profile;
 }
 
 export interface ContractMilestone {
@@ -79,6 +108,70 @@ export interface AIParsedRequirements {
   tech_stack: string[];
   complexity: 'low' | 'medium' | 'high';
   ideal_builder_type: string;
+}
+
+export interface MatchBreakdown {
+  pastSimilar: number; // 0..30
+  stack: number;       // 0..25
+  availability: number;// 0..20
+  budget: number;      // 0..15
+  style: number;       // 0..10
+}
+
+export interface MatchResult {
+  builderUid: string;
+  score: number;
+  breakdown: MatchBreakdown;
+  reasons: string[];
+  builder?: Profile;
+}
+
+export interface MarketplaceProject {
+  id: string;
+  slug: string;
+  creatorUid: string;
+  title: string;
+  category: string;
+  description: string;
+  requirements: string[];
+  budgetType: "Fixed" | "Hourly" | "Range";
+  budgetMin: number;
+  budgetMax: number;
+  currency: string;
+  timelineStart?: string;
+  timelineEnd?: string;
+  timelineWeeks: number;
+  skills: string[];
+  techStack: string[];
+  complexity: "low" | "medium" | "high" | "critical";
+  teamSize: string;
+  remote: boolean;
+  ndaRequired: boolean;
+  visibility: "public" | "invite-only";
+  featured: boolean;
+  status: "open" | "in_review" | "matched" | "closed" | "cancelled";
+  viewsCount: number;
+  applicationsCount: number;
+  createdAt: string;
+  updatedAt: string;
+  creator?: Profile;
+  matches?: MatchResult[];
+}
+
+export interface MarketplaceApplication {
+  id: string;
+  projectId: string;
+  marketplaceProjectId?: string;
+  builderUid: string;
+  pitch: string;
+  links?: string[];
+  proposedRate: number;
+  proposedTimelineWeeks: number;
+  status: "pending" | "shortlisted" | "accepted" | "rejected";
+  createdAt: string;
+  updatedAt?: string;
+  builder?: Profile;
+  project?: MarketplaceProject;
 }
 
 export interface HireProject {
@@ -104,6 +197,20 @@ export interface HireProject {
   created_at: string;
   updated_at: string;
   creator?: Profile;
+  slug?: string;
+  creatorUid?: string;
+  requirements?: string[];
+  budgetType?: "Fixed" | "Hourly" | "Range";
+  budgetMin?: number;
+  budgetMax?: number;
+  timelineWeeks?: number;
+  skills?: string[];
+  techStack?: string[];
+  remote?: boolean;
+  ndaRequired?: boolean;
+  teamSize?: string;
+  featured?: boolean;
+  applicationsCount?: number;
 }
 
 export interface BuilderMatch {
@@ -122,16 +229,26 @@ export interface BuilderMatch {
 
 export interface Invitation {
   id: string;
-  project_id: string;
-  project?: HireProject;
-  creator_id: string;
+  project_id?: string;
+  projectId?: string;
+  marketplaceProjectId?: string;
+  project?: MarketplaceProject | HireProject;
+  creator_id?: string;
+  creatorUid?: string;
+  founderUid?: string;
+  senderUid?: string;
   creator?: Profile;
-  builder_id: string;
+  founder?: Profile;
+  builder_id?: string;
+  builderUid?: string;
   builder?: Profile;
-  personalized_message: string;
+  personalized_message?: string;
+  message?: string;
   status: 'pending' | 'accepted' | 'declined' | 'expired';
-  sent_at: string;
-  responded_at: string | null;
+  sent_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  responded_at?: string | null;
 }
 
 export interface ProjectFeedback {
@@ -142,4 +259,17 @@ export interface ProjectFeedback {
   rating: number;
   feedback: string;
   created_at: string;
+}
+
+export interface Rating {
+  id?: string;
+  contractId: string;
+  raterUid: string;
+  rateeUid: string;
+  score: number;
+  comment: string;
+  role: 'founder' | 'builder';
+  createdAt: string;
+  rater?: Profile;
+  ratee?: Profile;
 }

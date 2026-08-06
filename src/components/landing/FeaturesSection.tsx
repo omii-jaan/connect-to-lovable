@@ -1,5 +1,5 @@
 import { Layout, Briefcase, Terminal, Mail, GitBranch } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 
 const LAYERS = [
   {
@@ -52,10 +52,10 @@ export const FeaturesSection = () => {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+          viewport={{ once: true, margin: "0px 0px 250px 0px" }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
           className="text-center max-w-2xl mx-auto space-y-3"
         >
           <p className="text-xs font-mono font-semibold text-primary uppercase tracking-wider">
@@ -76,10 +76,10 @@ export const FeaturesSection = () => {
             return (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.4, delay: idx * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+                viewport={{ once: true, margin: "0px 0px 250px 0px" }}
+                transition={{ duration: 0.2, delay: idx * 0.02, ease: "easeOut" }}
                 className="rounded-xl border border-border-subtle bg-card p-6 space-y-4 hover:border-primary/30 transition-colors flex flex-col justify-between"
               >
                 <div className="space-y-3">

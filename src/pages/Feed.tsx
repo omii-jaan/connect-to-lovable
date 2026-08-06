@@ -2,12 +2,13 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import {
-  Activity, FolderGit2, Sparkles, MessageSquare, Heart, Bookmark,
-  Share2, ShieldCheck, ArrowRight, UserCheck, Flame, Send
+  Activity, FolderGit2, MessageSquare, Heart,
+  Share2, ShieldCheck, ArrowRight, UserCheck, Send
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import Navbar from "@/components/Navbar";
+import SiteFooter from "@/components/SiteFooter";
 import { notify as toast } from "@/lib/notify";
 import { sendNotification } from "@/lib/notifications";
 import TechBadge from "@/components/TechBadge";
@@ -132,33 +133,24 @@ export const Feed = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="fixed top-0 left-0 right-0 h-14 border-b border-border bg-background/80 backdrop-blur-xl flex items-center px-4 z-50 justify-between">
-        <Link to="/" className="flex items-center gap-2 text-sm font-mono text-muted-foreground hover:text-foreground transition-colors">
-          ← Shipyards
-        </Link>
-        <div className="flex items-center gap-3">
-          <Link to="/explore" className="text-xs font-mono text-muted-foreground hover:text-foreground transition-colors">Explore</Link>
-          <Link to="/leaderboards" className="text-xs font-mono text-muted-foreground hover:text-foreground transition-colors">Leaderboards</Link>
-          <Link to="/login" className="px-3 py-1 rounded bg-primary text-primary-foreground font-mono text-xs hover:bg-primary/90 transition-colors">Sign In</Link>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background flex flex-col">
+      <Navbar />
 
-      <div className="h-14" />
-
-      <main className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+      <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-8 space-y-6">
         <div>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-xs font-mono font-medium text-primary mb-2">
             <Activity className="w-3.5 h-3.5" />
-            <span>Discover Feed</span>
+            <span>Developer Activity Stream</span>
           </div>
-          <h1 className="font-display font-bold text-3xl text-foreground">Live Builder Activity</h1>
-          <p className="text-xs font-mono text-muted-foreground mt-1">Real-time updates, docked releases, and milestone achievements from the community.</p>
+          <h1 className="font-display font-bold text-3xl tracking-tight text-foreground">Live Builder Activity</h1>
+          <p className="text-xs font-mono text-muted-foreground mt-1 max-w-[65ch]">
+            Real-time updates, docked releases, and milestone achievements from the community.
+          </p>
         </div>
 
         {/* Composer or Guest CTA */}
         {user ? (
-          <Card className="border-border bg-card p-4 space-y-3">
+          <Card className="border-border bg-card p-4 space-y-3 rounded-xl shadow-sm">
             <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
               <span className="text-primary">&gt;</span> Share a milestone or ship...
             </div>
@@ -168,13 +160,13 @@ export const Feed = () => {
               className="w-full h-20 p-3 rounded-lg bg-muted/50 border border-border text-xs text-foreground outline-none focus:border-primary/40 focus-visible:ring-2 focus-visible:ring-primary"
             />
             <div className="flex justify-end">
-              <Button size="sm" className="text-xs">
+              <Button size="sm" className="text-xs bg-primary text-primary-foreground font-semibold">
                 <Send className="w-3.5 h-3.5 mr-1" /> Post Update
               </Button>
             </div>
           </Card>
         ) : (
-          <Card className="border-primary/20 bg-primary/5 p-6 text-center space-y-3 relative overflow-hidden">
+          <Card className="border-primary/20 bg-primary/5 p-6 text-center space-y-3 relative overflow-hidden rounded-xl">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-mono text-primary font-bold">
               <UserCheck className="w-3.5 h-3.5" /> Guest Mode (Read Only)
             </div>
@@ -202,32 +194,32 @@ export const Feed = () => {
           {SAMPLE_FEED_POSTS.map((post) => {
             const isLiked = likedPosts.has(post.id);
             return (
-              <Card key={post.id} className="border-border bg-card p-5 space-y-4">
+              <Card key={post.id} className="border-border bg-card p-5 space-y-4 rounded-xl shadow-sm">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
                     <img src={post.author.avatar} alt="" className="w-10 h-10 rounded-full border border-border" />
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <Link to={`/@${post.author.username}`} className="text-sm font-bold text-foreground hover:text-primary transition-colors">
+                        <Link to={`/@${post.author.username}`} className="text-sm font-semibold text-foreground hover:text-primary transition-colors">
                           {post.author.name}
                         </Link>
                         {post.author.is_verified && <ShieldCheck className="w-3.5 h-3.5 text-primary" />}
                       </div>
-                      <span className="text-[10px] font-mono text-muted-foreground">@{post.author.username} · {post.timestamp}</span>
+                      <span className="text-[10px] font-mono text-muted-foreground tabular-nums">@{post.author.username} · {post.timestamp}</span>
                     </div>
                   </div>
                 </div>
 
-                <p className="text-xs text-foreground leading-relaxed">{post.content}</p>
+                <p className="text-xs text-foreground leading-relaxed max-w-[65ch]">{post.content}</p>
 
                 {post.ship && (
                   <div className="rounded-xl border border-border/60 bg-muted/40 p-4 space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <FolderGit2 className="w-4 h-4 text-primary" />
-                        <span className="text-xs font-bold text-foreground">{post.ship.title}</span>
+                        <span className="text-xs font-semibold text-foreground">{post.ship.title}</span>
                       </div>
-                      <Link to={post.ship.link} className="text-[10px] font-mono text-primary hover:underline">
+                      <Link to={post.ship.link} className="text-[10px] font-mono font-medium text-primary hover:underline">
                         View Dock →
                       </Link>
                     </div>
@@ -248,7 +240,7 @@ export const Feed = () => {
                     className={`min-h-[36px] min-w-[36px] px-2 rounded-md flex items-center gap-1.5 hover:text-foreground transition-colors ${isLiked ? "text-destructive font-bold" : ""}`}
                   >
                     <Heart className={`w-3.5 h-3.5 ${isLiked ? "fill-destructive text-destructive" : ""}`} />
-                    <span>{post.likes + (isLiked ? 1 : 0)}</span>
+                    <span className="tabular-nums">{post.likes + (isLiked ? 1 : 0)}</span>
                   </button>
                   <button
                     type="button"
@@ -257,7 +249,7 @@ export const Feed = () => {
                     className="min-h-[36px] min-w-[36px] px-2 rounded-md flex items-center gap-1.5 hover:text-foreground transition-colors"
                   >
                     <MessageSquare className="w-3.5 h-3.5" />
-                    <span>{post.comments}</span>
+                    <span className="tabular-nums">{post.comments}</span>
                   </button>
                   <button
                     type="button"
@@ -273,6 +265,8 @@ export const Feed = () => {
           })}
         </div>
       </main>
+
+      <SiteFooter />
     </div>
   );
 };

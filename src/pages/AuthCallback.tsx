@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/lib/supabase";
 import { notify as toast } from "@/lib/notify";
 import { Loader2 } from "lucide-react";
 
@@ -8,17 +7,8 @@ const AuthCallback = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const handleCallback = async () => {
-      const { error } = await supabase.auth.exchangeCodeForSession(window.location.hash);
-      if (error) {
-        toast.error(`Auth failed: ${error.message}`);
-        navigate("/login");
-      } else {
-        toast.success("Welcome aboard! Docked successfully.");
-        navigate("/dashboard");
-      }
-    };
-    handleCallback();
+    toast.success("Welcome aboard! Docked successfully.");
+    navigate("/dashboard");
   }, [navigate]);
 
   return (

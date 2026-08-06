@@ -36,15 +36,29 @@ Status legend: ✅ done · ⏳ pending · 🔧 in progress
 - ✅ 16. Notifications polish — no self-notifications, deterministic dedupe ids, live badge, click-to-read.
 - ✅ 18. Responsive + a11y QA sweep — mobile nav strip, overflow tables, touch targets, Escape/focus, ARIA, reduced-motion; build + lint clean.
 - ⏳ **17. Analytics detail / Top Builders recompute — deferred** (needs server function; schedule for Layer 2).
-- ⏳ **19. Layer 1 shippable checkpoint** — final guest + authenticated test (incl. WCAG AA contrast + console-errors check), tag version, Git-sync.
+- ✅ **19. Layer 1 shippable checkpoint** — guest + authenticated passes both green (contrast AA + console clean), ready to tag + Git-sync.
+
+## Layer 1 — ✅ COMPLETE (all 12 chunks + pile; verified end to end)
+
+## Layer 2 — Project Marketplace (all chunks ✅, built in new-account workspace `omii-jaan/05july26-wc`)
+- ✅ L2.1 Marketplace post + listing + detail — /post-project wizard (multi-step, framer-motion), marketplaceProjects collection w/ unique slug + view increments, /marketplace listing (filters: category/budget/skills/remote, sort: Newest/Budget/Timeline, grid/list toggle, search, skeleton + empty state), /marketplace/:slug detail (deliverables, skills, tech stack, meta bar, Apply modal w/ pitch + proposed rate/timeline, optimistic + notifications). Founder can't apply to own post; guests browse, Apply prompts sign-in.
+- ✅ L2.2 AI Match engine (server-side) — server function computes matchScore per formula (pastSimilar +30, stack +25, availability +20, budget +15, style +10 → clamp 0-100) with breakdown; stored on post (matches[] or marketplaceMatches); owner "Top Builder Matches" panel w/ breakdown bars + Invite button (stub → L2.4); builder "Projects for you"; seeded builders matchable.
+- ✅ L2.3 Applications — proposal modal → applications doc (pitch, links[], proposedRate, timeline, status), duplicate-application prevention, founder Applicants panel (mini-cards + match score badge + Accept/Reject), Accept → contracts draft + post 'matched' + notification, Reject → notification, builder "My Applications" board w/ status chips; rules: read = applicant or owner, write = applicant; deployed.
+- ✅ L2.4 Invitations — founder Invite (from matches + profile) → invitations doc + notification, duplicate prevention, builder "My Invites" (Accept/Decline → contracts draft + post matched/in_progress + notifications), hidden if already applied; rules: read = invitee or founder, founder create, invitee update; deployed.
+- ✅ L2.5 Contracts — contracts doc schema (terms, status active/completed, ratingStatus), drafts from L2.3/L2.4 upgraded, "My Contracts" (founder outbound / builder inbound cards + status + actions), founder "Mark as complete" → post completed + unlocks ratings, notifications on create/complete; rules: either party; deployed.
+- ✅ L2.6 Ratings — 5-star + comment on completed contracts, one per role via doc id contractId_role, rating average + recent 5 on builder profile Reviews tab (replaces placeholder), founder rating chip on posts, notifications on rating received; rules: contract party create once, public read; deployed.
+- ✅ L2.7 Polish + checkpoint — notifications audit (all fire, no self, dedupe, deep links), security walk of all 6 new collections vs DB_SCHEMA_FIRESTORE.md + deploy, guest pass (browse logged-out, actions gated w/ redirect), responsive + a11y sweep, seed: 2-3 founder posts + 1 completed contract w/ ratings for @demo, final checkpoint green.
+
+## Layer 2 — ✅ COMPLETE (all 7 chunks; marketplace end to end: post → match → apply/invite → contract → rating)
 
 ## Open items
 - ✅ reputationScore removed from non-owner writable counters; firestore.rules deployed to new project (light-coral-nds98).
 - ✅ Supabase fully removed (supabase.ts + all imports; waitlist/api on Firebase).
-- ✅ Account migration: new Google account, project imported from GitHub repo, new Firebase provisioned (light-coral-nds98), rules deployed, smoke test passed.
+- ✅ Account migration: new Google account, project imported from GitHub repo, Firebase provisioned (light-coral-nds98), rules deployed, smoke test passed.
+- ✅ Layer 1 checkpoint version tagged + Git-synced in AI Studio.
+- ✅ Pile 17 (Analytics detail / Top Builders recompute) — resolved by L2.2 server-side match engine.
 - ⏳ Gate/remove the test user switcher before production.
-- ⏳ Re-run contrast (WCAG AA) + console-errors verification at the checkpoint.
+- ⏳ Tag the Layer 2 checkpoint version + Git-sync in AI Studio.
 
 ## Next up
-- **Pile 19 — Layer 1 shippable checkpoint** (final guest + authenticated test, tag version, Git-sync).
-- **Layer 2 — Project Marketplace** planning (build plan + schema already drafted in DB_SCHEMA_FIRESTORE.md).
+- **Layer 3 — Collaboration Workspace** — build plan to write from the master spec (SHIPYARDS_MASTER_DOCUMENT_COMPLETE.md): shared workspaces for builder+founder pairs, milestone tracking (contracts.milestones), shared channels/history, deliverables handoff, smart breakdown tooling. Plan before building, one chunk per prompt.

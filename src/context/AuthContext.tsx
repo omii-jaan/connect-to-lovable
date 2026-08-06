@@ -1,6 +1,13 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { User, Session, AuthError } from "@supabase/supabase-js";
-import { supabase } from "@/lib/supabase";
+import {
+  onAuthStateChanged,
+  signInWithPopup,
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  signOut as firebaseSignOut,
+  User as FirebaseUser
+} from "firebase/auth";
+import { auth } from "@/lib/firebase";
 import { notify as toast } from "@/lib/notify";
 
 export const TEST_USERS = {
@@ -26,13 +33,24 @@ export const TEST_USERS = {
   }
 };
 
+export interface AppUser {
+  id: string;
+  email?: string | null;
+  user_metadata: {
+    full_name?: string | null;
+    user_name?: string | null;
+    avatar_url?: string | null;
+    role?: string | null;
+  };
+}
+
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  user: AppUser | null;
+  session: FirebaseUser | null;
   loading: boolean;
   activeUserId: string;
-  signInWithGithub: () => Promise<{ error: AuthError | null }>;
-  signInWithGoogle: () => Promise<{ error: AuthError | null }>;
+  signInWithGithub: () => Promise<{ error: Error | null }>;
+  signInWithGoogle: () => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   switchTestUser: (key: "user_a" | "user_b" | "none") => void;
   activeTestKey: "user_a" | "user_b" | "custom" | "none";
@@ -41,35 +59,20 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [sessionUser, setSessionUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [fbUser, setFbUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTestKey, setActiveTestKey] = useState<"user_a" | "user_b" | "custom" | "none">("user_a");
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session?.user) {
-        setSessionUser(session.user);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setFbUser(user);
+      if (user) {
         setActiveTestKey("custom");
       }
       setLoading(false);
     });
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (session?.user) {
-        setSessionUser(session.user);
-        setActiveTestKey("custom");
-      } else {
-        setSessionUser(null);
-      }
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    return () => unsubscribe();
   }, []);
 
   const switchTestUser = (key: "user_a" | "user_b" | "none") => {
@@ -82,50 +85,70 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const currentUser: User | null =
-    activeTestKey === "custom" && sessionUser
-      ? sessionUser
+  const customUser: AppUser | null = fbUser
+    ? {
+        id: fbUser.uid,
+        email: fbUser.email,
+        user_metadata: {
+          full_name: fbUser.displayName || fbUser.email?.split("@")[0] || "Builder",
+          user_name: fbUser.email?.split("@")[0] || "builder",
+          avatar_url: fbUser.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${fbUser.uid}`,
+          role: "AI Builder",
+        },
+      }
+    : null;
+
+  const currentUser: AppUser | null =
+    activeTestKey === "custom" && customUser
+      ? customUser
       : activeTestKey === "user_a"
-      ? (TEST_USERS.user_a as unknown as User)
+      ? TEST_USERS.user_a
       : activeTestKey === "user_b"
-      ? (TEST_USERS.user_b as unknown as User)
+      ? TEST_USERS.user_b
       : null;
 
   const activeUserId = currentUser?.id || "";
 
   const signInWithGithub = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "github",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-    if (error) toast.error(error.message);
-    return { error };
+    try {
+      const provider = new GithubAuthProvider();
+      await signInWithPopup(auth, provider);
+      setActiveTestKey("custom");
+      return { error: null };
+    } catch (err) {
+      const error = err as Error;
+      toast.error(error.message || "Failed to sign in with GitHub");
+      return { error };
+    }
   };
 
   const signInWithGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-    if (error) toast.error(error.message);
-    return { error };
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      setActiveTestKey("custom");
+      return { error: null };
+    } catch (err) {
+      const error = err as Error;
+      toast.error(error.message || "Failed to sign in with Google");
+      return { error };
+    }
   };
 
   const signOut = async () => {
     setActiveTestKey("none");
-    const { error } = await supabase.auth.signOut();
-    if (error) toast.error(error.message);
+    try {
+      await firebaseSignOut(auth);
+    } catch (err) {
+      // ignore
+    }
   };
 
   return (
     <AuthContext.Provider
       value={{
         user: currentUser,
-        session,
+        session: fbUser,
         loading,
         activeUserId,
         signInWithGithub,

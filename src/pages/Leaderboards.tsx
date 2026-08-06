@@ -1,15 +1,15 @@
 import { useState, useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { motion } from "motion/react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
-  Trophy, Search, Star, Zap, FolderGit2, Check, ArrowUpRight,
-  ShieldCheck, Filter, ChevronLeft, ChevronRight, ArrowUpDown
+  Trophy, Search, Star, Zap, FolderGit2, ArrowUpRight,
+  ShieldCheck, ChevronLeft, ChevronRight, ArrowUpDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import TechBadge from "@/components/TechBadge";
+import Navbar from "@/components/Navbar";
+import SiteFooter from "@/components/SiteFooter";
 
 interface LeaderboardBuilder {
   id: string;
@@ -175,29 +175,20 @@ export const Leaderboards = () => {
   }, [filteredData, currentPage]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="fixed top-0 left-0 right-0 h-14 border-b border-border bg-background/80 backdrop-blur-xl flex items-center px-4 z-50 justify-between">
-        <Link to="/" className="flex items-center gap-2 text-sm font-mono text-muted-foreground hover:text-foreground transition-colors">
-          ← Shipyards
-        </Link>
-        <div className="flex items-center gap-3">
-          <Link to="/explore" className="text-xs font-mono text-muted-foreground hover:text-foreground transition-colors">Explore</Link>
-          <Link to="/projects" className="text-xs font-mono text-muted-foreground hover:text-foreground transition-colors">Projects</Link>
-          <Link to="/login" className="px-3 py-1 rounded bg-primary text-primary-foreground font-mono text-xs hover:bg-primary/90 transition-colors">Sign In</Link>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background flex flex-col">
+      <Navbar />
 
-      <div className="h-14" />
-
-      <main className="max-w-5xl mx-auto px-4 py-8 space-y-6">
+      <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-8 space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-xs font-mono font-medium text-primary mb-2">
               <Trophy className="w-3.5 h-3.5" />
-              <span>Builder Leaderboard</span>
+              <span>Verified Builder Standings</span>
             </div>
-            <h1 className="font-display font-bold text-3xl text-foreground">Top AI Builders</h1>
-            <p className="text-xs font-mono text-muted-foreground mt-1">Ranked algorithmically by verified code docks, reputation, and contract deliveries.</p>
+            <h1 className="font-display font-bold text-3xl tracking-tight text-foreground">Top AI Builders</h1>
+            <p className="text-xs font-mono text-muted-foreground mt-1 max-w-[65ch]">
+              Ranked algorithmically by verified code docks, developer reputation score, and contract deliveries.
+            </p>
           </div>
         </div>
 
@@ -221,7 +212,7 @@ export const Leaderboards = () => {
                 onClick={() => { setSelectedCategory(cat); setCurrentPage(1); }}
                 className={`px-3 py-1.5 rounded-full text-xs font-mono border transition-all ${
                   selectedCategory === cat
-                    ? "bg-primary/15 border-primary/30 text-primary font-bold"
+                    ? "bg-primary/15 border-primary/30 text-primary font-semibold"
                     : "bg-card border-border text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -232,7 +223,7 @@ export const Leaderboards = () => {
         </div>
 
         {/* Table Card */}
-        <Card className="border-border bg-card overflow-hidden">
+        <Card className="border-border bg-card overflow-hidden rounded-xl shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
@@ -257,8 +248,8 @@ export const Leaderboards = () => {
                   const actualRank = (currentPage - 1) * itemsPerPage + idx + 1;
                   return (
                     <tr key={b.id} className="hover:bg-muted/30 transition-colors">
-                      <td className="px-4 py-3 font-mono text-xs">
-                        <span className={`inline-flex items-center justify-center w-6 h-6 rounded-md font-bold ${
+                      <td className="px-4 py-3 font-mono text-xs tabular-nums">
+                        <span className={`inline-flex items-center justify-center w-6 h-6 rounded-md font-bold tabular-nums ${
                           actualRank === 1 ? "bg-amber-500/20 text-amber-400 border border-amber-500/30" :
                           actualRank === 2 ? "bg-slate-300/20 text-slate-300 border border-slate-300/30" :
                           actualRank === 3 ? "bg-amber-700/20 text-amber-600 border border-amber-700/30" :
@@ -272,7 +263,7 @@ export const Leaderboards = () => {
                           <img src={b.avatar_url} alt="" className="w-8 h-8 rounded-full border border-border" />
                           <div>
                             <div className="flex items-center gap-1.5">
-                              <Link to={`/@${b.username}`} className="text-xs font-bold text-foreground hover:text-primary transition-colors">
+                              <Link to={`/@${b.username}`} className="text-xs font-semibold text-foreground hover:text-primary transition-colors">
                                 {b.full_name}
                               </Link>
                               {b.is_verified && <ShieldCheck className="w-3.5 h-3.5 text-primary" />}
@@ -283,15 +274,15 @@ export const Leaderboards = () => {
                       </td>
                       <td className="px-4 py-3 text-xs font-mono text-muted-foreground">{b.category}</td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1 text-xs font-mono font-bold text-primary">
+                        <div className="flex items-center gap-1 text-xs font-mono font-bold tabular-nums text-primary">
                           <Zap className="w-3.5 h-3.5" />
                           <span>{b.reputation}%</span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 hidden md:table-cell text-xs font-mono text-foreground">
+                      <td className="px-4 py-3 hidden md:table-cell text-xs font-mono tabular-nums text-foreground">
                         <span className="flex items-center gap-1"><FolderGit2 className="w-3.5 h-3.5 text-muted-foreground" /> {b.ships_count}</span>
                       </td>
-                      <td className="px-4 py-3 hidden md:table-cell text-xs font-mono text-foreground">
+                      <td className="px-4 py-3 hidden md:table-cell text-xs font-mono tabular-nums text-foreground">
                         <span className="flex items-center gap-1"><Star className="w-3.5 h-3.5 text-amber-400" /> {b.stars_count}</span>
                       </td>
                       <td className="px-4 py-3 text-right">
@@ -308,7 +299,7 @@ export const Leaderboards = () => {
 
           {/* Pagination */}
           <div className="p-4 border-t border-border flex items-center justify-between text-xs font-mono text-muted-foreground">
-            <span>Showing {paginatedData.length} of {filteredData.length} builders</span>
+            <span className="tabular-nums">Showing {paginatedData.length} of {filteredData.length} builders</span>
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
@@ -319,7 +310,7 @@ export const Leaderboards = () => {
               >
                 <ChevronLeft className="w-3.5 h-3.5" /> Prev
               </Button>
-              <span>Page {currentPage} of {totalPages}</span>
+              <span className="tabular-nums">Page {currentPage} of {totalPages}</span>
               <Button
                 variant="outline"
                 size="sm"
@@ -333,6 +324,8 @@ export const Leaderboards = () => {
           </div>
         </Card>
       </main>
+
+      <SiteFooter />
     </div>
   );
 };

@@ -92,7 +92,7 @@ const FeaturedBuilders = () => {
                 <span className="text-content-tertiary">Real ships, real builders.</span>
               </h2>
             </div>
-            <Link to="/login" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 self-start md:self-auto">
+            <Link to="/builders" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 self-start md:self-auto">
               View all builders →
             </Link>
           </div>

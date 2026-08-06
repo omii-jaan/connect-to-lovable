@@ -100,6 +100,16 @@
     --input: 221 22% 12%;
     --ring: var(--brand-400);
 
+    /* ---- Brand-aligned subtle accents for marketplace & dashboard ---- */
+    --accent-teal-subtle: 184 92% 44% / 0.08;
+    --accent-teal-border: 184 92% 44% / 0.25;
+    --accent-indigo-subtle: 235 70% 60% / 0.08;
+    --accent-indigo-border: 235 70% 60% / 0.25;
+    --accent-emerald-subtle: 142 76% 55% / 0.08;
+    --accent-emerald-border: 142 76% 55% / 0.25;
+    --accent-purple-subtle: 270 60% 62% / 0.08;
+    --accent-purple-border: 270 60% 62% / 0.25;
+
     --radius: 0.5rem; /* spec: radius.lg = 8px */
 
     /* ---- Spacing scale (4px grid) ---- */
@@ -202,6 +212,15 @@
     --border-strong: 212 14% 76%;
     --input: 212 18% 90%;
     --ring: 190 86% 26%;
+
+    --accent-teal-subtle: 188 82% 32% / 0.08;
+    --accent-teal-border: 188 82% 32% / 0.22;
+    --accent-indigo-subtle: 235 60% 45% / 0.08;
+    --accent-indigo-border: 235 60% 45% / 0.22;
+    --accent-emerald-subtle: 150 74% 28% / 0.08;
+    --accent-emerald-border: 150 74% 28% / 0.22;
+    --accent-purple-subtle: 274 52% 42% / 0.08;
+    --accent-purple-border: 274 52% 42% / 0.22;
 
     --shadow-sm: 0 1px 2px hsl(220 25% 20% / 0.06), 0 2px 6px -2px hsl(220 25% 20% / 0.07);
     --shadow-md: 0 4px 16px hsl(220 25% 20% / 0.1);

@@ -37,19 +37,19 @@ const colorMap = {
   cyan: {
     icon: "text-primary bg-primary/10 border-primary/20",
     step: "text-primary",
-    glow: "shadow-[0_0_20px_rgba(183,100,50,0.15)] border-primary/40",
+    glow: "shadow-glow-cyan border-primary/40",
     glowText: "text-primary",
   },
   purple: {
     icon: "text-secondary bg-secondary/10 border-secondary/20",
     step: "text-secondary",
-    glow: "shadow-[0_0_20px_rgba(168,85,247,0.15)] border-secondary/40",
+    glow: "shadow-glow-purple border-secondary/40",
     glowText: "text-secondary",
   },
   green: {
     icon: "text-accent bg-accent/10 border-accent/20",
     step: "text-accent",
-    glow: "shadow-[0_0_20px_rgba(142,76,55,0.15)] border-accent/40",
+    glow: "shadow-glow-green border-accent/40",
     glowText: "text-accent",
   },
 };

@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, Navigate, useLocation, useParams } from "react-router-dom";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
 import ScrollToTop from "@/components/ScrollToTop";
 import LiveAnnouncer from "@/components/LiveAnnouncer";
@@ -92,6 +92,7 @@ const AppRoutes = () => {
         <Route path="/auth/callback" element={<AnimatedPage><AuthCallback /></AnimatedPage>} />
         <Route path="/profile-preview" element={<AnimatedPage><ProfilePreview /></AnimatedPage>} />
         <Route path="/builder/:username" element={<AnimatedPage><BuilderProfile /></AnimatedPage>} />
+        <Route path="/@demo" element={<AnimatedPage><BuilderProfile /></AnimatedPage>} />
         <Route path="/@:username" element={<AnimatedPage><BuilderProfile /></AnimatedPage>} />
         <Route
           path="/dashboard"
@@ -105,13 +106,16 @@ const AppRoutes = () => {
         />
         <Route path="/post-project" element={<AnimatedPage><ProtectedRoute><PostProject /></ProtectedRoute></AnimatedPage>} />
         <Route path="/projects" element={<AnimatedPage><Projects /></AnimatedPage>} />
+        <Route path="/marketplace" element={<AnimatedPage><Projects /></AnimatedPage>} />
         <Route path="/explore" element={<AnimatedPage><Projects /></AnimatedPage>} />
         <Route path="/loads" element={<Navigate to="/projects" replace />} />
         <Route path="/workloads" element={<Navigate to="/projects" replace />} />
         <Route path="/projects/:id" element={<ProjectsRedirect />} />
         <Route path="/project/:slug" element={<AnimatedPage><ProjectDetail /></AnimatedPage>} />
         <Route path="/project/:id" element={<AnimatedPage><ProjectDetail /></AnimatedPage>} />
+        <Route path="/marketplace/:slug" element={<AnimatedPage><ProjectDetail /></AnimatedPage>} />
         <Route path="/leaderboards" element={<AnimatedPage><Leaderboards /></AnimatedPage>} />
+        <Route path="/builders" element={<AnimatedPage><Leaderboards /></AnimatedPage>} />
         <Route path="/feed" element={<AnimatedPage><Feed /></AnimatedPage>} />
         <Route path="/messages" element={<AnimatedPage><ProtectedRoute><Dashboard defaultTab="messages" /></ProtectedRoute></AnimatedPage>} />
         <Route path="/settings" element={<AnimatedPage><ProtectedRoute><Dashboard defaultTab="settings" /></ProtectedRoute></AnimatedPage>} />

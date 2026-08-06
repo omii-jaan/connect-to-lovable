@@ -98,22 +98,18 @@ const Navbar = () => {
         {/* Desktop Nav links */}
         <div className="hidden md:flex items-center gap-1 text-sm font-semibold text-muted-foreground">
           {[
-            { id: "builders", label: "Builders" },
-            { id: "projects", label: "Projects" },
-            { id: "hire", label: "Hire" },
-            { id: "discover", label: "Discover" },
+            { to: "/builders", label: "Builders" },
+            { to: "/projects", label: "Projects" },
+            { to: "/feed", label: "Feed" },
+            { to: "/post-project", label: "Post Project" },
           ].map((link) => (
-            <a
+            <Link
               key={link.label}
-              href={`#${link.id}`}
-              className={`relative px-3 py-2 transition-colors duration-200 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:h-[2px] after:bg-primary after:rounded-full after:transition-all after:duration-300 ${
-                link.id && activeSection === link.id
-                  ? "text-primary after:w-4/5"
-                  : "text-muted-foreground hover:text-primary after:w-0 hover:after:w-4/5"
-              }`}
+              to={link.to}
+              className="relative px-3 py-2 text-muted-foreground hover:text-primary transition-colors duration-200 after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:h-[2px] after:bg-primary after:rounded-full after:transition-all after:duration-300 after:w-0 hover:after:w-4/5"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
 
@@ -423,29 +419,21 @@ const Navbar = () => {
           {/* Terminal navigation items */}
           <div className="flex flex-col py-3">
             <div className="px-4 py-1.5 text-[10px] font-mono text-muted-foreground"># navigation</div>
-            <button
-              onClick={() => { setOpen(false); document.getElementById("builders")?.scrollIntoView({ behavior: "smooth" }); }}
-              className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-primary/5 transition-colors group"
-            >
-              <span className="text-muted-foreground font-mono text-xs">{`>`}</span>
-              <span className="flex-1">cd builders</span>
-              <ChevronRight className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-            </button>
             {[
-              { href: "#builders", label: "Builders" },
-              { href: "#projects", label: "Projects" },
-              { href: "#hire", label: "Hire" },
-              { href: "#discover", label: "Discover" },
+              { to: "/builders", label: "Builders" },
+              { to: "/projects", label: "Projects" },
+              { to: "/feed", label: "Feed" },
+              { to: "/post-project", label: "Post Project" },
             ].map((link) => (
-              <a
+              <Link
                 key={link.label}
-                href={link.href}
+                to={link.to}
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-3 px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-primary/5 transition-colors group ml-7"
+                className="flex items-center gap-3 px-4 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-primary/5 transition-colors group"
               >
                 <span className="text-[10px] font-mono">#/</span>
                 {link.label}
-              </a>
+              </Link>
             ))}
 
             <div className="h-px bg-foreground/5 my-2 mx-4" />

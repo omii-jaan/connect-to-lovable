@@ -31,37 +31,37 @@ export const LandingFooter = () => {
             </p>
             <ul className="space-y-2 text-xs">
               <li>
-                <Link to="/explore" className="hover:text-foreground transition-colors">Builders</Link>
+                <Link to="/leaderboards" className="hover:text-foreground transition-colors">Builders Leaderboard</Link>
               </li>
               <li>
-                <Link to="/projects" className="hover:text-foreground transition-colors">Projects</Link>
+                <Link to="/projects" className="hover:text-foreground transition-colors">Project Marketplace</Link>
               </li>
               <li>
-                <a href="#features" className="hover:text-foreground transition-colors">Marketplace</a>
+                <Link to="/feed" className="hover:text-foreground transition-colors">Live Activity Feed</Link>
               </li>
               <li>
-                <a href="#features" className="hover:text-foreground transition-colors">Leaderboards</a>
+                <Link to="/dashboard" className="hover:text-foreground transition-colors">Builder Workspace</Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 3: Resources */}
+          {/* Column 3: Quick Actions */}
           <div className="space-y-3">
             <p className="text-xs font-mono font-semibold text-foreground uppercase tracking-wider">
-              Resources
+              Actions
             </p>
             <ul className="space-y-2 text-xs">
               <li>
-                <a href="#docs" className="hover:text-foreground transition-colors">Documentation</a>
+                <Link to="/post-project" className="hover:text-foreground transition-colors">Post a Paid Project</Link>
               </li>
               <li>
-                <a href="#api" className="hover:text-foreground transition-colors">API Reference</a>
+                <Link to="/sign-up" className="hover:text-foreground transition-colors">Claim Builder Profile</Link>
               </li>
               <li>
-                <a href="#changelog" className="hover:text-foreground transition-colors">Changelog</a>
+                <Link to="/login" className="hover:text-foreground transition-colors">Sign In to Shipyards</Link>
               </li>
               <li>
-                <a href="#blog" className="hover:text-foreground transition-colors">Blog</a>
+                <Link to="/@demo" className="hover:text-foreground transition-colors">View Demo Profile</Link>
               </li>
             </ul>
           </div>

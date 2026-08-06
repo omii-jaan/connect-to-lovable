@@ -51,7 +51,7 @@ export const notify = Object.assign(
   },
 );
 
-type LegacyToast = {
+type ToastOptions = {
   title?: string;
   description?: string;
   variant?: "default" | "destructive";
@@ -59,10 +59,10 @@ type LegacyToast = {
 };
 
 /**
- * Object-form adapter for the legacy shadcn `toast({ title, description })`
+ * Object-form adapter for the shadcn `toast({ title, description })`
  * call shape, routed through sonner + the live announcer.
  */
-export const legacyToast = ({ title, description, variant, duration }: LegacyToast) => {
+export const toast = ({ title, description, variant, duration }: ToastOptions) => {
   const message = title ?? description ?? "";
   const options = { description: title ? description : undefined, duration };
   return variant === "destructive"

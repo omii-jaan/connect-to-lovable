@@ -626,3 +626,16 @@ export const TIMELINE_OPTIONS = [
   { label: "5–8 weeks", weeks: 8 },
   { label: "9+ weeks", weeks: 12 },
 ] as const;
+
+export const CATEGORY_STYLES: Record<string, string> = {
+  "AI Agents": "bg-teal-500/10 text-teal-400 border-teal-500/30",
+  "Data Engineering": "bg-indigo-500/10 text-indigo-400 border-indigo-500/30",
+  "DevOps & Infrastructure": "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+  "Developer Tools": "bg-purple-500/10 text-purple-400 border-purple-500/30",
+  "Automation": "bg-amber-500/10 text-amber-400 border-amber-500/30",
+  "Web Development": "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
+  "Mobile Development": "bg-violet-500/10 text-violet-400 border-violet-500/30",
+  "Blockchain": "bg-blue-500/10 text-blue-400 border-blue-500/30",
+  "Design & UI": "bg-rose-500/10 text-rose-400 border-rose-500/30",
+  "Other": "bg-muted text-muted-foreground border-border",
+};

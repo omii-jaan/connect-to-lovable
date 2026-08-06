@@ -6,7 +6,7 @@ import { NumberTicker } from "@/components/magicui/number-ticker";
 import { WordRotate } from "@/components/magicui/word-rotate";
 import HeroOrb from "@/components/HeroOrb";
 import { useTilt } from "@/hooks/useTilt";
-import { legacyToast as toast } from "@/lib/notify";
+import { toast } from "@/lib/notify";
 
 
 const LOG_REPLIES: Record<string, string[]> = {

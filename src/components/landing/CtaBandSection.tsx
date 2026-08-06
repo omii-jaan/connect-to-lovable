@@ -1,6 +1,6 @@
 import { useState, FormEvent } from "react";
 import { ArrowRight, Loader2, Sparkles } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { submitToWaitlist } from "@/lib/waitlist";
 import { notify as toast } from "@/lib/notify";
 
@@ -34,10 +34,10 @@ export const CtaBandSection = () => {
 
       <div className="relative max-w-4xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
+          initial={{ opacity: 0, scale: 0.98 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+          viewport={{ once: true, margin: "0px 0px 250px 0px" }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
           className="rounded-2xl border border-primary/20 bg-primary/5 p-8 sm:p-12 text-center space-y-6 relative overflow-hidden"
         >
           {/* Ambient Glow */}
