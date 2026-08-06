@@ -63,4 +63,4 @@ Status legend: ✅ done · ⏳ pending · 🔧 in progress
 - ⏳ Re-paste refreshed KNOWLEDGE.md + WORKSPACE.md (Firebase track, Layer 2 complete) into AI Studio system instructions before Layer 3 chunks.
 
 ## Next up
-- **Layer 3 — Collaboration Workspace** — build plan to write from the master spec (SHIPYARDS_MASTER_DOCUMENT_COMPLETE.md): shared workspaces for builder+founder pairs, milestone tracking (contracts.milestones), shared channels/history, deliverables handoff, smart breakdown tooling. Plan before building, one chunk per prompt.
+- **Layer 3 — Collaboration Workspace (The Yard)** — build plan in `lovable/BUILD_PLAN_LAYER3.md`: L3.1 Yard foundation ✅ · L3.2 Milestones ✅ · L3.3 Channel ✅ · L3.4 Deliverables ✅ · **L3.5 polish + checkpoint ⏳ (next prompt)**
