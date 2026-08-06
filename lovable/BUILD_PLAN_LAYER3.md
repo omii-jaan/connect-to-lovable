@@ -1,5 +1,20 @@
 # BUILD_PLAN_LAYER3 — Shipyards Layer 3: Collaboration Workspace ("The Yard")
 
+## How to paste each chunk (do this for EVERY chunk, every time)
+Every chunk message to AI Studio MUST start with this preamble (keeps context fresh and consistent):
+
+```text
+Before building, refer to these memory files and follow them strictly:
+- lovable/KNOWLEDGE.md — product vision, roles, design tokens, anti-vibe rules.
+- lovable/WORKSPACE.md — engineering standards + the mandatory QUALITY BAR checklist.
+- lovable/DB_SCHEMA_FIRESTORE.md — collections, fields, security rules. Update + deploy rules for any new/changed collections.
+- lovable/BUILD_PLAN_LAYER3.md — this plan; build only the chunk I name, nothing else.
+- lovable/PROGRESS.md — current status and open items.
+Apply the QUALITY BAR to this chunk. No fake/mock data except the explicit seed step.
+```
+
+Then paste the chunk instructions. One chunk per message. After building: verify desktop + mobile in the preview, fix with a small targeted prompt, tag a version, Git-sync.
+
 Scope: the **trust layer for the founder+builder pair**. When a contract goes active, both parties get a shared Yard for that project: milestone tracking, a shared project channel, and a deliverables handoff log. No surveillance — no keystroke/screenshot tracking, no git scraping, no timers. Only honest, explicit submissions tracked. Cut for post-MVP: Kanban boards, team roles/teams, code editor, git/Claude integrations, docs area.
 
 Same rules as Layers 1-2: ONE chunk per message in AI Studio Build mode. After each chunk: verify in preview (desktop + mobile), fix with a small targeted prompt, tag a version, Git-sync. Collections + security rules per `lovable/DB_SCHEMA_FIRESTORE.md` (Layer 3 section). Append the QUALITY BAR to every prompt (3 view states, optimistic UI + toasts, a11y, responsive, tokens only, no gradients/glows).
