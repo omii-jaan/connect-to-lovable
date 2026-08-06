@@ -5,7 +5,7 @@ Status legend: ✅ done · ⏳ pending · 🔧 in progress
 ## Decisions (locked)
 - Platform: **Google AI Studio** (Build mode), React + TypeScript + Tailwind, Vite.
 - Backend: **Firebase** — Firestore + Firebase Auth + security rules (`DB_SCHEMA_FIRESTORE.md` is the active schema). Supabase/SQL path shelved.
-- Old GitHub repo (`omii-jaan/connect-to-lovable`, Supabase app) = **design reference only**, not the working codebase.
+- Active GitHub repo: **`omii-jaan/connect-to-lovable`** — current Git-sync target and AI Studio clone source. `omii-jaan/05july26-wc` is the older new-account workspace (app code behind, reference only).
 - Build discipline: one chunk per prompt, verify desktop + mobile, tag version, Git-sync after each chunk.
 
 ## Setup (done)
@@ -57,8 +57,10 @@ Status legend: ✅ done · ⏳ pending · 🔧 in progress
 - ✅ Account migration: new Google account, project imported from GitHub repo, Firebase provisioned (light-coral-nds98), rules deployed, smoke test passed.
 - ✅ Layer 1 checkpoint version tagged + Git-synced in AI Studio.
 - ✅ Pile 17 (Analytics detail / Top Builders recompute) — resolved by L2.2 server-side match engine.
+- ✅ Full workspace state (Layer 2 + polish) synced to GitHub (`connect-to-lovable`, commit a987b52), verified build, AI Studio re-cloned from it.
 - ⏳ Gate/remove the test user switcher before production.
 - ⏳ Tag the Layer 2 checkpoint version + Git-sync in AI Studio.
+- ⏳ Re-paste refreshed KNOWLEDGE.md + WORKSPACE.md (Firebase track, Layer 2 complete) into AI Studio system instructions before Layer 3 chunks.
 
 ## Next up
 - **Layer 3 — Collaboration Workspace** — build plan to write from the master spec (SHIPYARDS_MASTER_DOCUMENT_COMPLETE.md): shared workspaces for builder+founder pairs, milestone tracking (contracts.milestones), shared channels/history, deliverables handoff, smart breakdown tooling. Plan before building, one chunk per prompt.

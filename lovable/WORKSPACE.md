@@ -24,13 +24,14 @@ These rules apply to every project built in this workspace. They are always in c
 - Motion: use the token durations (100/150/250/350ms) and `cubic-bezier(0.4,0,0.2,1)`. Honor `prefers-reduced-motion`.
 
 ## Data & backend
-- Backend = Supabase (via Lovable Cloud or a connected project).
-- **Row Level Security (RLS) enabled on every table.** When creating a table, write the policies in the same prompt. Default: public read for content tables; write only for owners. Never expose service-role keys client-side.
-- Use the typed Supabase client (`supabase-js`); no raw SQL in components. Complex queries/transforms go in `src/lib/` helpers or Edge Functions.
-- Server-side logic that needs secrets (AI calls, emails, payments, matching) goes in **Supabase Edge Functions**. Store keys as secrets, never in frontend code.
-- Real-time: use Supabase Realtime subscriptions for chat, notifications, feeds, live counts. Clean up subscriptions on unmount (avoid leaks).
-- Follow the schema in project knowledge / DB_SCHEMA. When a schema change is needed, describe the change in chat and let Lovable run the migration with approval.
-- Seeding: sample data should be realistic and flagged as sample (prefix names or a `is_sample` flag) so it can be wiped later.
+- Backend = **Firebase** (Firestore + Firebase Auth + Firebase Storage + security rules). Never assume Postgres/Supabase; the Firestore track is the only active track.
+- **Security rules enabled on every collection.** When a collection is created, write its rules in the same prompt. Default: public read for content collections; writes restricted to the authenticated owner (creator/participant). Deploy rules after every schema change.
+- Use the Firebase SDK (`firebase/app`, `firebase/firestore`, `firebase/auth`, `firebase/storage`). No raw REST calls in components. Complex queries/transforms go in `src/lib/` helpers.
+- Server-side logic that needs secrets or cross-user computation (AI calls, matching, emails, payments) goes in the **AI Studio Node backend** (`server.ts`, exposed as `/api/*`). Keep secrets server-side, never in frontend code.
+- Real-time: use Firestore `onSnapshot` subscriptions for chat, notifications, feeds, live counts. Clean up subscriptions on unmount (avoid leaks).
+- Follow the schema in project knowledge / `DB_SCHEMA_FIRESTORE.md`. When a schema change is needed, describe it in chat and let the build run the change with approval; update the schema doc in the same change.
+- Seeding: sample data should be realistic and flagged as sample (a `is_sample` flag) so it can be wiped later.
+- Firebase integration must be approved/kept when the AI Studio agent offers it; the Firebase project id is `light-coral-nds98`.
 
 ## Process (how to work with this workspace)
 - One change per prompt. Verify in preview; bookmark working versions.
@@ -40,6 +41,7 @@ These rules apply to every project built in this workspace. They are always in c
 - Keep routes/imports stable: if renaming a component, update ALL imports in the same change.
 - Accessibility: visible focus rings, aria-labels on icon buttons, semantic HTML, keyboard navigable, 4.5:1 contrast.
 - Performance: lazy-load heavy components (charts, editors), paginate lists, memoize expensive renders, keep bundle lean.
+- Google AI Studio Build mode: this workspace runs in Build mode with an attached GitHub repo. After each chunk: verify desktop + mobile in the preview, fix small issues with targeted prompts, then tag a version and Git-sync.
 
 ## Design guardrails (workspace-wide)
 - Dark mode first. No glow/gradient/shadow effects for decoration. No glassmorphism except specified (top bar). No rounded corners over 12px except avatars/badges.

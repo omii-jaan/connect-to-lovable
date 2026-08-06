@@ -3,7 +3,7 @@
 This file guides any AI agent (Google AI Studio, Cursor, Claude Code, opencode, etc.) working in this repository.
 
 ## Project
-Shipyards — the professional identity platform for AI builders ("LinkedIn for AI developers"). React + TypeScript + Tailwind (Vite), built in **Google AI Studio Build mode**, backend on **Firebase** (Firestore, Firebase Auth, security rules). Dark mode, muted-teal accent (#14B8A6) design. MVP covers Layers 1-3: **Discovery & Showcase**, **Project Marketplace**, **Collaboration Workspace**. Layer 1 is the active build.
+Shipyards — the professional identity platform for AI builders ("LinkedIn for AI developers"). React + TypeScript + Tailwind (Vite), built in **Google AI Studio Build mode**, backend on **Firebase** (Firestore, Firebase Auth, security rules). Dark mode, muted-teal accent (#14B8A6) design. MVP covers Layers 1-3: **Discovery & Showcase**, **Project Marketplace**, **Collaboration Workspace**. Layers 1-2 complete; Layer 3 is the active build.
 
 ## Always follow
 1. Read `lovable/KNOWLEDGE.md`, `lovable/WORKSPACE.md`, `lovable/BUILD_PLAN.md`, and `lovable/PROGRESS.md` in this repo before making changes — they are the project memory and global standards.
@@ -21,8 +21,8 @@ The build is executed chunk by chunk, one component per prompt, per `lovable/BUI
 - **Layer 3 (Collaboration Workspace) — next** — plan from `lovable/BUILD_PLAN_LAYER3.md` once written.
 
 ## Repository layout
-- **Canonical repo: `omii-jaan/05july26-wc`** — the live AI Studio workspace and Git-sync target. All builds and memory updates land there.
-- `omii-jaan/connect-to-lovable` is now **archived/stale** — contains the older Firestore export with Supabase remnants; reference only, do not push to it.
+- **Active repo: `omii-jaan/connect-to-lovable`** — current Git-sync target; contains the full app state (Layers 1-2 + polish). All builds and memory updates land there.
+- `omii-jaan/05july26-wc` — the older new-account workspace repo; **app code there is behind** (no Layer 2). Reference only; do not push to it unless the AI Studio workspace is re-attached to it.
 - `lovable/` — the build package (knowledge, schema, plan, progress). Keep it authoritative and up to date.
 - Root documents `SHIPYARDS_*.md` — the original specs. They are reference; the files in `lovable/` are the working truth.
 - `src/` — application code.
