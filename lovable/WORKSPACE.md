@@ -46,3 +46,18 @@ These rules apply to every project built in this workspace. They are always in c
 ## Design guardrails (workspace-wide)
 - Dark mode first. No glow/gradient/shadow effects for decoration. No glassmorphism except specified (top bar). No rounded corners over 12px except avatars/badges.
 - Copy: professional, precise, developer-friendly. No "vibe" marketing speak in the app UI.
+
+## QUALITY BAR (mandatory for every chunk)
+Every build chunk MUST satisfy all of the following, without exception. This is a hard checklist, not a suggestion:
+- 3 view states everywhere: loading (skeleton), empty (helpful message + CTA), data.
+- Optimistic UI updates + success/error toasts for every mutation (sonner).
+- Error state with retry for any Firestore read that can fail.
+- Keyboard navigable (focus rings, Escape closes modals, Enter submits forms).
+- ARIA labels on icon-only buttons; semantic HTML.
+- Responsive: mobile-first, works ≥ 320px width, no horizontal overflow, touch targets ≥ 40px.
+- Design tokens only (CSS variables); NO gradients, glows, glass, or drop shadows in dark UI.
+- Lucide icons stroke 1.5px; no emoji in the UI; numeric data uses tabular-nums.
+- No unused imports, no console.log, TypeScript strict, no `any`.
+- One component per file; small components; no code comments.
+- Firestore security rules updated + deployed for any new/changed collections in the same chunk.
+- No fake/mock data except the explicit seed step — real collections, real auth.
